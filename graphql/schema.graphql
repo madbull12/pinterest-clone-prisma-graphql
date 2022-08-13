@@ -2,6 +2,47 @@
 ### Do not make changes to this file directly
 
 
+type Comment {
+  content: String
+  createdAt: DateTime
+  id: String
+  pin: Pin
+  pinId: String
+  user: User
+  userId: String
+}
+
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar DateTime
+
+type Pin {
+  category: [String]
+  comments: [Comment]
+  createdAt: DateTime
+  description: String
+  id: String
+  imageUrl: String
+  title: String
+  user: User
+  userId: String
+}
+
 type Query {
-  ok: Boolean!
+  pin(pinId: String!): Pin!
+  pins: [Pin]!
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+type User {
+  email: String
+  id: String
+  image: String
+  pins: [Pin]
+  role: Role
 }

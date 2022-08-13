@@ -2,7 +2,7 @@
 export const resolvers = {
     Query:{
         pins:(_parent:any,_args:any,ctx:any) => {
-            return ctx.prisma.link.findMany();
+            return ctx.prisma.pin.findMany();
         }
     }
   }

@@ -1,11 +1,19 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import { pins } from '../data/pins'
 import Masonry from 'react-masonry-css'
 import { IPin } from '../interface'
+import { useQuery } from '@apollo/client'
+import { FeedQuery } from '../lib/query'
+import Link from 'next/link'
+
 
 const Home: NextPage = () => {
+  const { data, loading, error } = useQuery(FeedQuery);
+
+  if(loading) return <p>Loading...</p>
+  if(error) return <p>{error.message}</p>
+  console.log(data)
   const widthGenerator = () => {
     return Math.floor(Math.random() * (450 - 300 + 1) + 300)
   }
@@ -19,20 +27,25 @@ const Home: NextPage = () => {
     500: 1
   };
   return (
-    <div className='m-4'>
+    <div className='p-4 max-w-7xl mx-auto'>
+      <Head>
+        <title>Pinterest</title>
+      </Head>
       <Masonry
         breakpointCols={breakpointColumnsObj}
         className="my-masonry-grid"
         columnClassName="my-masonry-grid_column"
       >
         {/* array of JSX items */}
-        {pins?.map((item:IPin)=>(
+        {data?.pins?.map((item:IPin)=>(
             <div key={item.userId} className="relative">
-                
-                  <Image src={item.imageUrl} alt="pin" width={widthGenerator()} height={heightGenerator()} objectFit="cover" className='rounded-2xl '  />
-                  <div className='absolute bottom-0 text-white'>
+                  <Link href={`/pin/${item?.id}`}>
+                    <Image src={item.imageUrl}  alt="pin" width={widthGenerator()} height={heightGenerator()} objectFit="cover" className='cursor-pointer rounded-2xl '  />
+                  
+                  </Link>
+                  {/* <div className='absolute bottom-0 text-white'>
                     <h1>fsfs</h1>
-                  </div>
+                  </div> */}
                 
             </div>
         ))}
