@@ -21,13 +21,23 @@ const Navbar = () => {
                     <Link href="/pin-builder">Create</Link>
                 </li>
             </div>
-    
-            {user ? (
-                <button className='rounded-full px-4 py-2 bg-[#E60023] text-white font-semibold' onClick={()=>router.push("/api/auth/logout")}>Logout</button>
-            ):(
-                <button className='rounded-full px-4 py-2 bg-[#E60023] text-white font-semibold' onClick={()=>router.push("/api/auth/login")}>Login</button>
+            <div className='flex items-center gap-x-2'>
+                {user ? (
+                    <button className='rounded-full px-4 py-2 bg-[#E60023] text-white font-semibold' onClick={()=>router.push("/api/auth/logout")}>Logout</button>
+                ):(
+                    <button className='rounded-full px-4 py-2 bg-[#E60023] text-white font-semibold' onClick={()=>router.push("/api/auth/login")}>Login</button>
 
-            )}
+                )}
+                {user && (
+                    <Link href="/user/created">
+                     <Image src={user?.picture || ""} alt="avatar" width={40} height={40} className="cursor-pointer rounded-full" />
+                    
+                    </Link>
+
+                )}
+            </div>
+    
+           
         </ul>
     </nav>
   )

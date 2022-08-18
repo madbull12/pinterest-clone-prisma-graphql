@@ -36,6 +36,17 @@ export const SinglePinQuery = gql`
     }
 `
 
+export const PinByUserEmail = gql`
+  query Query($userId: String!) {
+    user(userId: $userId) {
+      pins {
+        id
+        imageUrl
+      }
+    }
+  }
+`
+
 export const UserIdQuery = gql`
   query User($userId: String!) {
     user(userId: $userId) {

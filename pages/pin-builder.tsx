@@ -5,7 +5,7 @@ import toast,{ Toaster } from 'react-hot-toast'
 import prisma from '../lib/prisma'
 import {  createPinMutation } from '../lib/mutation'
 import { UserIdQuery } from '../lib/query'
-import { useUser } from '@auth0/nextjs-auth0'
+import { getSession, useUser } from '@auth0/nextjs-auth0'
 import { HiDotsHorizontal, HiUpload } from 'react-icons/hi'
 import { MdFileUpload, MdUpload } from 'react-icons/md'
 import Image from 'next/image'
@@ -159,5 +159,25 @@ const PinBuilder = () => {
     </div>
   )
 }
+
+export const getServerSideProps = async({ req,res }:any) => {
+    const session = getSession(req,res);
+
+    if(!session) {
+        return {
+            redirect:{
+                permanent:false,
+                destination:"/api/auth/login"
+            },
+            props:{}
+        }
+    }
+
+    return {
+        props:{}
+    }
+}
+
+
 
 export default PinBuilder

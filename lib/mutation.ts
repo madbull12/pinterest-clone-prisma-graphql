@@ -7,8 +7,8 @@ export const createPinMutation = gql`
             title
             imageUrl
             description
+            userId
         }
     }
-
 
 `

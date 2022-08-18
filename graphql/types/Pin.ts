@@ -90,7 +90,7 @@ export const createPinMutation = extendType({
                 if(!ctx.user) {
                     throw new Error("You need to be logged in to perform an action")
                 }
-                const newLink = {
+                const newPin = {
                     title: args.title,
                     imageUrl: args.imageUrl,
                     category: args.category,
@@ -98,8 +98,8 @@ export const createPinMutation = extendType({
                     userId:args.userId
                   }
           
-                return await ctx.prisma.link.create({
-                    data: newLink,
+                return await ctx.prisma.pin.create({
+                    data: newPin,
                 })
             }
         })
