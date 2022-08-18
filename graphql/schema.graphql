@@ -17,6 +17,10 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 """
 scalar DateTime
 
+type Mutation {
+  createPin(category: [String], description: String, imageUrl: String!, title: String!, userId: String!): Pin!
+}
+
 type Pin {
   category: [String]
   comments: [Comment]
@@ -32,6 +36,7 @@ type Pin {
 type Query {
   pin(pinId: String!): Pin!
   pins: [Pin]!
+  user(userId: String!): User!
 }
 
 enum Role {

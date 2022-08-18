@@ -4,16 +4,20 @@ import { ApolloProvider } from '@apollo/client'
 import apolloClient from '../lib/apollo'
 import Navbar from '../components/Navbar'
 import Layout from '../components/Layout'
+import { UserProvider } from '@auth0/nextjs-auth0'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ApolloProvider client={apolloClient} >
-      <Layout>
-        <Component {...pageProps} />
+    <UserProvider>
+      <ApolloProvider client={apolloClient} >
+        <Layout>
+          <Component {...pageProps} />
 
-      </Layout>
+        </Layout>
 
-    </ApolloProvider>
+      </ApolloProvider>
+    </UserProvider>
+
   
   )
 }

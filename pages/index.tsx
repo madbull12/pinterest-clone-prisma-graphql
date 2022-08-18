@@ -6,14 +6,16 @@ import { IPin } from '../interface'
 import { useQuery } from '@apollo/client'
 import { FeedQuery } from '../lib/query'
 import Link from 'next/link'
+import { useUser } from '@auth0/nextjs-auth0'
 
 
 const Home: NextPage = () => {
   const { data, loading, error } = useQuery(FeedQuery);
 
+  const { user } = useUser();
   if(loading) return <p>Loading...</p>
   if(error) return <p>{error.message}</p>
-  console.log(data)
+  console.log(user)
   const widthGenerator = () => {
     return Math.floor(Math.random() * (450 - 300 + 1) + 300)
   }

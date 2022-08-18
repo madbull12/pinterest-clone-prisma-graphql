@@ -1,5 +1,5 @@
 import { DateTimeResolver } from "graphql-scalars";
-import { objectType,extendType, enumType, nonNull, stringArg, queryField, asNexusMethod } from "nexus";  
+import { objectType,extendType, enumType, nonNull, stringArg, queryField, asNexusMethod, list } from "nexus";  
 import { Comment } from "./Comment";
 import { User } from "./User";
 
@@ -71,7 +71,41 @@ export const PinsQuery = extendType({
     }
 });
 
+//mutation
 
+export const createPinMutation = extendType({
+    type:"Mutation",
+    definition(t) {
+        t.nonNull.field("createPin",{
+            type:'Pin',
+            args:{
+                title:nonNull(stringArg()),
+                imageUrl:nonNull(stringArg()),
+                description:stringArg(),
+                category:list(stringArg()),
+                userId:nonNull(stringArg())
+                
+            },
+            async resolve(_parent: any,args: any,ctx: any) {
+                if(!ctx.user) {
+                    throw new Error("You need to be logged in to perform an action")
+                }
+                const newLink = {
+                    title: args.title,
+                    imageUrl: args.imageUrl,
+                    category: args.category,
+                    description: args.description,
+                    userId:args.userId
+                  }
+          
+                return await ctx.prisma.link.create({
+                    data: newLink,
+                })
+            }
+        })
+    },
+    
+})
 
 
 

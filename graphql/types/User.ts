@@ -1,4 +1,4 @@
-import { enumType, objectType } from "nexus";
+import { enumType, extendType, nonNull, objectType, stringArg } from "nexus";
 import { Pin } from "./Pin";
 
 export const User = objectType({
@@ -21,6 +21,28 @@ export const User = objectType({
         })
     },
 });
+
+export const UsersQuery = extendType({
+    type:"Query",
+    definition(t) {
+        t.nonNull.field("user",{
+            type:'User',
+            args:{
+                userId:nonNull(stringArg())
+            },
+            resolve(_parent,{ userId },ctx) {
+                return ctx.prisma.user
+                    .findUnique({
+                        where:{
+                            email:userId
+                        }
+                    })
+            }
+
+    })
+}})
+
+
 
 const Role = enumType({
     name:"Role",

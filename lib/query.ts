@@ -35,3 +35,12 @@ export const SinglePinQuery = gql`
         }
     }
 `
+
+export const UserIdQuery = gql`
+  query User($userId: String!) {
+    user(userId: $userId) {
+      id
+    }
+  }
+
+`
