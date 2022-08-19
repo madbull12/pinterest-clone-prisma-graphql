@@ -1,4 +1,4 @@
-import { objectType,asNexusMethod } from "nexus"
+import { objectType,asNexusMethod, extendType, nonNull, stringArg } from "nexus"
 import { DateTimeResolver } from "graphql-scalars";
 
 import { Pin } from "./Pin"
@@ -39,4 +39,34 @@ export const Comment = objectType({
         })
         
     },
+});
+
+export const CommentMutation = extendType({
+    type:"Mutation",
+    definition(t){
+        t.nonNull.field("createComment",{
+            type:"Comment",
+            args:{
+                content:nonNull(stringArg()),
+                userId:nonNull(stringArg()),
+                pinId:nonNull(stringArg())
+            },
+            async resolve(_parent,{ content,userId,pinId },ctx) {
+                if(!ctx.user) {
+                    throw new Error("You have to be logged in first in order to perform this action")
+                }
+
+                const data = {
+                    content,
+                    userId,
+                    pinId
+                }
+
+                return await ctx.prisma.comment.create({
+                    data
+                })
+            
+            }
+        })
+    }
 })

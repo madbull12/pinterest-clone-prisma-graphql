@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SinglePinQuery, UserIdQuery } from '../../lib/query';
 import { HiArrowLeft, HiDotsHorizontal, HiDownload, HiLink } from 'react-icons/hi'
 import { IComment, IPin } from '../../interface';
@@ -9,13 +9,20 @@ import { MdExpandMore } from 'react-icons/md'
 import { v4 as uuidv4 } from 'uuid'
 import Loading from '../../components/Loading';
 import { useUser } from '@auth0/nextjs-auth0';
-import { savePinMutation } from '../../lib/mutation';
+import { createCommentMutation, savePinMutation } from '../../lib/mutation';
 import toast from 'react-hot-toast';
+import { useForm } from 'react-hook-form';
+import apolloClient  from '../../lib/apollo'
+
+
 
 interface IProps {
   comment:IComment
 }
+
 const Comment = ({ comment }: IProps) => {
+  
+  
   return (
     <div key={uuidv4()} className={`flex gap-x-2 items-center`}>
       <Image className='rounded-full' width={40} height={40} alt="user-picture" src={comment?.user?.image || "https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"} />
@@ -33,7 +40,16 @@ const PinDetail = () => {
     const { pinId } = router.query;
     const { user } = useUser();
 
-    const [saveMutation,{}] = useMutation(savePinMutation);
+
+    const [contentFocus,setContentFocus] = useState<boolean>(false);
+    const [content,setContent] = useState<string>("");
+
+    const { reset,handleSubmit } = useForm();
+
+    const [saveMutation,{ error:saveError }] = useMutation(savePinMutation);
+    const [createComment] = useMutation(createCommentMutation,{
+      refetchQueries:[SinglePinQuery]
+    })
 
     const { data:userId } = useQuery(UserIdQuery,{
       variables:{
@@ -48,11 +64,6 @@ const PinDetail = () => {
         }
     });
 
-    
-
-    console.log(data)
-
-  
 
     const { pin }: { pin:IPin } = data || {};
 
@@ -62,17 +73,38 @@ const PinDetail = () => {
         pinId
       }
 
+    
+
       try {
         toast.promise(saveMutation({ variables }), {
           loading: 'Saving pin..',
           success: 'Pin successfully saved!🎉',
-          error: `Something went wrong 😥 Please try again -  ${error}`,
+          error: `Something went wrong 😥 Please try again -  ${saveError?.message}`,
         })
   
       } catch (error) {
         console.error(error)
       }
     }
+
+    const addComment = async() => {
+      const variables = {
+        content,
+        userId:userId?.user.id,
+        pinId
+      }
+      try {
+        await createComment({ variables })
+      reset()
+
+      } catch (error) {
+        console.error(error)
+      }
+
+
+    }
+
+    console.log(userId)
 
     if(loading) return (
       <div className='flex justify-center py-4'>
@@ -97,7 +129,9 @@ const PinDetail = () => {
                 <HiLink />
               </div>
               <div className='ml-auto'>
-                <button onClick={savePin} className='bg-[#E60023] rounded-full px-4 py-2 text-lg font-semibold text-white'>Save</button>
+                <button onClick={()=>{
+                  user ? savePin() : router.push("/api/auth/login") 
+                }} className='bg-[#E60023] rounded-full px-4 py-2 text-lg font-semibold text-white'>Save</button>
               </div>
             </nav>
             <div className='mt-4 space-y-3'>
@@ -123,21 +157,33 @@ const PinDetail = () => {
                 </div>
               )}
 
-              <form className='flex flex-col'>
+              <form className='flex flex-col' onSubmit={handleSubmit(addComment)} >
                 <div className='flex gap-x-4 w-full items-center '>
-                  <Image src={user?.picture || ""} width={40} height={40} className="rounded-full mr-4" alt={"avatar"} />
+                  {user && (
+                    <Image src={user?.picture || ""} width={40} height={40} className="rounded-full mr-4" alt={"avatar"} />
+
+                  )}
                   <input
+                    onFocus={()=>setContentFocus(true)}
+                    onChange={(e)=>setContent(e.target.value)}
                     type="text"
                     className='w-full p-3 outline-none border-gray-200 rounded-full border'
-                    placeholder="Add a comment"
+                    placeholder={`${user ? "Add a comment" : "Please login first to comment"}`}
+                    disabled={user===undefined}
                   />
                   
                 </div>
-            
-                <div className=' self-end gap-x-2 flex items-center  mt-2'>
-                    <button>Cancel</button>
-                    <button className='font-semibold bg-[#E60023] text-white rounded-full px-4 py-2'>Done</button>
-                </div>
+                    
+                {contentFocus && (
+                  <div className=' self-end gap-x-2 flex items-center  mt-2'>
+                    <button className='px-4 py-2 bg-gray-200 text-gray-800 font-semibold rounded-full' onClick={()=>{
+                      setContentFocus(false)
+                      reset()
+                    }}>Cancel</button>
+                    <button className='font-semibold bg-[#E60023] text-white rounded-full px-4 py-2' disabled={content.length <= 0} >Done</button>
+                  </div>
+                )}
+         
               </form>
         
                
