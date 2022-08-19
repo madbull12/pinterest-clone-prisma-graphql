@@ -7,13 +7,18 @@ import { useQuery } from '@apollo/client'
 import { FeedQuery } from '../lib/query'
 import Link from 'next/link'
 import { useUser } from '@auth0/nextjs-auth0'
+import Loading from '../components/Loading'
 
 
 const Home: NextPage = () => {
   const { data, loading, error } = useQuery(FeedQuery);
 
   const { user } = useUser();
-  if(loading) return <p>Loading...</p>
+  if(loading) return (
+    <div className='justify-center flex py-4'>
+      <Loading />
+    </div>
+  )
   if(error) return <p>{error.message}</p>
   console.log(user)
   const widthGenerator = () => {
@@ -33,6 +38,7 @@ const Home: NextPage = () => {
       <Head>
         <title>Pinterest</title>
       </Head>
+      <p className='text-center font-semibold  py-4 text-lg '>For you</p>
       <Masonry
         breakpointCols={breakpointColumnsObj}
         className="my-masonry-grid"

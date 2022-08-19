@@ -3,7 +3,7 @@ import { objectType,extendType, enumType, nonNull, stringArg, queryField, asNexu
 import { Comment } from "./Comment";
 import { User } from "./User";
 
-export const GQLDate = asNexusMethod(DateTimeResolver,"date");
+ const GQLDate = asNexusMethod(DateTimeResolver,"date");
 
 export const Pin = objectType({
     name:"Pin",
@@ -96,7 +96,7 @@ export const createPinMutation = extendType({
                     category: args.category,
                     description: args.description,
                     userId:args.userId
-                  }
+                }
           
                 return await ctx.prisma.pin.create({
                     data: newPin,

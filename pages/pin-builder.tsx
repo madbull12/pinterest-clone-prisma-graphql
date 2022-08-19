@@ -78,7 +78,6 @@ const PinBuilder = () => {
     console.log(textAreaFocus)
   return (
     <div className='min-h-screen bg-gray-200 py-8'>
-        <Toaster />
         <form className='shadow-md p-8 rounded-2xl max-w-3xl bg-white mx-auto' onSubmit={handleSubmit(onSubmit)}>
             <div className='flex items-center justify-between'>
                 <HiDotsHorizontal className='text-2xl text-gray-400' />

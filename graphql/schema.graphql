@@ -19,6 +19,7 @@ scalar DateTime
 
 type Mutation {
   createPin(category: [String], description: String, imageUrl: String!, title: String!, userId: String!): Pin!
+  savePin(pinId: String!, userId: String!): Saved!
 }
 
 type Pin {
@@ -36,12 +37,22 @@ type Pin {
 type Query {
   pin(pinId: String!): Pin!
   pins: [Pin]!
+  saved: [Saved]!
   user(userId: String!): User!
 }
 
 enum Role {
   ADMIN
   USER
+}
+
+type Saved {
+  createdAt: DateTime
+  id: String
+  pin: Pin
+  pinId: String
+  user: User
+  userId: String
 }
 
 type User {

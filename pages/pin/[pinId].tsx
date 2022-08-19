@@ -1,12 +1,16 @@
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { SinglePinQuery } from '../../lib/query';
+import { SinglePinQuery, UserIdQuery } from '../../lib/query';
 import { HiArrowLeft, HiDotsHorizontal, HiDownload, HiLink } from 'react-icons/hi'
 import { IComment, IPin } from '../../interface';
 import Image from 'next/image';
 import { MdExpandMore } from 'react-icons/md'
 import { v4 as uuidv4 } from 'uuid'
+import Loading from '../../components/Loading';
+import { useUser } from '@auth0/nextjs-auth0';
+import { savePinMutation } from '../../lib/mutation';
+import toast from 'react-hot-toast';
 
 interface IProps {
   comment:IComment
@@ -26,7 +30,17 @@ const Comment = ({ comment }: IProps) => {
 const PinDetail = () => {
     const [expandComment,setExpandComment] = useState(false)
     const router = useRouter();
-    const { pinId } = router.query
+    const { pinId } = router.query;
+    const { user } = useUser();
+
+    const [saveMutation,{}] = useMutation(savePinMutation);
+
+    const { data:userId } = useQuery(UserIdQuery,{
+      variables:{
+          userId:user?.email
+      }
+    });
+
 
     const { data,loading,error } = useQuery(SinglePinQuery,{
         variables:{
@@ -34,9 +48,37 @@ const PinDetail = () => {
         }
     });
 
+    
+
+    console.log(data)
+
+  
+
     const { pin }: { pin:IPin } = data || {};
-    console.log(pin)
-    if(loading) return <p>Loading...</p>
+
+    const savePin = () => {
+      const variables = { 
+        userId:userId?.user.id,
+        pinId
+      }
+
+      try {
+        toast.promise(saveMutation({ variables }), {
+          loading: 'Saving pin..',
+          success: 'Pin successfully saved!🎉',
+          error: `Something went wrong 😥 Please try again -  ${error}`,
+        })
+  
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    if(loading) return (
+      <div className='flex justify-center py-4'>
+        <Loading />
+      </div>  
+    )
     if(error) return <p>{error.message}</p>
   return (
     <main className='max-w-7xl mx-auto my-8 p-4'>
@@ -55,12 +97,16 @@ const PinDetail = () => {
                 <HiLink />
               </div>
               <div className='ml-auto'>
-                <button className='bg-[#E60023] rounded-full px-4 py-2 text-lg font-semibold text-white'>Save</button>
+                <button onClick={savePin} className='bg-[#E60023] rounded-full px-4 py-2 text-lg font-semibold text-white'>Save</button>
               </div>
             </nav>
-            <div className='mt-4'>
+            <div className='mt-4 space-y-3'>
               <h1 className='text-2xl md:text-4xl font-bold'>{pin.title}</h1>
               <p className='text-sm md:text-base'>{pin.description}</p>
+              <div className='flex gap-x-3'>
+                <Image alt="user-avatar" className='rounded-full' src={data?.pin.user.image || "https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"} width={40} height={40}   />
+                <p>{data?.pin.user.email}</p>
+              </div>
               <div>
                 <div className='flex items-center gap-x-2 font-semibold text-xl'>
                   <span >
@@ -70,12 +116,29 @@ const PinDetail = () => {
                   <MdExpandMore className="text-4xl animate-bounce cursor-pointer" onClick={()=>setExpandComment((prev)=>!prev)} />
               </div>
               {expandComment && (
-                <>
+                <div className='space-y-2 my-2'>
                   {pin.comments.map((comment:IComment)=>(
                     <Comment key={uuidv4()} comment={comment} />
                   ))}
-                </>
+                </div>
               )}
+
+              <form className='flex flex-col'>
+                <div className='flex gap-x-4 w-full items-center '>
+                  <Image src={user?.picture || ""} width={40} height={40} className="rounded-full mr-4" alt={"avatar"} />
+                  <input
+                    type="text"
+                    className='w-full p-3 outline-none border-gray-200 rounded-full border'
+                    placeholder="Add a comment"
+                  />
+                  
+                </div>
+            
+                <div className=' self-end gap-x-2 flex items-center  mt-2'>
+                    <button>Cancel</button>
+                    <button className='font-semibold bg-[#E60023] text-white rounded-full px-4 py-2'>Done</button>
+                </div>
+              </form>
         
                
 

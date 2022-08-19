@@ -55,3 +55,18 @@ export const UserIdQuery = gql`
   }
 
 `
+
+export const SavedPinsQuery = gql`
+  query Query {
+    saved {
+      id
+      createdAt
+      pin {
+        imageUrl
+        id
+      }
+
+    }
+  }
+
+`

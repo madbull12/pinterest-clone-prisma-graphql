@@ -8,6 +8,7 @@ import UserProfile from '../../components/UserProfile'
 import { IPin } from '../../interface';
 import { PinByUserEmail } from '../../lib/query';
 import { v4 as uuidv4 } from 'uuid';
+import Loading from '../../components/Loading';
 const CreatedPins = () => {
   const { user } = useUser();
   const { data, loading, error } = useQuery(PinByUserEmail,{
@@ -20,14 +21,18 @@ const CreatedPins = () => {
   return (
     <div>
         <UserProfile />
-  
+        {loading && (
+          <div className='flex justify-center pt-4'> 
+            <Loading />
+          </div>
+        )}
         <div>
-        {data?.user.pins.map((item:IPin)=>(
-            <Link key={uuidv4()} href={`/pin/${item?.id}`}>
-                <Image src={item.imageUrl}  alt="pin" width={200} height={400} objectFit="cover" className='cursor-pointer rounded-2xl '  />
-            
-            </Link>
-        ))}
+          {data?.user.pins.map((item:IPin)=>(
+              <Link key={uuidv4()} href={`/pin/${item?.id}`}>
+                  <Image src={item.imageUrl}  alt="pin" width={200} height={400} objectFit="cover" className='cursor-pointer rounded-2xl '  />
+              
+              </Link>
+          ))}
                
         </div>
     
