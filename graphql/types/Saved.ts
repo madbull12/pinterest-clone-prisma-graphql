@@ -47,6 +47,19 @@ export const SavedQuery = extendType({
             resolve(_parent,_args,ctx) {
                 return ctx.prisma.saved.findMany()
             }
+        }),
+        t.nonNull.list.field("userSaved",{
+            type:"Saved",
+            args:{
+                userId:nonNull(stringArg())
+            },
+            resolve(_parent,{ userId },ctx) {
+                return ctx.prisma.saved.findMany({
+                    where:{
+                        userId
+                    }
+                })
+            }
         })
     },
 });
@@ -72,6 +85,19 @@ export const SaveMutation = extendType({
 
                 return await ctx.prisma.saved.create({
                     data:saveData
+                })
+            }
+        })
+        t.nonNull.field("deleteSave",{
+            type:"Saved",
+            args:{
+                saveId:nonNull(stringArg())
+            },
+            async resolve(_parent,{ saveId },ctx) {
+                return await ctx.prisma.saved.delete({
+                    where:{
+                        id:saveId
+                    }
                 })
             }
         })

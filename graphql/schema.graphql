@@ -20,6 +20,7 @@ scalar DateTime
 type Mutation {
   createComment(content: String!, pinId: String!, userId: String!): Comment!
   createPin(category: [String], description: String, imageUrl: String!, title: String!, userId: String!): Pin!
+  deleteSave(saveId: String!): Saved!
   savePin(pinId: String!, userId: String!): Saved!
 }
 
@@ -40,6 +41,7 @@ type Query {
   pins: [Pin]!
   saved: [Saved]!
   user(userId: String!): User!
+  userSaved(userId: String!): [Saved]!
 }
 
 enum Role {

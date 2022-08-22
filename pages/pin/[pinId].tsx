@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { SinglePinQuery, UserIdQuery } from '../../lib/query';
+import { SinglePinQuery, UserIdQuery, UserSavedPins } from '../../lib/query';
 import { HiArrowLeft, HiDotsHorizontal, HiDownload, HiLink } from 'react-icons/hi'
 import { IComment, IPin } from '../../interface';
 import Image from 'next/image';
@@ -9,7 +9,7 @@ import { MdExpandMore } from 'react-icons/md'
 import { v4 as uuidv4 } from 'uuid'
 import Loading from '../../components/Loading';
 import { useUser } from '@auth0/nextjs-auth0';
-import { createCommentMutation, savePinMutation } from '../../lib/mutation';
+import { createCommentMutation,  savePinMutation,deleteSaveMutation } from '../../lib/mutation';
 import toast from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
 import apolloClient  from '../../lib/apollo'
@@ -47,6 +47,7 @@ const PinDetail = () => {
     const { reset,handleSubmit } = useForm();
 
     const [saveMutation,{ error:saveError }] = useMutation(savePinMutation);
+    const [deleteSave] = useMutation(deleteSaveMutation)
     const [createComment] = useMutation(createCommentMutation,{
       refetchQueries:[SinglePinQuery]
     })
@@ -67,24 +68,44 @@ const PinDetail = () => {
 
     const { pin }: { pin:IPin } = data || {};
 
-    const savePin = () => {
+    const savePin = async () => {
       const variables = { 
         userId:userId?.user.id,
         pinId
       }
 
-    
-
-      try {
-        toast.promise(saveMutation({ variables }), {
-          loading: 'Saving pin..',
-          success: 'Pin successfully saved!🎉',
-          error: `Something went wrong 😥 Please try again -  ${saveError?.message}`,
-        })
-  
-      } catch (error) {
-        console.error(error)
+      const { data:{ userSaved } } = await apolloClient.query({
+        query:UserSavedPins,
+        variables:{
+          userId:userId?.user.id
+        }
+      });
+      const alreadySaved = userSaved.find((pin:any)=>pin.pinId === pinId);
+      console.log(alreadySaved)
+      if(alreadySaved) {
+        try {
+          toast.promise(deleteSave({ variables:{ saveId:alreadySaved.id } }), {
+            loading: 'Removing pin from save...',
+            success: 'Pin successfully removed from your saved!🎉',
+            error: `Something went wrong 😥 Please try again -  ${saveError?.message}`,
+          })
+        } catch(err) {
+          console.log(err)
+        }
+      } else {
+          try {
+            toast.promise(saveMutation({ variables }), {
+              loading: 'Saving pin..',
+              success: 'Pin successfully saved!🎉',
+              error: `Something went wrong 😥 Please try again -  ${saveError?.message}`,
+            })
+      
+          } catch (error) {
+            console.error(error)
+          }
       }
+
+   
     }
 
     const addComment = async() => {

@@ -70,3 +70,18 @@ export const SavedPinsQuery = gql`
   }
 
 `
+
+export const UserSavedPins = gql`
+  query ExampleQuery($userId: String!) {
+    userSaved(userId: $userId) {
+      pin {
+        imageUrl
+        id
+      }
+      id
+      pinId
+    }
+}
+
+
+`

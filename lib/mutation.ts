@@ -44,5 +44,15 @@ export const createCommentMutation = gql`
         }
     }
 
+`
 
+export const deleteSaveMutation = gql`
+    mutation Mutation($saveId: String!) {
+        deleteSave(saveId: $saveId) {
+            id
+            createdAt
+            userId
+            pinId
+        }
+    }
 `

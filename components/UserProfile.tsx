@@ -7,7 +7,6 @@ import { HiPlusCircle } from 'react-icons/hi';
 
 const UserProfile = () => {
     const { user } = useUser();
-    console.log(user);
     const router = useRouter();
   return (
     <main className='flex justify-center items-center flex-col text-center'>
