@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { SinglePinQuery, UserIdQuery, UserSavedPins } from '../../lib/query';
 import { HiArrowLeft, HiDotsHorizontal, HiDownload, HiLink } from 'react-icons/hi'
-import { IComment, IPin } from '../../interface';
+import { IComment, IPin, ISaved } from '../../interface';
 import Image from 'next/image';
 import { MdExpandMore } from 'react-icons/md'
 import { v4 as uuidv4 } from 'uuid'
@@ -80,11 +80,11 @@ const PinDetail = () => {
           userId:userId?.user.id
         }
       });
-      const alreadySaved = userSaved.find((pin:any)=>pin.pinId === pinId);
+      const alreadySaved = userSaved.find((_pin:ISaved)=>_pin.pinId === pinId);
       console.log(alreadySaved)
       if(alreadySaved) {
         try {
-          toast.promise(deleteSave({ variables:{ saveId:alreadySaved.id } }), {
+         await toast.promise(deleteSave({ variables:{ saveId:alreadySaved.id } }), {
             loading: 'Removing pin from save...',
             success: 'Pin successfully removed from your saved!🎉',
             error: `Something went wrong 😥 Please try again -  ${saveError?.message}`,
@@ -94,14 +94,14 @@ const PinDetail = () => {
         }
       } else {
           try {
-            toast.promise(saveMutation({ variables }), {
+            await toast.promise(saveMutation({ variables }), {
               loading: 'Saving pin..',
               success: 'Pin successfully saved!🎉',
               error: `Something went wrong 😥 Please try again -  ${saveError?.message}`,
             })
       
-          } catch (error) {
-            console.error(error)
+          } catch (_error) {
+            console.error(_error)
           }
       }
 

@@ -6,7 +6,7 @@ import prisma from '../lib/prisma'
 import {  createPinMutation } from '../lib/mutation'
 import { UserIdQuery } from '../lib/query'
 import { getSession, useUser } from '@auth0/nextjs-auth0'
-import { HiDotsHorizontal, HiUpload } from 'react-icons/hi'
+import { HiDotsHorizontal, HiTrash, HiUpload } from 'react-icons/hi'
 import { MdFileUpload, MdUpload } from 'react-icons/md'
 import Image from 'next/image'
 
@@ -22,7 +22,11 @@ const PinBuilder = () => {
     const { user } = useUser();
     const[textAreaFocus,setTextAreaFocus] = useState(false);
     const [textAreaCount,setTextAreaCount] = useState(500);
-    const [categories,setCategories]= useState<any>([])
+    const [categories,setCategories]= useState<any>([]);
+
+    const [imageSrc, setImageSrc] = useState<any>();
+    // const [uploadData, setUploadData] = useState<any>();
+
     const  { register, handleSubmit,formState:{ errors },reset,getValues } = useForm<IFormInput>();
     const { data } = useQuery(UserIdQuery,{
         variables:{
@@ -30,9 +34,22 @@ const PinBuilder = () => {
         }
     });
     const userId = data?.user.id
-    const [createPin,{ loading,error }] = useMutation(createPinMutation,{
+    const [createPin,{ error }] = useMutation(createPinMutation,{
         onCompleted:()=>reset()
     });
+
+    // image change
+
+    // function handleOnChangeImage(changeEvent:any) {
+    //     const reader = new FileReader();
+    
+    //     reader.onload = function(onLoadEvent) {
+    //       setImageSrc(onLoadEvent.target?.result);
+    //       setUploadData(undefined);
+    //     }
+    
+    //     reader.readAsDataURL(changeEvent.target.files[0]);
+    //   }
 
     
     const addCategory = () => {
@@ -53,19 +70,33 @@ const PinBuilder = () => {
 
     }
 
-    useEffect(()=>{
-        console.log(categories)
-    },[categories])
+    // useEffect(()=>{
+    //     console.log(imageSrc)
+    // },[imageSrc])
 
     const onSubmit=async(data:IFormInput)=>{
 
+        console.log(data)
         const { title,description } = data;
 
-        const imageUrl = `https://via.placeholder.com/300`;
+        // upload image 
+        const formData = new FormData();
+        formData.append("file", data.imageUrl[0]);
+
+        formData.append("upload_preset","uploads")
+
+        const res = await fetch("https://api.cloudinary.com/v1_1/dem2vt6lj/image/upload", {
+            method: "POST",
+            body: formData,
+        }).then((res) => res.json());
+        console.log(res)
+
+        // end of upload image
+        const imageUrl = res.secure_url;
         
         const variables = { title,  category:categories, description, imageUrl,userId }
         try {
-            toast.promise(createPin({ variables }), {
+            await toast.promise(createPin({ variables }), {
               loading: 'Creating new pin..',
               success: 'Link successfully created!🎉',
               error: `Something went wrong 😥 Please try again -  ${error}`,
@@ -84,13 +115,34 @@ const PinBuilder = () => {
                 <button className='rounded-full bg-[#E60023] px-4 py-2 text-white font-semibold' type='submit'>Publish</button>
             </div>
             <div className='flex gap-x-4 mt-2' >
-                <div className='bg-gray-200 p-4 rounded-lg w-1/2'>
-                    <div className="rounded-lg  cursor-center flex-col space-y-2 flex justify-center text-gray-500 items-center border-dashed border-2 p-4 border-gray-300 w-full h-full">
-                        <HiUpload className="text-3xl" />
-                        <p>Click to upload image</p>
+                    {imageSrc && (
+                        <>
+                            <img src={imageSrc} className="h-full w-1/2 rounded-lg "  />
+                            <button className="absolute w-10 h-10 rounded-full bg-white place-items-center grid opacity-75 m-4" onClick={()=>setImageSrc(null)}>
+                                <HiTrash />
+                            </button>
                         
-                    </div>
-                </div>
+                        </>
+
+                    )}
+                    {!imageSrc && (
+                        <div className='bg-gray-200  rounded-lg w-1/2 cursor-pointer p-4'>
+                                            
+                            <div className="rounded-lg  cursor-center  space-y-2  text-gray-500  border-dashed border-2 p-4 border-gray-300 w-full h-full">
+                                                    
+                                <label htmlFor="upload" className='items-center flex flex-col justify-center pt-16 cursor-pointer'>
+                                    <HiUpload className="text-3xl" />
+                                    <p>Click to upload image</p>
+
+
+                                    <input type="file" id="upload" {...register("imageUrl")} className='h-full opacity-0 w-full cursor-pointer' />
+                                </label>
+                            </div>
+
+                            
+                        </div>
+                    )}
+      
                 <div className='flex flex-col w-1/2 space-y-3  '>
                     <input
                         className='p-2 text-4xl text-gray-800 focus:border-blue-500 focus:border-b-2 placeholder:text-gray-500 outline-none border-gray-300 border-b font-bold'
@@ -155,6 +207,7 @@ const PinBuilder = () => {
             </div>
 
         </form>
+ 
     </div>
   )
 }
