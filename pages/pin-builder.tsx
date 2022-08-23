@@ -39,13 +39,13 @@ const PinBuilder = () => {
     });
 
     // image change
+    console.log(getValues("imageUrl"))
 
     // function handleOnChangeImage(changeEvent:any) {
     //     const reader = new FileReader();
     
     //     reader.onload = function(onLoadEvent) {
     //       setImageSrc(onLoadEvent.target?.result);
-    //       setUploadData(undefined);
     //     }
     
     //     reader.readAsDataURL(changeEvent.target.files[0]);
@@ -135,7 +135,7 @@ const PinBuilder = () => {
                                     <p>Click to upload image</p>
 
 
-                                    <input type="file" id="upload" {...register("imageUrl")} className='h-full opacity-0 w-full cursor-pointer' />
+                                    <input accept="image/png, image/gif, image/jpeg"  type="file" id="upload" {...register("imageUrl")} className='h-full opacity-0 w-full cursor-pointer' />
                                 </label>
                             </div>
 

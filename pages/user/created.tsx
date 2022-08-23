@@ -17,6 +17,7 @@ const CreatedPins = () => {
     }
   });
 
+  console.log(data)
 
   return (
     <div>
@@ -26,13 +27,20 @@ const CreatedPins = () => {
             <Loading />
           </div>
         )}
-        <div>
-          {data?.user.pins.map((item:IPin)=>(
-              <Link key={uuidv4()} href={`/pin/${item?.id}`}>
-                  <Image src={item.imageUrl}  alt="pin" width={200} height={400} objectFit="cover" className='cursor-pointer rounded-2xl '  />
-              
-              </Link>
-          ))}
+        <div className='mx-auto max-w-7xl grid sm:grid-cols-2 grid-cols-1 md:grid-cols-3 lg:grid-cols-4 p-4 gap-4 mt-4 '>
+          {data?.user.pins.length !== 0 ? (
+            <>
+              {data?.user.pins.map((item:IPin)=>(
+                            <Link key={uuidv4()} href={`/pin/${item?.id}`}>
+                                <Image src={item.imageUrl}  alt="pin" width={200} height={400} objectFit="cover" className='cursor-pointer rounded-2xl '  />
+                            
+                            </Link>
+              ))}
+            </>
+          ):(
+            <h1>No pins created yet!</h1>
+          )}
+   
                
         </div>
     

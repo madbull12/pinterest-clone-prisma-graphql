@@ -68,6 +68,35 @@ export const PinsQuery = extendType({
             
 
         })
+        t.nonNull.list.field("searchPins",{
+            type:"Pin",
+            args:{
+                searchTerm:nonNull(stringArg())
+            },
+            resolve(_parent,{ searchTerm },ctx) {
+                return ctx.prisma.pin.findMany({
+                    where:{
+                        OR:[
+                            {
+                                title:{
+                                    contains: searchTerm
+                                }
+                            },
+                            {
+                                description:{
+                                    contains:searchTerm
+                                }
+                            },
+                            {
+                                category:{
+                                    has:searchTerm
+                                }
+                            }
+                        ]
+                    }
+                })
+            }
+        })
     }
 });
 

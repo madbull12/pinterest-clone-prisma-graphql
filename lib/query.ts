@@ -5,6 +5,7 @@ export const FeedQuery = gql`
     pins {
       id
       imageUrl
+      title
     }
   }
 `
@@ -84,4 +85,15 @@ export const UserSavedPins = gql`
 }
 
 
+`
+
+export const SearchPinQuery = gql`
+  query Query($searchTerm: String!) {
+    searchPins(searchTerm: $searchTerm) {
+      title
+      id
+      imageUrl
+    }
+
+  }
 `

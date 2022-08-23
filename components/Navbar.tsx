@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
+import Search from './Search'
 
 const Navbar = () => {
 
@@ -21,6 +22,7 @@ const Navbar = () => {
                     <Link href="/pin-builder">Create</Link>
                 </li>
             </div>
+            <Search />
             <div className='flex items-center gap-x-2'>
                 {user ? (
                     <button className='rounded-full px-4 py-2 bg-[#E60023] text-white font-semibold' onClick={()=>router.push("/api/auth/logout")}>Logout</button>

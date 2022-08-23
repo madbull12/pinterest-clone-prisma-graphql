@@ -8,11 +8,22 @@ import { FeedQuery } from '../lib/query'
 import Link from 'next/link'
 import { useUser } from '@auth0/nextjs-auth0'
 import Loading from '../components/Loading'
+import { useRecoilState } from 'recoil'
+import { searchResultState } from '../atom/searchAtom'
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 
 
 const Home: NextPage = () => {
   const { data, loading, error } = useQuery(FeedQuery);
 
+  const [searchResults,setSearchResults] = useRecoilState<any>(searchResultState)
+
+
+
+
+
+  console.log(searchResults)
   const { user } = useUser();
   if(loading) return (
     <div className='justify-center flex py-4'>
@@ -44,19 +55,35 @@ const Home: NextPage = () => {
         className="my-masonry-grid"
         columnClassName="my-masonry-grid_column"
       >
-        {/* array of JSX items */}
-        {data?.pins?.map((item:IPin)=>(
-            <div key={item.userId} className="relative">
-                  <Link href={`/pin/${item?.id}`}>
-                    <Image src={item.imageUrl}  alt="pin" width={widthGenerator()} height={heightGenerator()} objectFit="cover" className='cursor-pointer rounded-2xl '  />
+        
+
+
+            {data?.pins?.map((item:IPin)=>(
+              <div key={item.userId} className="relative my-3">
+                    <Link href={`/pin/${item?.id}`}>
+                      <span className='cursor-pointer'>
+                        <Image src={item.imageUrl}  alt="pin" width={widthGenerator()} height={heightGenerator()} objectFit="cover" className='cursor-pointer rounded-2xl '  />
+
+                        <h1 className=' font-semibold'>{item.title}</h1>
+                      </span>
+              
+                    </Link>
+                    {/* <div className='absolute bottom-0 text-white'>
+                      <h1>fsfs</h1>
+                    </div> */}
                   
-                  </Link>
-                  {/* <div className='absolute bottom-0 text-white'>
-                    <h1>fsfs</h1>
-                  </div> */}
-                
-            </div>
-        ))}
+              </div>
+            ))}
+        
+          
+    
+           
+        
+        {/* array of JSX items */}
+    
+           
+      
+
       </Masonry>
     </div>
   )
