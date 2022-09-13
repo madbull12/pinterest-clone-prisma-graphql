@@ -59,11 +59,11 @@ const SavedPins = () => {
         <section className='mx-auto max-w-7xl mt-4 flex flex-col  '>
           <div className='relative self-end'>
             <div className='hover:bg-gray-200 z-50 w-10 h-10 grid  place-items-center rounded-full ' onClick={()=>setCreateOpen(!createOpen)}>
-              <FiPlus className='text-2xl text-end cursor-pointer' />
+              <FiPlus className='text-2xl text-end cursor-pointer' onClick={()=>setCreateOpen(!createOpen)} />
 
             </div>
             {createOpen && (
-              <div className="absolute -bottom-34 right-0 bg-white shadow-md rounded-lg px-2 py-3 w-40 ">
+              <div className="absolute -bottom-34 right-0 bg-white shadow-md rounded-lg z-50 px-2 py-3 w-40 ">
                 <p className="text-sm px-2">Create</p>
                 <ul className="font-semibold  mt-2">
                   <li className="cursor-pointer  hover:bg-gray-200  p-2 rounded-lg">
