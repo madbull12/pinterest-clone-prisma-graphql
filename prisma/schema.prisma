@@ -37,6 +37,7 @@ model Pin {
   saved         Saved[]
 }
 model Saved {
+  
   id            String    @id @default(uuid())
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -44,6 +45,8 @@ model Saved {
   user          User      @relation(fields: [userId],references: [id])
   pinId         String    
   pin           Pin       @relation(fields: [pinId],references: [id])
+  board         Board     @relation(fields: [boardId],references: [id])
+  boardId       String
 
   @@unique([userId,pinId])
 }
@@ -57,6 +60,15 @@ model Comment {
   pin           Pin        @relation(fields: [pinId],references: [id])
   userId        String
   user          User       @relation(fields: [userId],references: [id])
+}
+
+model Board {
+  id            String     @id @default(uuid())
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  name          String
+  saved         Saved[]     
+  secret        Boolean
 }
 
 enum Role {
