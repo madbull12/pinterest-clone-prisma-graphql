@@ -2,6 +2,15 @@
 ### Do not make changes to this file directly
 
 
+type Board {
+  id: String
+  name: String
+  saved: [Saved]
+  secret: Boolean
+  user: User
+  userId: String
+}
+
 type Comment {
   content: String
   createdAt: DateTime
@@ -37,6 +46,7 @@ type Pin {
 }
 
 type Query {
+  UserBoards(userId: String!): [Board!]
   pin(pinId: String!): Pin!
   pins: [Pin]!
   saved: [Saved]!
