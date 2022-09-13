@@ -12,8 +12,6 @@ const BoardModal = () => {
 
 
   return (
-
-
         <div className='p-8 rounded-3xl shadow-md max-w-xl mx-auto bg-white mt-36' onClick={(e)=>e.stopPropagation()}>
                 <p className='text-xl mb-4 text-center font-semibold'>Create Board</p>
                 <form className='space-y-3 flex flex-col'>
