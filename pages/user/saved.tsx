@@ -71,7 +71,7 @@ const SavedPins = () => {
                       Pin
                     </Link>
                   </li>
-                  <li className="cursor-pointer hover:bg-gray-200 p-2 rounded-lg " onClick={()=>{
+                  <li className="cursor-pointer hover:bg-gray-200 p-2 rounded-lg  " onClick={()=>{
                     setOpenModal(true)
                     window.scrollTo(0,0)
                   }}>Board</li>
