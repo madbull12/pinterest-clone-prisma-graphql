@@ -3,7 +3,12 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import Loading from "../../components/Loading";
 import UserProfile from "../../components/UserProfile";
-import { SavedPinsQuery, UserIdQuery, UserSavedPins } from "../../lib/query";
+import {
+  SavedPinsQuery,
+  UserBoardsQuery,
+  UserIdQuery,
+  UserSavedPins,
+} from "../../lib/query";
 import { v4 as uuidv4 } from "uuid";
 import { IPin } from "../../interface";
 import Image from "next/image";
@@ -21,7 +26,7 @@ const SavedPins = () => {
     },
   });
 
-  const { data, loading, error } = useQuery(UserSavedPins, {
+  const { data, loading, error } = useQuery(UserBoardsQuery, {
     variables: {
       userId: userId?.user.id,
     },
