@@ -97,3 +97,15 @@ export const SearchPinQuery = gql`
 
   }
 `
+
+export const UserBoardsQuery = gql`
+  query Query($userId: String!) {
+    userBoards(userId: $userId) {
+      id
+      name
+      userId
+      secret
+    }
+  }
+
+`
