@@ -47,6 +47,7 @@ type Pin {
 }
 
 type Query {
+  firstUserBoard(userId: String!): Board!
   pin(pinId: String!): Pin!
   pins: [Pin]!
   saved: [Saved]!

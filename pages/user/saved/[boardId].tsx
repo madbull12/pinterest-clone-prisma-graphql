@@ -1,9 +1,10 @@
 import React from 'react'
 
-const SaveDetails = () => {
+const BoardDetails = () => {
+  
   return (
     <div>SaveDetails</div>
   )
 }
 
-export default SaveDetails
+export default BoardDetails

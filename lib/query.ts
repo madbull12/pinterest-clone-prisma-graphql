@@ -109,3 +109,16 @@ export const UserBoardsQuery = gql`
   }
 
 `
+
+export const firstBoardQuery = gql`
+  query ExampleQuery($userId: String!) {
+  
+    firstUserBoard(userId: $userId) {
+      name
+      id
+      userId
+      secret
+    }
+}
+
+`
