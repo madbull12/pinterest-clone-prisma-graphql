@@ -38,12 +38,26 @@ export const BoardQuery = extendType({
     type:"Query",
     definition(t) {
         t.list.nonNull.field("userBoards",{
-            type:Board,
+            type:"Board",
             args:{
                 userId:nonNull(stringArg())
             },
             resolve(_parent,{ userId },ctx) {
                 return ctx.prisma.board.findMany({
+                    where:{
+                        userId
+                    }
+                })
+            }
+
+        })
+        t.nonNull.field("firstUserBoard",{
+            type:"Board",
+            args:{
+                userId:nonNull(stringArg())
+            },
+            resolve(_parent,{ userId },ctx) {
+                return ctx.prisma.board.findFirst({
                     where:{
                         userId
                     }

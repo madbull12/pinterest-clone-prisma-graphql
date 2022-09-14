@@ -24,12 +24,17 @@ export interface IComment {
     user:IUser
 }
 
+export interface ISaved {
+    
+}
+
 export interface IBoard {
     id:string;
     name:string;
     userId:string;
     secret:boolean
 }
+
 
 enum Role {
     USER = "user",
