@@ -1,7 +1,12 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { firstBoardQuery, SinglePinQuery, UserIdQuery, UserSavedPins } from "../../lib/query";
+import {
+  firstBoardQuery,
+  SinglePinQuery,
+  UserIdQuery,
+  UserSavedPins,
+} from "../../lib/query";
 import {
   HiArrowLeft,
   HiDotsHorizontal,
@@ -28,13 +33,17 @@ interface IProps {
 }
 
 const SaveDialog = () => {
-  return(
-    <div className="bg-white p-4">
-      <p className="text-center">Save to board</p>
-
+  return (
+    <div className="bg-white p-4 shadow-md rounded-xl space-y-3">
+      <p className="text-center font-semibold">Save to board</p>
+      <input
+        type="text"
+        placeholder="Search"
+        className="px-4 py-2 border-2 outline-none rounded-full border-gray-300 w-full focus:ring-4 ring-blue-300 "
+      />
     </div>
-  )
-}
+  );
+};
 
 const Comment = ({ comment }: IProps) => {
   return (
@@ -130,13 +139,13 @@ const PinDetail = () => {
   //   }
   // };
 
-  const { data:firstBoard } = useQuery(firstBoardQuery,{
-    variables:{
-      userId: userId?.user.id
-    }
+  const { data: firstBoard } = useQuery(firstBoardQuery, {
+    variables: {
+      userId: userId?.user.id,
+    },
   });
 
-  console.log(firstBoard)
+  console.log(firstBoard);
 
   const addComment = async () => {
     const variables = {
@@ -187,9 +196,12 @@ const PinDetail = () => {
                 <HiLink />
               </div>
               <div className="ml-auto flex items-center gap-x-2">
-                <button className="flex items-center ">
+                <button className="flex items-center relative ">
                   <MdExpandMore className="text-xl" />
-                  <p></p>
+                  <p>{firstBoard?.firstUserBoard.name}</p>
+                  <div className="absolute top-0 right-16 w-96">
+                    <SaveDialog />
+                  </div>
                 </button>
                 <button
                   onClick={() => {
