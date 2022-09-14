@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import {
   firstBoardQuery,
   SinglePinQuery,
+  UserBoardsQuery,
   UserIdQuery,
   UserSavedPins,
 } from "../../lib/query";
@@ -13,7 +14,7 @@ import {
   HiDownload,
   HiLink,
 } from "react-icons/hi";
-import { IComment, IPin, ISaved } from "../../interface";
+import { IBoard, IComment, IPin, ISaved } from "../../interface";
 import Image from "next/image";
 import { MdExpandMore } from "react-icons/md";
 import { v4 as uuidv4 } from "uuid";
@@ -32,7 +33,8 @@ interface IProps {
   comment: IComment;
 }
 
-const SaveDialog = () => {
+const SaveDialog = ({ userBoards }:{ userBoards:IBoard[] }) => {
+  
   return (
     <div className="bg-white p-4 shadow-md rounded-xl space-y-3">
       <p className="text-center font-semibold">Save to board</p>
@@ -41,6 +43,10 @@ const SaveDialog = () => {
         placeholder="Search"
         className="px-4 py-2 border-2 outline-none rounded-full border-gray-300 w-full focus:ring-4 ring-blue-300 "
       />
+      <div>
+        <p className="text-xs">All boards</p>
+        
+      </div>
     </div>
   );
 };
@@ -139,13 +145,14 @@ const PinDetail = () => {
   //   }
   // };
 
-  const { data: firstBoard } = useQuery(firstBoardQuery, {
+  const { data: userBoards } = useQuery(UserBoardsQuery, {
     variables: {
       userId: userId?.user.id,
     },
   });
 
-  console.log(firstBoard);
+
+
 
   const addComment = async () => {
     const variables = {
@@ -198,9 +205,9 @@ const PinDetail = () => {
               <div className="ml-auto flex items-center gap-x-2">
                 <button className="flex items-center relative ">
                   <MdExpandMore className="text-xl" />
-                  <p>{firstBoard?.firstUserBoard.name}</p>
+                  <p>{userBoards?.userBoards[0].name}</p>
                   <div className="absolute top-0 right-16 w-96">
-                    <SaveDialog />
+                    <SaveDialog userBoards={userBoards?.userBoards} />
                   </div>
                 </button>
                 <button
