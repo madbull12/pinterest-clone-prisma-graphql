@@ -90,20 +90,11 @@ const SavedPins = () => {
         </div>
 
         <div className=" grid sm:grid-cols-2 grid-cols-1 md:grid-cols-3 lg:grid-cols-4 p-4 gap-4">
-          {data?.userSaved.length !== 0 ? (
+          {data?.userBoards.length !== 0 ? (
             <>
-              {data?.userSaved.map((item: any) => (
-                <Link key={uuidv4()} href={`/pin/${item?.pin.id}`}>
-                  <Image
-                    src={item.pin.imageUrl}
-                    alt="pin"
-                    width={300}
-                    height={450}
-                    objectFit="cover"
-                    className="cursor-pointer rounded-2xl "
-                  />
-                </Link>
-              ))}
+              {/* {data?.userBoards.map((item: any) => (
+      
+              ))} */}
             </>
           ) : (
             <h1 className="text-xl  font-semibold">No pins saved yet</h1>

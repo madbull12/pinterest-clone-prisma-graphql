@@ -24,6 +24,13 @@ export interface IComment {
     user:IUser
 }
 
+export interface IBoard {
+    id:string;
+    name:string;
+    userId:string;
+    secret:boolean
+}
+
 enum Role {
     USER = "user",
     ADMIN = "admin"
