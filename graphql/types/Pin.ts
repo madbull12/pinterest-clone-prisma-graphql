@@ -102,7 +102,7 @@ export const PinsQuery = extendType({
 
 //mutation
 
-export const createPinMutation = extendType({
+export const PinMutation = extendType({
     type:"Mutation",
     definition(t) {
         t.nonNull.field("createPin",{

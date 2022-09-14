@@ -1,5 +1,4 @@
-import { extendType, nonNull, objectType, stringArg } from "nexus";
-import { resolve } from "path";
+import { booleanArg, extendType, nonNull, objectType, stringArg } from "nexus";
 
 export const Board = objectType({
     name:"Board",
@@ -38,7 +37,7 @@ export const Board = objectType({
 export const BoardQuery = extendType({
     type:"Query",
     definition(t) {
-        t.list.nonNull.field("UserBoards",{
+        t.list.nonNull.field("userBoards",{
             type:Board,
             args:{
                 userId:nonNull(stringArg())
@@ -52,6 +51,33 @@ export const BoardQuery = extendType({
             }
 
         })
+
+    },
+});
+
+export const BoardMutation = extendType({
+    type:"Mutation",
+    definition(t) {
+        t.nonNull.field("createBoard",{
+            type:"Board",
+            args:{
+                userId:nonNull(stringArg()),
+                name:nonNull(stringArg()),
+                secret:nonNull(booleanArg())
+
+            },
+            async resolve(_parent,args,ctx) {
+                return await ctx.prisma.board
+                    .create({
+                        data:{
+                            name:args.name,
+                            userId:args.userId,
+                            secret:args.secret
+                        }
+                    })
+            }
+        })
+        
 
     },
 })

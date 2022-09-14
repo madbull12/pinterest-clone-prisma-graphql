@@ -56,3 +56,13 @@ export const deleteSaveMutation = gql`
         }
     }
 `
+
+export const createBoardMutation = gql`
+    mutation Mutation($userId: String!, $name: String!, $secret: Boolean!) {
+        createBoard(userId: $userId, name: $name, secret: $secret) {
+            id
+            userId
+        }
+    }
+  
+`

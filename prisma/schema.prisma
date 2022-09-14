@@ -71,6 +71,8 @@ model Board {
   userId        String
   saved         Saved[]     
   secret        Boolean
+
+  @@unique([userId,name])
 }
 
 enum Role {

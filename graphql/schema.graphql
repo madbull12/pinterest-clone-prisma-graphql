@@ -27,6 +27,7 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 scalar DateTime
 
 type Mutation {
+  createBoard(name: String!, secret: Boolean!, userId: String!): Board!
   createComment(content: String!, pinId: String!, userId: String!): Comment!
   createPin(category: [String], description: String, imageUrl: String!, title: String!, userId: String!): Pin!
   deleteSave(saveId: String!): Saved!
@@ -46,12 +47,12 @@ type Pin {
 }
 
 type Query {
-  UserBoards(userId: String!): [Board!]
   pin(pinId: String!): Pin!
   pins: [Pin]!
   saved: [Saved]!
   searchPins(searchTerm: String!): [Pin]!
   user(userId: String!): User!
+  userBoards(userId: String!): [Board!]
   userSaved(userId: String!): [Saved]!
 }
 
