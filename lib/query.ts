@@ -105,6 +105,8 @@ export const UserBoardsQuery = gql`
       name
       userId
       secret
+      createdAt
+      updatedAt
     }
   }
 
@@ -118,6 +120,7 @@ export const firstBoardQuery = gql`
       id
       userId
       secret
+   
     }
 }
 
