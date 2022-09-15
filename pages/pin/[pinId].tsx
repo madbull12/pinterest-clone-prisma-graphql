@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
+import { AiFillLock } from 'react-icons/ai'
 import React, {
   ButtonHTMLAttributes,
   useEffect,
@@ -59,6 +60,10 @@ const SaveDialog = ({ userBoards }: { userBoards: IBoard[] }) => {
                 <div className="bg-gray-300 w-12 h-12 rounded-lg"></div>
                 <p className="font-semibold">{board.name}</p>
               </div>
+              {board.secret && (
+                <AiFillLock className="text-lg" />
+
+              )}
             </div>
           ))}
         </div>
@@ -107,17 +112,17 @@ const PinDetail = () => {
   });
   const btnRef = useRef(null);
 
-  useEffect(() => {
-    const closeDialog = (e: any) => {
-      console.log(e);
-      if (e.path[0].tagname !== btnRef.current) {
-        setOpenDialog(false);
-      }
-    };
+  // useEffect(() => {
+  //   const closeDialog = (e: any) => {
+  //     console.log(e);
+  //     if (e.path[0].tagname !== btnRef.current) {
+  //       setOpenDialog(false);
+  //     }
+  //   };
 
-    document.body.addEventListener("click", closeDialog);
-    return () => document.body.removeEventListener("click", closeDialog);
-  }, []);
+  //   document.body.addEventListener("click", closeDialog);
+  //   return () => document.body.removeEventListener("click", closeDialog);
+  // }, []);
   console.log(openDialog);
 
   const { data: userId } = useQuery(UserIdQuery, {
@@ -242,7 +247,7 @@ const PinDetail = () => {
                   </p>
                   {openDialog && (
                     <div
-                      key={uuidv4()}
+                      onClick={(e)=>e.stopPropagation()}
                       className="absolute top-16 right-16 w-96 z-50"
                     >
                       <SaveDialog userBoards={userBoards?.userBoards} />
