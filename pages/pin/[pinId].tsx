@@ -1,6 +1,11 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, {
+  ButtonHTMLAttributes,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   firstBoardQuery,
   SinglePinQuery,
@@ -33,8 +38,7 @@ interface IProps {
   comment: IComment;
 }
 
-const SaveDialog = ({ userBoards }:{ userBoards:IBoard[] }) => {
-  
+const SaveDialog = ({ userBoards }: { userBoards: IBoard[] }) => {
   return (
     <div className="bg-white p-4 shadow-md rounded-xl space-y-3">
       <p className="text-center font-semibold">Save to board</p>
@@ -44,8 +48,20 @@ const SaveDialog = ({ userBoards }:{ userBoards:IBoard[] }) => {
         className="px-4 py-2 border-2 outline-none rounded-full border-gray-300 w-full focus:ring-4 ring-blue-300 "
       />
       <div>
-        <p className="text-xs">All boards</p>
-        
+        <p className="text-xs text-start px-2">All boards</p>
+        <div className="flex flex-col gap-y-2 mt-2">
+          {userBoards?.map((board: IBoard) => (
+            <div
+              key={uuidv4()}
+              className="flex items-center justify-between hover:bg-gray-100 rounded-lg p-1"
+            >
+              <div className="flex items-center gap-x-2">
+                <div className="bg-gray-300 w-12 h-12 rounded-lg"></div>
+                <p className="font-semibold">{board.name}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -74,6 +90,7 @@ const Comment = ({ comment }: IProps) => {
 
 const PinDetail = () => {
   const [expandComment, setExpandComment] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const router = useRouter();
   const { pinId } = router.query;
   const { user } = useUser();
@@ -88,6 +105,20 @@ const PinDetail = () => {
   const [createComment] = useMutation(createCommentMutation, {
     refetchQueries: [SinglePinQuery],
   });
+  const btnRef = useRef(null);
+
+  useEffect(() => {
+    const closeDialog = (e: any) => {
+      console.log(e);
+      if (e.path[0].tagname !== btnRef.current) {
+        setOpenDialog(false);
+      }
+    };
+
+    document.body.addEventListener("click", closeDialog);
+    return () => document.body.removeEventListener("click", closeDialog);
+  }, []);
+  console.log(openDialog);
 
   const { data: userId } = useQuery(UserIdQuery, {
     variables: {
@@ -151,9 +182,6 @@ const PinDetail = () => {
     },
   });
 
-
-
-
   const addComment = async () => {
     const variables = {
       content,
@@ -202,14 +230,26 @@ const PinDetail = () => {
                 <HiDownload />
                 <HiLink />
               </div>
-              <div className="ml-auto flex items-center gap-x-2">
-                <button className="flex items-center relative ">
-                  <MdExpandMore className="text-xl" />
-                  <p>{userBoards?.userBoards[0].name}</p>
-                  <div className="absolute top-0 right-16 w-96">
-                    <SaveDialog userBoards={userBoards?.userBoards} />
-                  </div>
+              <div className="ml-auto flex items-center gap-x-4">
+                <button
+                  ref={btnRef}
+                  className="flex items-center relative "
+                  onClick={() => setOpenDialog(!openDialog)}
+                >
+                  <MdExpandMore className="text-xl " />
+                  <p className="">
+                    {userBoards?.userBoards[0].name}
+                  </p>
+                  {openDialog && (
+                    <div
+                      key={uuidv4()}
+                      className="absolute top-16 right-16 w-96 z-50"
+                    >
+                      <SaveDialog userBoards={userBoards?.userBoards} />
+                    </div>
+                  )}
                 </button>
+
                 <button
                   onClick={() => {
                     // user ? savePin() : router.push("/api/auth/login");
