@@ -286,7 +286,9 @@ const PinDetail = () => {
                   )}
                 </button>
 
-                  <Button text={"Save"} handleClick={()=>{}} />
+                  <Button text={"Save"} handleClick={()=>{
+                    
+                  }} />
               </div>
             </nav>
             <div className="mt-4 space-y-3">
