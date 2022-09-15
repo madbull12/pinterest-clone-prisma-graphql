@@ -105,8 +105,7 @@ export const UserBoardsQuery = gql`
       name
       userId
       secret
-      createdAt
-      updatedAt
+      
     }
   }
 

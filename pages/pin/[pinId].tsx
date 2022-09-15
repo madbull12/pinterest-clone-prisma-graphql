@@ -42,7 +42,7 @@ interface IProps {
 
 const BoardItem = ({ board }: { board: IBoard }) => {
   const [showSaveBtn, setShowSaveBtn] = useState<boolean>(false);
-
+  console.log(board)
   return (
     <div
       className="flex items-center justify-between hover:bg-gray-100 rounded-lg p-1"
@@ -53,7 +53,13 @@ const BoardItem = ({ board }: { board: IBoard }) => {
         <div className="bg-gray-300 w-12 h-12 rounded-lg"></div>
         <p className="font-semibold">{board.name}</p>
       </div>
-      {board.secret && <AiFillLock className="text-lg" />}
+      {!showSaveBtn && (
+        <>
+          {board.secret && <AiFillLock className="text-lg" />}
+        
+        </>
+
+      )}
       {showSaveBtn && (
         <Button text={"Save"} handleClick={() => {}} />
 
@@ -63,6 +69,7 @@ const BoardItem = ({ board }: { board: IBoard }) => {
 };
 
 const SaveDialog = ({ userBoards }: { userBoards: IBoard[] }) => {
+  console.log(userBoards)
   return (
     <div className="bg-white p-4 shadow-md rounded-xl space-y-3">
       <p className="text-center font-semibold">Save to board</p>

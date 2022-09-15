@@ -24,8 +24,6 @@ const Search = () => {
 
     const onSubmit = async(data:IFormInput) => {
         try {
-          
-
             const pins = await apolloClient.query({
                 query:SearchPinQuery,
                 variables:data
@@ -33,7 +31,7 @@ const Search = () => {
             setSearchResult(pins?.data.searchPins);
             router.push("/search")
         }catch(err){
-            console.log(err)
+            console.log(err);
         }   finally{
             reset()
         }
