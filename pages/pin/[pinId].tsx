@@ -286,14 +286,7 @@ const PinDetail = () => {
                   )}
                 </button>
 
-                <button
-                  onClick={() => {
-                    // user ? savePin() : router.push("/api/auth/login");
-                  }}
-                  className="bg-[#E60023] rounded-full px-4 py-2 text-lg font-semibold text-white"
-                >
-                  Save
-                </button>
+                  <Button text={"Save"} handleClick={()=>{}} />
               </div>
             </nav>
             <div className="mt-4 space-y-3">

@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
+import Button from './Button'
 import Search from './Search'
 
 const Navbar = () => {
@@ -25,9 +26,9 @@ const Navbar = () => {
             <Search />
             <div className='flex items-center gap-x-2'>
                 {user ? (
-                    <button className='rounded-full px-4 py-2 bg-[#E60023] text-white font-semibold' onClick={()=>router.push("/api/auth/logout")}>Logout</button>
+                    <Button text="Logout" handleClick={()=>router.push("/api/auth/logout")} />
                 ):(
-                    <button className='rounded-full px-4 py-2 bg-[#E60023] text-white font-semibold' onClick={()=>router.push("/api/auth/login")}>Login</button>
+                    <Button text="Login" handleClick={()=>router.push("/api/auth/login")} />
 
                 )}
                 {user && (

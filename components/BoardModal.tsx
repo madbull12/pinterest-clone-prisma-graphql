@@ -10,33 +10,31 @@ const BoardModal = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [name, setName] = useState("");
   const { user } = useUser();
-  
 
   const handleOnChange = () => {
     setIsChecked(!isChecked);
   };
 
   const [createBoard] = useMutation(createBoardMutation);
-  const { data:userId } = useQuery(UserIdQuery,{
-    variables:{
-        userId:user?.email
-    }
-}); 
+  const { data: userId } = useQuery(UserIdQuery, {
+    variables: {
+      userId: user?.email,
+    },
+  });
 
-  const handleSubmit = async(e: React.SyntheticEvent) => {
-    e.preventDefault()
-    const variables = { name,userId:userId?.user.id,secret:isChecked};
-    try{
-        await toast.promise(createBoard({ variables }),{
-            loading: 'Creating new board..',
-            success: 'Board successfully created!🎉',
-            error: `Something went wrong 😥 Please try again `,
-        })
-    } catch(err) {
-        console.log(err)
+  const handleSubmit = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    const variables = { name, userId: userId?.user.id, secret: isChecked };
+    try {
+      await toast.promise(createBoard({ variables }), {
+        loading: "Creating new board..",
+        success: "Board successfully created!🎉",
+        error: `Something went wrong 😥 Please try again `,
+      });
+    } catch (err) {
+      console.log(err);
     }
-
-  }
+  };
 
   return (
     <div
@@ -68,7 +66,10 @@ const BoardModal = () => {
             </p>
           </div>
         </div>
-        <button className="px-4 py-2 bg-[#E60023] text-white font-semibold rounded-full self-end" type="submit">
+        <button
+          type="submit"
+          className="px-4 py-2 self-end font-semibold text-white bg-[#E60023] rounded-full"
+        >
           Create
         </button>
       </form>
