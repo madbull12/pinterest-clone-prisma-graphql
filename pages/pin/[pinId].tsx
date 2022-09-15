@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import { AiFillLock } from 'react-icons/ai'
+import { AiFillLock } from "react-icons/ai";
 import React, {
   ButtonHTMLAttributes,
   useEffect,
@@ -34,10 +34,33 @@ import {
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import apolloClient from "../../lib/apollo";
+import Button from "../../components/Button";
 
 interface IProps {
   comment: IComment;
 }
+
+const BoardItem = ({ board }: { board: IBoard }) => {
+  const [showSaveBtn, setShowSaveBtn] = useState<boolean>(false);
+
+  return (
+    <div
+      className="flex items-center justify-between hover:bg-gray-100 rounded-lg p-1"
+      onMouseEnter={() => setShowSaveBtn(true)}
+      onMouseLeave={() => setShowSaveBtn(false)}
+    >
+      <div className="flex items-center gap-x-2">
+        <div className="bg-gray-300 w-12 h-12 rounded-lg"></div>
+        <p className="font-semibold">{board.name}</p>
+      </div>
+      {board.secret && <AiFillLock className="text-lg" />}
+      {showSaveBtn && (
+        <Button text={"Save"} handleClick={() => {}} />
+
+      )}
+    </div>
+  );
+};
 
 const SaveDialog = ({ userBoards }: { userBoards: IBoard[] }) => {
   return (
@@ -52,19 +75,22 @@ const SaveDialog = ({ userBoards }: { userBoards: IBoard[] }) => {
         <p className="text-xs text-start px-2">All boards</p>
         <div className="flex flex-col gap-y-2 mt-2">
           {userBoards?.map((board: IBoard) => (
-            <div
-              key={uuidv4()}
-              className="flex items-center justify-between hover:bg-gray-100 rounded-lg p-1"
-            >
-              <div className="flex items-center gap-x-2">
-                <div className="bg-gray-300 w-12 h-12 rounded-lg"></div>
-                <p className="font-semibold">{board.name}</p>
-              </div>
-              {board.secret && (
-                <AiFillLock className="text-lg" />
+            <BoardItem key={uuidv4()} board={board} />
 
-              )}
-            </div>
+            // <div
+            //   key={uuidv4()}
+            //   className="flex items-center justify-between hover:bg-gray-100 rounded-lg p-1"
+            // >
+            //   <div className="flex items-center gap-x-2">
+            //     <div className="bg-gray-300 w-12 h-12 rounded-lg"></div>
+            //     <p className="font-semibold">{board.name}</p>
+            //   </div>
+            //   {board.secret && (
+            //     <AiFillLock className="text-lg" />
+
+            //   )}
+            //   <Button text={"Save"} handleClick={()=>{}} />
+            // </div>
           ))}
         </div>
       </div>
@@ -242,12 +268,10 @@ const PinDetail = () => {
                   onClick={() => setOpenDialog(!openDialog)}
                 >
                   <MdExpandMore className="text-xl " />
-                  <p className="">
-                    {userBoards?.userBoards[0].name}
-                  </p>
+                  <p className="">{userBoards?.userBoards[0].name}</p>
                   {openDialog && (
                     <div
-                      onClick={(e)=>e.stopPropagation()}
+                      onClick={(e) => e.stopPropagation()}
                       className="absolute top-16 right-16 w-96 z-50"
                     >
                       <SaveDialog userBoards={userBoards?.userBoards} />
