@@ -71,6 +71,7 @@ export const SaveMutation = extendType({
             type:"Saved",
             args:{
                 pinId:nonNull(stringArg()),
+                boardId:nonNull(stringArg()),
                 userId:nonNull(stringArg())
             },
             async resolve(_parent,args:any,ctx) {
@@ -80,7 +81,8 @@ export const SaveMutation = extendType({
 
                 const saveData = {
                     pinId:args.pinId,
-                    userId:args.userId
+                    userId:args.userId,
+                    boardId:args.boardId
                 }
 
                 return await ctx.prisma.saved.create({

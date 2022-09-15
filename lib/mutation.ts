@@ -14,20 +14,11 @@ export const createPinMutation = gql`
 `
 
 export const savePinMutation = gql`
-    mutation Mutation($pinId: String!, $userId: String!) {
-        savePin(pinId: $pinId, userId: $userId) {
+    mutation Mutation($pinId: String!, $boardId: String!, $userId: String!) {
+        savePin(pinId: $pinId, boardId: $boardId, userId: $userId) {
             id
-            createdAt
             userId
             pinId
-            user {
-                id
-                email
-            }
-            pin {
-                imageUrl
-                description
-            }
         }
     }
 

@@ -109,7 +109,7 @@ const PinBuilder = () => {
     try {
       await toast.promise(createPin({ variables }), {
         loading: "Creating new pin..",
-        success: "Link successfully created!🎉",
+        success: "Pin successfully created!🎉",
         error: `Something went wrong 😥 Please try again -  ${error}`,
       });
     } catch (error) {
