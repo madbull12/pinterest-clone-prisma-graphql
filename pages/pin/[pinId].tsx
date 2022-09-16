@@ -43,6 +43,14 @@ interface IProps {
 
 const BoardItem = ({ board }: { board: IBoard }) => {
   const [showSaveBtn, setShowSaveBtn] = useState<boolean>(false);
+  const router = useRouter();
+  const { user } = useUser()
+  const { data: userId } = useQuery(UserIdQuery, {
+    variables: {
+      userId: user?.email,
+    },
+  });
+  const { pinId } = router.query;
   console.log(board)
   return (
     <div
@@ -62,7 +70,9 @@ const BoardItem = ({ board }: { board: IBoard }) => {
 
       )}
       {showSaveBtn && (
-        <Button text={"Save"} handleClick={() => {}} />
+        <Button text={"Save"} handleClick={() => {
+          savePin(userId?.user.id,board.id,pinId)
+        }} />
 
       )}
     </div>
