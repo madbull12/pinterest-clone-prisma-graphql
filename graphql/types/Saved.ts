@@ -60,22 +60,9 @@ export const SavedQuery = extendType({
                     }
                 })
             }
-        }),
-        t.nonNull.list.field("boardPins",{
-            type:"Saved",
-            args:{
-                boardId:nonNull(stringArg())
-              
-            },
-            resolve(_parent,{ boardId },ctx){
-                return ctx.prisma.saved.findMany({
-                    where:{
-                        boardId
-                    }
-                })
-            }
         })
-    },
+
+    }
 });
 
 export const SaveMutation = extendType({
