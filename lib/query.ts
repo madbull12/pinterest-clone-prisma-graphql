@@ -124,3 +124,23 @@ export const firstBoardQuery = gql`
 }
 
 `
+
+export const BoardPins = gql`
+  query Query($boardId: String!) {
+    boardPins(boardId: $boardId) {
+      saved {
+        pinId
+        createdAt
+        id
+        pin {
+          title
+          id
+          imageUrl
+        }
+      }
+      id
+      name
+      secret
+    }
+  }
+`

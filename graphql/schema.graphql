@@ -47,14 +47,14 @@ type Pin {
 }
 
 type Query {
-  BoardPins: Board!
-  FirstUserBoard(userId: String!): Board!
-  UserBoards(userId: String!): [Board!]
+  boardPins(boardId: String!): Board!
+  firstUserBoard(userId: String!): Board!
   pin(pinId: String!): Pin!
   pins: [Pin]!
   saved: [Saved]!
   searchPins(searchTerm: String!): [Pin]!
   user(userId: String!): User!
+  userBoards(userId: String!): [Board!]
   userSaved(userId: String!): [Saved]!
 }
 

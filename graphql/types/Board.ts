@@ -37,7 +37,7 @@ export const Board = objectType({
 export const BoardQuery = extendType({
     type:"Query",
     definition(t) {
-        t.list.nonNull.field("UserBoards",{
+        t.list.nonNull.field("userBoards",{
             type:"Board",
             args:{
                 userId:nonNull(stringArg())
@@ -50,8 +50,8 @@ export const BoardQuery = extendType({
                 })
             }
 
-        })
-        t.nonNull.field("FirstUserBoard",{
+        }),
+        t.nonNull.field("firstUserBoard",{
             type:"Board",
             args:{
                 userId:nonNull(stringArg())
@@ -64,22 +64,20 @@ export const BoardQuery = extendType({
                 })
             }
 
-        })
-        t.nonNull.field("BoardPins",{
+        }),
+        t.nonNull.field("boardPins",{
             type:"Board",
             args:{
                 boardId:nonNull(stringArg())
             },
-            resolve(_parent,args, ctx) {
-                return ctx.prisma.board.findMany({
+            resolve(_parent,{ boardId }, ctx) {
+                return ctx.prisma.board.findUnique({
                     where:{
-                        id:args.boardId
-                    },
-                    select:{
-                        saved:true
+                        id:boardId
                     }
                 })
             }
+            
         })
 
     },
