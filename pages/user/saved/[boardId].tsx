@@ -7,6 +7,7 @@ import { ISaved } from '../../../interface';
 import { BoardPins } from '../../../lib/query';
 import { v4 as uuidv4 } from 'uuid'
 import Pin from '../../../components/Pin';
+import MasonryWrapper from '../../../components/MasonryWrapper';
 
 const BoardDetails = () => {
   const router = useRouter();
@@ -31,9 +32,12 @@ const BoardDetails = () => {
       )}
       <div>
         <p>{boardPins?.boardPins.saved.length} pins</p>
-        {boardPins?.boardPins.saved.map((item:ISaved)=>(
-          <Pin key={uuidv4()} item={item.pin} />
-        ))}
+        <MasonryWrapper>
+          {boardPins?.boardPins.saved.map((item:ISaved)=>(
+            <Pin key={uuidv4()} item={item.pin} />
+          ))}
+        </MasonryWrapper>
+   
       </div>
     </div>
   )

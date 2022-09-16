@@ -9,6 +9,8 @@ import { IPin } from '../../interface';
 import { PinByUserEmail } from '../../lib/query';
 import { v4 as uuidv4 } from 'uuid';
 import Loading from '../../components/Loading';
+import MasonryWrapper from '../../components/MasonryWrapper';
+import Pin from '../../components/Pin';
 const CreatedPins = () => {
   const { user } = useUser();
   const { data, loading, error } = useQuery(PinByUserEmail,{
@@ -27,22 +29,23 @@ const CreatedPins = () => {
             <Loading />
           </div>
         )}
-        <div className='mx-auto max-w-7xl grid sm:grid-cols-2 grid-cols-1 md:grid-cols-3 lg:grid-cols-4 p-4 gap-4 mt-4 '>
-          {data?.user.pins.length !== 0 ? (
-            <>
-              {data?.user.pins.map((item:IPin)=>(
-                            <Link key={uuidv4()} href={`/pin/${item?.id}`}>
-                                <Image src={item.imageUrl}  alt="pin" width={200} height={400} objectFit="cover" className='cursor-pointer rounded-2xl '  />
-                            
-                            </Link>
-              ))}
-            </>
-          ):(
-            <h1>No pins created yet!</h1>
-          )}
+        <MasonryWrapper>
+          <>
+            {data?.user.pins.length !== 0 ? (
+              <>
+                {data?.user.pins.map((item:IPin)=>(
+              
+                    <Pin key={uuidv4()} item={item} />
+                ))}
+              </>
+            ):(
+              <h1>No pins created yet!</h1>
+            )}
+          </>
+          
    
                
-        </div>
+        </MasonryWrapper>
     
   
 
