@@ -1,3 +1,4 @@
+
 export interface IPin {
     id:string;
     title:string;
@@ -25,14 +26,18 @@ export interface IComment {
 }
 
 export interface ISaved {
-    
+    id:string;
+    userId:string;
+    pin:IPin;
+    pinId:string;
 }
 
 export interface IBoard {
     id:string;
     name:string;
     userId:string;
-    secret:boolean
+    secret:boolean;
+    saved:ISaved[]
 }
 
 

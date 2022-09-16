@@ -10,8 +10,10 @@ import { useUser } from '@auth0/nextjs-auth0'
 import Loading from '../components/Loading'
 import { useRecoilState } from 'recoil'
 import { searchResultState } from '../atom/searchAtom'
-import { useEffect } from 'react'
-import { useRouter } from 'next/router'
+// import { useEffect } from 'react'
+// import { useRouter } from 'next/router'
+import { v4 as uuidv4 } from 'uuid'
+import Pin from '../components/Pin'
 
 
 const Home: NextPage = () => {
@@ -32,12 +34,7 @@ const Home: NextPage = () => {
   )
   if(error) return <p>{error.message}</p>
   console.log(user)
-  const widthGenerator = () => {
-    return Math.floor(Math.random() * (450 - 300 + 1) + 300)
-  }
-  const heightGenerator = () => {
-    return Math.floor(Math.random() * (450 - 300 + 1) + 300)
-  }
+
   const breakpointColumnsObj = {
     default: 4,
     1100: 3,
@@ -59,20 +56,7 @@ const Home: NextPage = () => {
 
 
             {data?.pins?.map((item:IPin)=>(
-              <div key={item.userId} className="relative my-3">
-                    <Link href={`/pin/${item?.id}`}>
-                      <span className='cursor-pointer'>
-                        <Image src={item.imageUrl}  alt="pin" width={widthGenerator()} height={heightGenerator()} objectFit="cover" className='cursor-pointer rounded-2xl '  />
-
-                        <h1 className=' font-semibold'>{item.title}</h1>
-                      </span>
-              
-                    </Link>
-                    {/* <div className='absolute bottom-0 text-white'>
-                      <h1>fsfs</h1>
-                    </div> */}
-                  
-              </div>
+              <Pin key={uuidv4()} item={item} />
             ))}
         
           

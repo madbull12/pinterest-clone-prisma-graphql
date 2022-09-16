@@ -136,6 +136,7 @@ export const BoardPins = gql`
           title
           id
           imageUrl
+          
         }
       }
       id
