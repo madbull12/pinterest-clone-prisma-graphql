@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 import apolloClient from "../lib/apollo";
 import { savePinMutation } from "../lib/mutation";
 
-export default async function savePin(userId:string,boardId:string,pinId:string) {
+export default async function savePin(userId:string,boardId:string,pinId:any) {
     try {
         await toast.promise(
             apolloClient.mutate({

@@ -13,7 +13,18 @@ export const Pin = objectType({
         t.string("title")
         t.string("imageUrl")
         t.string("description")
-        t.list.string("category")
+        t.list.field("categories",{
+            type:"Category",
+            async resolve(_parent,_args,ctx) {
+                return await ctx.prisma.pin
+                    .findUnique({
+                        where:{
+                            id:_parent.id
+                        }
+                    })
+                    .categories()
+            }
+        })
         t.string("userId")
         t.field("user",{
             type:User,
@@ -128,7 +139,27 @@ export const PinMutation = extendType({
                 }
           
                 return await ctx.prisma.pin.create({
-                    data: newPin,
+                    data:{
+                        title:args.title,
+                        imageUrl:args.imageUrl,
+                        description:args.description,
+                        userId:args.userId,
+                        categories:{
+                            create:[
+                                args.category.forEach((item:string)=>{
+                                  
+                                    return {
+                                        category:{
+                                            create:{
+                                                name:item
+                                            }
+                                        }
+                                    }
+                                })
+                            ]
+                         
+                        }
+                    },
                 })
             }
         })
