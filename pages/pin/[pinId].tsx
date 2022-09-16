@@ -35,6 +35,7 @@ import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import apolloClient from "../../lib/apollo";
 import Button from "../../components/Button";
+import savePin from "../../helper/savePin";
 
 interface IProps {
   comment: IComment;
@@ -138,7 +139,7 @@ const PinDetail = () => {
 
   const { reset, handleSubmit } = useForm();
 
-  const [saveMutation, { error: saveError }] = useMutation(savePinMutation);
+  // const [saveMutation, { error: saveError }] = useMutation(savePinMutation);
   const [deleteSave] = useMutation(deleteSaveMutation);
   const [createComment] = useMutation(createCommentMutation, {
     refetchQueries: [SinglePinQuery],
@@ -234,7 +235,7 @@ const PinDetail = () => {
     }
   };
 
-  console.log(userId);
+  console.log(userBoards);
 
   if (loading)
     return (
@@ -287,7 +288,7 @@ const PinDetail = () => {
                 </button>
 
                   <Button text={"Save"} handleClick={()=>{
-                    
+                    savePin(userId?.user.id,userBoards?.userBoards[0].id,pin.id)
                   }} />
               </div>
             </nav>
