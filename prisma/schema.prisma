@@ -31,7 +31,7 @@ model Pin {
   title         String  
   imageUrl      String    
   description   String?
-  category      String[]
+  categories    CategoriesOnPins[]
   userId        String
   user          User       @relation(fields: [userId],references: [id])
   comments      Comment[] 
@@ -73,6 +73,23 @@ model Board {
   secret        Boolean
 
   @@unique([userId,name])
+}
+
+
+model Category {
+  id            String     @id @default(uuid())
+  name          String
+  pins          CategoriesOnPins[]
+  
+}
+
+model CategoriesOnPins {
+  pinId         String
+  pin           Pin         @relation(fields: [pinId],references: [id])
+  category      Category    @relation(fields: [categoryId],references: [id])
+  categoryId    String
+
+  @@id([pinId,categoryId])
 }
 
 enum Role {

@@ -31,7 +31,7 @@ const BoardDetails = () => {
 
       )}
       <div>
-        <p>{boardPins?.boardPins.saved.length} pins</p>
+        <p className='text-xl font-semibold px-4'>{boardPins?.boardPins.saved.length} pins</p>
         <MasonryWrapper>
           {boardPins?.boardPins.saved.map((item:ISaved)=>(
             <Pin key={uuidv4()} item={item.pin} />
