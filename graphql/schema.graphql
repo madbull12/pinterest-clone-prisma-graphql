@@ -11,6 +11,12 @@ type Board {
   userId: String
 }
 
+type Category {
+  id: String
+  name: String
+  pins: [Pin]
+}
+
 type Comment {
   content: String
   createdAt: DateTime
@@ -35,7 +41,7 @@ type Mutation {
 }
 
 type Pin {
-  category: [String]
+  categories: [Category]
   comments: [Comment]
   createdAt: DateTime
   description: String
@@ -48,6 +54,7 @@ type Pin {
 
 type Query {
   boardPins(boardId: String!): Board!
+  categories: [Category!]
   firstUserBoard(userId: String!): Board!
   pin(pinId: String!): Pin!
   pins: [Pin]!
