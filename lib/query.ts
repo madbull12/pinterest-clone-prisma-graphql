@@ -16,7 +16,10 @@ export const SinglePinQuery = gql`
             title
             imageUrl
             description
-            category
+            categories{
+              name
+              id
+            }
             userId
             user {
                 id

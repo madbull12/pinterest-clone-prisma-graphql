@@ -128,20 +128,16 @@ export const PinMutation = extendType({
                 const newPin = {
                     title: args.title,
                     imageUrl: args.imageUrl,
-                    category: args.category,
                     description: args.description,
                     userId:args.userId
                 }
           
                 return await ctx.prisma.pin.create({
                     data:{
-                        title:args.title,
-                        imageUrl:args.imageUrl,
-                        description:args.description,
-                        userId:args.userId,
+                        ...newPin,
                         categories:{
-                            create:[
-                                args.category.forEach((item:string)=>{
+                            create:
+                                args.category.map((item:string)=>{
                                   
                                     return {
                                         category:{
@@ -151,7 +147,6 @@ export const PinMutation = extendType({
                                         }
                                     }
                                 })
-                            ]
                          
                         }
                     },
