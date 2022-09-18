@@ -97,11 +97,6 @@ export const PinsQuery = extendType({
                                 description:{
                                     contains:searchTerm
                                 }
-                            },
-                            {
-                                category:{
-                                    has:searchTerm
-                                }
                             }
                         ]
                     }
