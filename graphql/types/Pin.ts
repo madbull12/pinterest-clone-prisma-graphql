@@ -157,28 +157,46 @@ export const PinMutation = extendType({
                         categories:{
                             create:
                                 args.category.map((item:string)=>{
-                                    if(categoryMapped.includes(item)) {
+                                    const categoryExists = categoryList.find((_category:ICategory)=>_category.name === item)
+                                    if(categoryExists) {
                                         return {
                                             category:{
-                                            
                                                 connect:{
-                                                    name:item
+                                                    id:categoryExists?.id
                                                 }
                                             }
                                         }
                                     } else {
                                         return {
-                                            category:{
-                                                
+                                            category :{
                                                 create:{
                                                     name:item
                                                 }
                                             }
                                         }
                                     }
+                                    // if(categoryMapped.includes(item)) {
+                                    //     return {
+                                    //         category:{
+                                                
+                                    //             connect:{
+                                    //                 name:item
+                                    //             }
+                                    //         }
+                                    //     }
+                                    // } else {
+                                    //     return {
+                                    //         category:{
+                                                
+                                    //             create:{
+                                    //                 name:item
+                                    //             }
+                                    //         }
+                                    //     }
+                                    // }
                            
                                 })
-                         
+                            
                         }
                     },
                 })
