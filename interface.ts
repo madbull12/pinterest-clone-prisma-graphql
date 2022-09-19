@@ -40,6 +40,12 @@ export interface IBoard {
     saved:ISaved[]
 }
 
+export interface ICategory { 
+    id:string;
+    name:string;
+    
+}
+
 
 enum Role {
     USER = "user",

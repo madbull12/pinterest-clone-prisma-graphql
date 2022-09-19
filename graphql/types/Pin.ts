@@ -1,5 +1,6 @@
 import { DateTimeResolver } from "graphql-scalars";
 import { objectType,extendType, enumType, nonNull, stringArg, queryField, asNexusMethod, list } from "nexus";  
+import { ICategory } from "../../interface";
 import { Comment } from "./Comment";
 import { User } from "./User";
 
@@ -131,6 +132,24 @@ export const PinMutation = extendType({
                     description: args.description,
                     userId:args.userId
                 }
+
+                const categoryList = await ctx.prisma.category.findMany({
+                    select:{
+                        name:true
+                    }
+                });
+
+                const categoryMapped = categoryList.map((category:ICategory)=>{
+                    return category.name;
+
+                });
+
+
+
+
+                console.log(categoryList)
+
+
           
                 return await ctx.prisma.pin.create({
                     data:{
@@ -138,14 +157,26 @@ export const PinMutation = extendType({
                         categories:{
                             create:
                                 args.category.map((item:string)=>{
-                                  
-                                    return {
-                                        category:{
-                                            create:{
-                                                name:item
+                                    if(categoryMapped.includes(item)) {
+                                        return {
+                                            category:{
+                                            
+                                                connect:{
+                                                    name:item
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        return {
+                                            category:{
+                                                
+                                                create:{
+                                                    name:item
+                                                }
                                             }
                                         }
                                     }
+                           
                                 })
                          
                         }
