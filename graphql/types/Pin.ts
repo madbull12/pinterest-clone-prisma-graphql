@@ -133,21 +133,22 @@ export const PinMutation = extendType({
                     userId:args.userId
                 }
 
-                const categoryList = await ctx.prisma.category.findMany({
-                    select:{
-                        name:true
-                    }
-                });
+                // const categoryList = await ctx.prisma.category.findMany({
+                //     select:{
+                //         name:true
+                //     }
+                // });
+                console.log(args.category)
 
-                const categoryMapped = categoryList.map((category:ICategory)=>{
-                    return category.name;
+                // const categoryMapped = categoryList.map((category:ICategory)=>{
+                //     return category.name;
 
-                });
-
-
+                // });
 
 
-                console.log(categoryList)
+
+
+                // console.log(categoryList)
 
 
           
@@ -155,26 +156,34 @@ export const PinMutation = extendType({
                     data:{
                         ...newPin,
                         categories:{
-                            create:
-                                args.category.map((item:string)=>{
-                                    const categoryExists = categoryList.find((_category:ICategory)=>_category.name === item)
-                                    if(categoryExists) {
-                                        return {
-                                            category:{
-                                                connect:{
-                                                    id:categoryExists?.id
-                                                }
-                                            }
-                                        }
-                                    } else {
-                                        return {
-                                            category :{
-                                                create:{
-                                                    name:item
-                                                }
-                                            }
+                            connectOrCreate:
+                                args?.category.map((item:string)=>{
+                                    return {
+                                        create:{
+                                            name:item
+                                        },
+                                        where:{
+                                            name:item
                                         }
                                     }
+                                    // const categoryExists = categoryList.find((_category:ICategory)=>_category.name === item)
+                                    // if(categoryExists) {
+                                    //     return {
+                                    //         category:{
+                                    //             connect:{
+                                    //                 id:categoryExists?.id
+                                    //             }
+                                    //         }
+                                    //     }
+                                    // } else {
+                                    //     return {
+                                    //         category :{
+                                    //             create:{
+                                    //                 name:item
+                                    //             }
+                                    //         }
+                                    //     }
+                                    // }
                                     // if(categoryMapped.includes(item)) {
                                     //     return {
                                     //         category:{
