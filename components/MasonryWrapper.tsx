@@ -9,13 +9,16 @@ const MasonryWrapper = ({ children }: { children:React.ReactNode}) => {
         500: 1
       };
   return (
-    <Masonry
-        breakpointCols={breakpointColumnsObj}
-        className="my-masonry-grid"
-        columnClassName="my-masonry-grid_column"
-    >
-        {children}
-    </Masonry>
+    <div className="relative">
+      <Masonry
+          breakpointCols={breakpointColumnsObj}
+          className="my-masonry-grid"
+          columnClassName="my-masonry-grid_column"
+      >
+          {children}
+      </Masonry>
+    </div>
+
   )
 };
 
