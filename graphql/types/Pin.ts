@@ -156,55 +156,56 @@ export const PinMutation = extendType({
                     data:{
                         ...newPin,
                         categories:{
-                            connectOrCreate:
-                                args?.category.map((item:string)=>{
-                                    return {
-                                        create:{
-                                            name:item
-                                        },
-                                        where:{
-                                            name:item
-                                        }
-                                    }
-                                    // const categoryExists = categoryList.find((_category:ICategory)=>_category.name === item)
-                                    // if(categoryExists) {
-                                    //     return {
-                                    //         category:{
-                                    //             connect:{
-                                    //                 id:categoryExists?.id
-                                    //             }
-                                    //         }
-                                    //     }
-                                    // } else {
-                                    //     return {
-                                    //         category :{
-                                    //             create:{
-                                    //                 name:item
-                                    //             }
-                                    //         }
-                                    //     }
-                                    // }
-                                    // if(categoryMapped.includes(item)) {
-                                    //     return {
-                                    //         category:{
-                                                
-                                    //             connect:{
-                                    //                 name:item
-                                    //             }
-                                    //         }
-                                    //     }
-                                    // } else {
-                                    //     return {
-                                    //         category:{
-                                                
-                                    //             create:{
-                                    //                 name:item
-                                    //             }
-                                    //         }
-                                    //     }
-                                    // }
-                           
-                                })
+                            connectOrCreate: args?.category.map((item:string)=>{
+                                return {
+                                    where:{
+                                        name:item
+                                    },
+                                    create:{
+                                        name:item
+                                    },
+                                
+                                }
+                                // const categoryExists = categoryList.find((_category:ICategory)=>_category.name === item)
+                                // if(categoryExists) {
+                                //     return {
+                                //         category:{
+                                //             connect:{
+                                //                 id:categoryExists?.id
+                                //             }
+                                //         }
+                                //     }
+                                // } else {
+                                //     return {
+                                //         category :{
+                                //             create:{
+                                //                 name:item
+                                //             }
+                                //         }
+                                //     }
+                                // }
+                                // if(categoryMapped.includes(item)) {
+                                //     return {
+                                //         category:{
+                                            
+                                //             connect:{
+                                //                 name:item
+                                //             }
+                                //         }
+                                //     }
+                                // } else {
+                                //     return {
+                                //         category:{
+                                            
+                                //             create:{
+                                //                 name:item
+                                //             }
+                                //         }
+                                //     }
+                                // }
+                       
+                            })
+                                
                             
                         }
                     },
