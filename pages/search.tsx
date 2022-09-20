@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react'
+import React, { useCallback, useMemo } from 'react'
 import Masonry from 'react-masonry-css';
 import { useRecoilValue } from 'recoil';
 import { searchResults } from '../atom/searchAtom';
@@ -15,12 +15,14 @@ const SearchPage = () => {
         700: 2,
         500: 1
       };
-      const widthGenerator = () => {
+      const widthGenerator = useCallback(()=>{
         return Math.floor(Math.random() * (450 - 300 + 1) + 300)
-      }
-      const heightGenerator = () => {
+
+      },[])
+      const heightGenerator =  useCallback(()=>{
         return Math.floor(Math.random() * (450 - 300 + 1) + 300)
-      }
+
+      },[])
     const pins = useRecoilValue<any>(searchResults);
     console.log(pins)
   return (
