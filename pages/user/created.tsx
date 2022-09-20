@@ -20,6 +20,7 @@ const CreatedPins = () => {
   });
 
   console.log(data)
+  if(data?.user.pins.length === 0) return <h1>No pins created </h1>
 
   return (
     <div>
@@ -30,18 +31,14 @@ const CreatedPins = () => {
           </div>
         )}
         <MasonryWrapper>
-          <>
-            {data?.user.pins.length !== 0 ? (
-              <>
-                {data?.user.pins.map((item:IPin)=>(
+
+          
+                 {data?.user.pins.map((item:IPin)=>(
               
                     <Pin key={uuidv4()} item={item} />
                 ))}
-              </>
-            ):(
-              <h1>No pins created yet!</h1>
-            )}
-          </>
+             
+       
           
    
                
