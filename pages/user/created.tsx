@@ -22,22 +22,22 @@ const CreatedPins = () => {
       userId: user?.email,
     },
   });
-  const [isClicked, setIsClicked] = useState(false);
-  // const onMouseLeave = useCallback(()=>{
-  //   setIsHover(false)
-  // },[isHover])
-  // const onMouseEnter = useCallback(() =>{
-  //   setIsHover(true)
-  // },[isHover])
+  // const [isClicked, setIsClicked] = useState(false);
+  const[openModal,setOpenModal] = useState(false);
+  const handleClick= () => {
+    setOpenModal(true)
+  }
+
 
   console.log(data);
   if (data?.user.pins.length === 0) return <h1>No pins created </h1>;
 
   return (
     <div className="relative">
-        <Backdrop>
-          <EditModal />
-        </Backdrop>
+
+      {/* <Backdrop>
+        <EditModal />
+      </Backdrop> */}
       <UserProfile />
       {loading && (
         <div className="flex justify-center pt-4">
@@ -52,8 +52,8 @@ const CreatedPins = () => {
             className="relative cursor-pointer "
           >
 
-            <HoverEdit  />
-       
+            <HoverEdit handleClick={handleClick}  />
+
             <Pin item={item} />
           </div>
         ))}
