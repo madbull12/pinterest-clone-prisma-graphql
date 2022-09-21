@@ -5,7 +5,7 @@ export const editModalState = atom({
     default: false, 
 });
 
-export const isOpen = selector({
+export const isEditOpen = selector({
     key: 'editValue', // unique ID (with respect to other atoms/selectors)
     get: ({get}) => {
       const isOpen = get(editModalState);
