@@ -13,6 +13,8 @@ import MasonryWrapper from "../../components/MasonryWrapper";
 import Pin from "../../components/Pin";
 import { MdEdit } from "react-icons/md";
 import HoverEdit from "../../components/HoverEdit";
+import Backdrop from "../../components/Backdrop";
+import EditModal from "../../components/EditModal";
 const CreatedPins = () => {
   const { user } = useUser();
   const { data, loading, error } = useQuery(PinByUserEmail, {
@@ -33,6 +35,9 @@ const CreatedPins = () => {
 
   return (
     <div className="relative">
+        <Backdrop>
+          <EditModal />
+        </Backdrop>
       <UserProfile />
       {loading && (
         <div className="flex justify-center pt-4">
@@ -42,17 +47,19 @@ const CreatedPins = () => {
       <MasonryWrapper>
         {data?.user.pins.map((item: IPin) => (
           <div
-        
+
             key={uuidv4()}
             className="relative cursor-pointer "
           >
 
             <HoverEdit  />
-
+       
             <Pin item={item} />
           </div>
         ))}
+            
       </MasonryWrapper>
+  
     </div>
   );
 };
