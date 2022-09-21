@@ -2,6 +2,9 @@ import { useQuery } from "@apollo/client";
 import { useUser } from "@auth0/nextjs-auth0";
 import React,{ useState } from "react";
 import { MdArrowDropDown } from "react-icons/md";
+import { useRecoilValue } from "recoil";
+import { editPinValue } from "../atom/editAtom";
+import { IPin } from "../interface";
 import { firstBoardQuery, UserIdQuery } from "../lib/query";
 import BoardDropdown from "./BoardDropdown";
 import BoardList from "./BoardList";
@@ -9,7 +12,9 @@ import Loading from "./Loading";
 
 const EditModal = () => {
 
+  const editPin = useRecoilValue<IPin | null>(editPinValue)
 
+  console.log(editPin)
 
   return (
     <div className="max-w-4xl mx-auto bg-white rounded-2xl p-4" onClick={(e)=>e.stopPropagation()}>
@@ -26,7 +31,7 @@ const EditModal = () => {
               </div>
               <div className="flex items-center justify-between">
                 <label className="flex-[0.25]">Title</label>
-                <input type="text" className="px-4 py-2 flex-[.75] outline-none focus:ring-4 ring-blue-300 border-2 border-gray-300 rounded-2xl" />
+                <input type="text" defaultValue={editPin?.title} className="px-4 py-2 flex-[.75] outline-none focus:ring-4 ring-blue-300 border-2 border-gray-300 rounded-2xl" />
               </div>
             </div>
           </form>

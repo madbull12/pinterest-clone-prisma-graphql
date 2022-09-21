@@ -56,9 +56,9 @@ const CreatedPins = () => {
             className="relative cursor-pointer "
           >
 
-            <HoverEdit   />
+            <HoverEdit item={item}  />
 
-            <Pin item={item} />
+            <Pin item={item} isEdit={true} />
           </div>
         ))}
             

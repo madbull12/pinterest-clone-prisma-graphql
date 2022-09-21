@@ -46,6 +46,8 @@ export const PinByUserEmail = gql`
       pins {
         id
         imageUrl
+        title
+        description
       }
     }
   }

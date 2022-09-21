@@ -1,4 +1,5 @@
 import { atom, selector } from "recoil";
+import { IPin } from "../interface";
 
 export const editModalState = atom({
     key: 'editModalState', 
@@ -8,7 +9,7 @@ export const editModalState = atom({
 export const editPinState = atom({
   key:"editPinState",
   default:null
-});;
+});
 
 export const editPinValue = selector({
   key:"editPinValue",

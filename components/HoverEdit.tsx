@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { MdEdit } from "react-icons/md";
 import { useRecoilState } from "recoil";
-import { editModalState } from "../atom/editAtom";
+import { editModalState, editPinState } from "../atom/editAtom";
+import { IPin } from "../interface";
 
 
-const HoverEdit = () => {
+const HoverEdit:React.FC<{ item:IPin }> = ({ item }) => {
   const [openEditModal, setEditModal] = useRecoilState(editModalState);
 
+  const [editPin,setEditPin] = useRecoilState<any>(editPinState);
   const [isHover, setIsHover] = useState(false);
   return (
     <div
@@ -20,6 +22,7 @@ const HoverEdit = () => {
             <MdEdit onClick={()=>{
               window.scrollTo(0,0)
               setEditModal(true)
+              setEditPin(item)
             }} />
           </div>
         </div>
