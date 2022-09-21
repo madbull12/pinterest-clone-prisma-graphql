@@ -1,93 +1,38 @@
-import { useQuery } from '@apollo/client'
-import { useUser } from '@auth0/nextjs-auth0'
-import { useRouter } from 'next/router'
+import { useQuery } from '@apollo/client';
+import { useUser } from '@auth0/nextjs-auth0';
 import React, { useState } from 'react'
-import { AiFillLock } from 'react-icons/ai'
-import savePin from '../helper/savePin'
-import { IBoard } from '../interface'
-import { UserIdQuery,UserBoardsQuery } from '../lib/query'
-import Button from './Button'
+import { MdArrowDropDown } from 'react-icons/md';
+import { firstBoardQuery, UserIdQuery } from '../lib/query';
+import BoardList from './BoardList'
+import Loading from './Loading';
 
-interface IBoardItem {
-    board:IBoard;
-    edit?:boolean;
-}
-const BoardItem = ({ board,edit }: IBoardItem) => {
-    const [showSaveBtn, setShowSaveBtn] = useState<boolean>(false);
-    const router = useRouter();
-    const { user } = useUser()
+const BoardDropdown = () => {
+    const { user } = useUser();
     const { data: userId } = useQuery(UserIdQuery, {
       variables: {
         userId: user?.email,
       },
     });
-    const { pinId } = router.query;
-    console.log(board)
-    return (
-      <div
-        className="flex items-center justify-between hover:bg-gray-100 rounded-lg p-1"
-        onMouseEnter={() => setShowSaveBtn(true)}
-        onMouseLeave={() => setShowSaveBtn(false)}
-      >
-        <div className="flex items-center gap-x-2">
-            {!edit && (
-                <div className="bg-gray-300 w-12 h-12 rounded-lg"></div>
+    const { data: firstBoard,loading } = useQuery(firstBoardQuery, {
+      variables: {
+        userId: userId?.user.id,
+      },
+    });
+  const [openDropdown,setOpenDropdown] = useState(false);
+  if(loading) return <Loading />
 
-            )}
-          <p className="font-semibold">{board.name}</p>
-        </div>
-    
-            {!edit ? (
-                <>
-                    {!showSaveBtn && (
-                        <>
-                            {board.secret && (
-                                <AiFillLock />
-                            )}
-                        </>
-                      
-                    )}
-                </>
-            ):(
-                <>
-                    {board.secret && (
-                        <AiFillLock />
-                    )}
-                </>
-               
-            )}
-      
+  return (
+    <div onClick={()=>setOpenDropdown(!openDropdown)} className="flex relative justify-between cursor-pointer items-center bg-gray-300 px-4 py-2 rounded-lg flex-[0.75]">
+        <p className="font-semibold">{firstBoard?.firstUserBoard.name}</p>
+        <MdArrowDropDown />
+        {openDropdown && (
+            <div className="absolute top-full w-full left-0">
+                <BoardList />
 
-        {!edit && (
-            <Button text='Save' handleClick={()=>{
-                savePin(userId?.user.id,board.id,pinId)
-            }} />
+            </div> 
+
         )}
 
-      </div>
-    );
-  };
-
-const BoardDropdown = () => {
-    const { user } = useUser();
-    const { data:userId } = useQuery(UserIdQuery,{
-        variables:{
-            userId:user?.email
-        }
-    });
-
-    const { data: userBoards } = useQuery(UserBoardsQuery,{
-        variables:{
-            userId:userId?.user.id
-        }
-    });
-
-    console.log(userBoards?.userBoards)
-  return (
-    <div className='p-2 rounded-lg border-gray-200 border '>
-        {userBoards?.userBoards.map((board:IBoard)=>(
-            <BoardItem board={board} edit={true} />
-        ))}
     </div>
   )
 }
