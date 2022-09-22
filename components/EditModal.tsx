@@ -9,6 +9,7 @@ import { IPin } from "../interface";
 import { firstBoardQuery, UserIdQuery } from "../lib/query";
 import BoardDropdown from "./BoardDropdown";
 import BoardList from "./BoardList";
+import Button from "./Button";
 import Loading from "./Loading";
 
 const EditModal = () => {
@@ -54,9 +55,9 @@ const EditModal = () => {
         />
         
       </form>
-      <div className="absolute bg-white w-full p-4 bottom-0 left-0 rounded-2xl">
-            <h1>dfsfds</h1>
-          </div>
+      <div className=" w-full   rounded-2xl">
+          <Button text={"Delete"} handleClick={()=>{}} />
+       </div>
     </div>
   );
 };
