@@ -1,73 +1,90 @@
 import { gql } from "apollo-server-micro";
 
 export const createPinMutation = gql`
-    mutation Mutation($title: String!, $imageUrl: String!, $userId: String!, $description: String, $category: [String]) {
-        createPin(title: $title, imageUrl: $imageUrl, userId: $userId, description: $description, category: $category) {
-            categories {
-                id
-                name
-            }
-            title
-            imageUrl
-            description
-            userId
-        }
+  mutation Mutation(
+    $title: String!
+    $imageUrl: String!
+    $userId: String!
+    $description: String
+    $category: [String]
+  ) {
+    createPin(
+      title: $title
+      imageUrl: $imageUrl
+      userId: $userId
+      description: $description
+      category: $category
+    ) {
+      categories {
+        id
+        name
+      }
+      title
+      imageUrl
+      description
+      userId
     }
-
-`
+  }
+`;
 
 export const savePinMutation = gql`
-    mutation Mutation($pinId: String!, $boardId: String!, $userId: String!) {
-        savePin(pinId: $pinId, boardId: $boardId, userId: $userId) {
-            id
-            userId
-            pinId
-        }
+  mutation Mutation($pinId: String!, $boardId: String!, $userId: String!) {
+    savePin(pinId: $pinId, boardId: $boardId, userId: $userId) {
+      id
+      userId
+      pinId
     }
-
-`
+  }
+`;
 
 export const createCommentMutation = gql`
-    mutation Mutation($content: String!, $userId: String!, $pinId: String!) {
-        createComment(content: $content, userId: $userId, pinId: $pinId) {
-            id
-            createdAt
-            content
-            userId
-            pinId
-        }
+  mutation Mutation($content: String!, $userId: String!, $pinId: String!) {
+    createComment(content: $content, userId: $userId, pinId: $pinId) {
+      id
+      createdAt
+      content
+      userId
+      pinId
     }
-
-`
+  }
+`;
 
 export const deleteSaveMutation = gql`
-    mutation Mutation($saveId: String!) {
-        deleteSave(saveId: $saveId) {
-            id
-            createdAt
-            userId
-            pinId
-        }
+  mutation Mutation($saveId: String!) {
+    deleteSave(saveId: $saveId) {
+      id
+      createdAt
+      userId
+      pinId
     }
-`
+  }
+`;
 
 export const createBoardMutation = gql`
-    mutation Mutation($userId: String!, $name: String!, $secret: Boolean!) {
-        createBoard(userId: $userId, name: $name, secret: $secret) {
-            id
-            userId
-        }
+  mutation Mutation($userId: String!, $name: String!, $secret: Boolean!) {
+    createBoard(userId: $userId, name: $name, secret: $secret) {
+      id
+      userId
     }
-  
-`
+  }
+`;
 
 export const deletePinMutation = gql`
-    mutation Mutation($pinId: String!) {
-        deletePin(pinId: $pinId) {
-            title
-            id
-            userId
-        }
+  mutation Mutation($pinId: String!) {
+    deletePin(pinId: $pinId) {
+      title
+      id
+      userId
     }
+  }
+`;
 
-`
+export const updatePinMutation = gql`
+  mutation Mutation($pinId: String!, $description: String, $title: String) {
+    updatePin(pinId: $pinId, description: $description, title: $title) {
+      id
+      title
+      description
+    }
+  }
+`;

@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useUser } from "@auth0/nextjs-auth0";
 import Image from "next/image";
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { MdArrowDropDown } from "react-icons/md";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -14,9 +15,21 @@ import BoardList from "./BoardList";
 import Button from "./Button";
 import Loading from "./Loading";
 
+interface IFormInput {
+  title:string;
+  description:string;
+}
+
 const EditModal = () => {
   const editPin = useRecoilValue<IPin | null>(editPinValue);
-  const [openEditModal,setEditModal] = useRecoilState(editModalState)
+  const [openEditModal,setEditModal] = useRecoilState(editModalState);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    getValues,
+  } = useForm<IFormInput>();
   const { user } = useUser();
   const { data:userId } = useQuery(UserIdQuery,{
     variables:{
@@ -70,6 +83,7 @@ const EditModal = () => {
           <div className="flex items-center justify-between">
             <label className="flex-[0.25]">Title</label>
             <input
+              {...register("title")}
               type="text"
               defaultValue={editPin?.title}
               className="px-4 py-2 flex-[.75] outline-none focus:ring-4 ring-blue-300 border-2 border-gray-300 rounded-2xl"
@@ -78,6 +92,8 @@ const EditModal = () => {
           <div className="flex items-center justify-between">
             <label className="flex-[0.25]">Description</label>
             <textarea
+              {...register("description")}
+
               defaultValue={editPin?.description}
               className="px-4 py-2 flex-[.75] outline-none focus:ring-4 ring-blue-300 border-2 border-gray-300 rounded-2xl"
             />
@@ -97,7 +113,9 @@ const EditModal = () => {
             <Button text={"Cancel"}  handleClick={()=>{
               setEditModal(false)
             }} color="black" backgroundColor="bg-gray-200"  />
-            <Button text={"Save"}  handleClick={()=>{}} />
+            <Button text={"Save"}  handleClick={()=>{
+              
+            }} />
           </div>
        </div>
     </div>

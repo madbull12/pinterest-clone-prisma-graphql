@@ -1,6 +1,6 @@
 import { DateTimeResolver } from "graphql-scalars";
 import { objectType,extendType, enumType, nonNull, stringArg, queryField, asNexusMethod, list } from "nexus";  
-import { ICategory } from "../../interface";
+import { ICategory, IPin } from "../../interface";
 import { Comment } from "./Comment";
 import { User } from "./User";
 
@@ -112,6 +112,31 @@ export const PinsQuery = extendType({
 export const PinMutation = extendType({
     type:"Mutation",
     definition(t) {
+        t.nonNull.field("updatePin",{
+            type:"Pin",
+            args:{
+                pinId:nonNull(stringArg()),
+                description:stringArg(),
+                title:stringArg(),
+
+            },
+            async resolve(_parent,{ title,description,pinId },ctx) {
+                if(!ctx.user) {
+                    throw new Error("You need to be logged in to perform an action")
+                }
+
+            
+                return await ctx.prisma.pin.update({
+                    where:{
+                        id:pinId
+                    },
+                    data:{
+                        title,
+                        description
+                    }
+                })
+            }
+        })
         
         t.nonNull.field("deletePin",{
             type:"Pin",

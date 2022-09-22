@@ -39,6 +39,7 @@ type Mutation {
   deletePin(pinId: String!): Pin!
   deleteSave(saveId: String!): Saved!
   savePin(boardId: String!, pinId: String!, userId: String!): Saved!
+  updatePin(description: String, pinId: String!, title: String): Pin!
 }
 
 type Pin {

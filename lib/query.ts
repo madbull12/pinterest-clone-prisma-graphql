@@ -8,37 +8,37 @@ export const FeedQuery = gql`
       title
     }
   }
-`
+`;
 export const SinglePinQuery = gql`
-    query Pin($pinId: String!) {
-        pin(pinId: $pinId) {
-            id
-            title
-            imageUrl
-            description
-            categories{
-              name
-              id
-            }
-            userId
-            user {
-                id
-                email
-                image
-            }
-            comments {
-                id
-                content
-                user {
-                    id
-                    email
-                    image
-                }
-                userId
-            }   
+  query Pin($pinId: String!) {
+    pin(pinId: $pinId) {
+      id
+      title
+      imageUrl
+      description
+      categories {
+        name
+        id
+      }
+      userId
+      user {
+        id
+        email
+        image
+      }
+      comments {
+        id
+        content
+        user {
+          id
+          email
+          image
         }
+        userId
+      }
     }
-`
+  }
+`;
 
 export const PinByUserEmail = gql`
   query Query($userId: String!) {
@@ -51,7 +51,7 @@ export const PinByUserEmail = gql`
       }
     }
   }
-`
+`;
 
 export const UserIdQuery = gql`
   query User($userId: String!) {
@@ -59,8 +59,7 @@ export const UserIdQuery = gql`
       id
     }
   }
-
-`
+`;
 
 export const SavedPinsQuery = gql`
   query Query {
@@ -71,11 +70,9 @@ export const SavedPinsQuery = gql`
         imageUrl
         id
       }
-
     }
   }
-
-`
+`;
 
 export const UserSavedPins = gql`
   query ExampleQuery($userId: String!) {
@@ -87,10 +84,8 @@ export const UserSavedPins = gql`
       id
       pinId
     }
-}
-
-
-`
+  }
+`;
 
 export const SearchPinQuery = gql`
   query Query($searchTerm: String!) {
@@ -99,9 +94,8 @@ export const SearchPinQuery = gql`
       id
       imageUrl
     }
-
   }
-`
+`;
 
 export const UserBoardsQuery = gql`
   query Query($userId: String!) {
@@ -110,26 +104,20 @@ export const UserBoardsQuery = gql`
       name
       userId
       secret
-    
-      
     }
   }
-
-`
+`;
 
 export const firstBoardQuery = gql`
   query ExampleQuery($userId: String!) {
-  
     firstUserBoard(userId: $userId) {
       name
       id
       userId
       secret
-   
     }
-}
-
-`
+  }
+`;
 
 export const BoardPins = gql`
   query Query($boardId: String!) {
@@ -142,7 +130,6 @@ export const BoardPins = gql`
           title
           id
           imageUrl
-          
         }
       }
       id
@@ -150,4 +137,4 @@ export const BoardPins = gql`
       secret
     }
   }
-`
+`;
