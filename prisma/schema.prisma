@@ -44,7 +44,7 @@ model Saved {
   userId        String
   user          User      @relation(fields: [userId],references: [id])
   pinId         String    
-  pin           Pin       @relation(fields: [pinId],references: [id])
+  pin           Pin       @relation(fields: [pinId],references: [id],onDelete: Cascade)
   board         Board     @relation(fields: [boardId],references: [id])
   boardId       String
 
