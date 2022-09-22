@@ -57,7 +57,7 @@ model Comment {
   updatedAt     DateTime   @updatedAt
   content       String
   pinId         String
-  pin           Pin        @relation(fields: [pinId],references: [id])
+  pin           Pin        @relation(fields: [pinId],references: [id],onDelete: Cascade)
   userId        String
   user          User       @relation(fields: [userId],references: [id])
 }

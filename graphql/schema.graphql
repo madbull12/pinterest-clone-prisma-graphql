@@ -38,7 +38,6 @@ type Mutation {
   createPin(category: [String], description: String, imageUrl: String!, title: String!, userId: String!): Pin!
   deletePin(pinId: String!): Pin!
   deleteSave(saveId: String!): Saved!
-  deleteSavedByPinId(pinId: String!): Saved!
   savePin(boardId: String!, pinId: String!, userId: String!): Saved!
 }
 

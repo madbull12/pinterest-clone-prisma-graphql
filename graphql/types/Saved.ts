@@ -69,13 +69,7 @@ export const SavedQuery = extendType({
 export const SaveMutation = extendType({
     type:"Mutation",
     definition(t) {
-        // t.nonNull.field("deleteSavedByPinId",{
-        //     type:"Saved",
-        //     args:{
-        //         pinId:nonNull(stringArg())
-        //     },
-       
-        // })
+ 
         t.nonNull.field("savePin",{
             type:"Saved",
             args:{
