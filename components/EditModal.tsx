@@ -1,12 +1,14 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { useUser } from "@auth0/nextjs-auth0";
 import Image from "next/image";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { MdArrowDropDown } from "react-icons/md";
 import { useRecoilValue } from "recoil";
 import { editPinValue } from "../atom/editAtom";
 import { IPin } from "../interface";
-import { firstBoardQuery, UserIdQuery } from "../lib/query";
+import { deletePinMutation } from "../lib/mutation";
+import { FeedQuery, firstBoardQuery, UserIdQuery } from "../lib/query";
 import BoardDropdown from "./BoardDropdown";
 import BoardList from "./BoardList";
 import Button from "./Button";
@@ -14,8 +16,28 @@ import Loading from "./Loading";
 
 const EditModal = () => {
   const editPin = useRecoilValue<IPin | null>(editPinValue);
+  const [deletePin] = useMutation(deletePinMutation,{
+    refetchQueries:[
+      {
+        query:FeedQuery
+      }
+    ]
+  });
 
   console.log(editPin);
+
+
+  const handleDeletePin = async() => {
+    await toast.promise(deletePin({variables:{
+      pinId:editPin?.id
+  }}),{
+    loading:"Deleting pin",
+    success:"Pin successfully deleted",
+    error:"Something went wrong"
+  })
+  
+  }
+
 
   return (
     <div
@@ -56,7 +78,7 @@ const EditModal = () => {
         
       </form>
       <div className=" w-full   rounded-2xl flex justify-between mt-4">
-          <Button text={"Delete"} handleClick={()=>{}} color="black" backgroundColor="bg-gray-200" />
+          <Button text={"Delete"} handleClick={handleDeletePin} color="black" backgroundColor="bg-gray-200" />
           <div className="flex items-center gap-x-3">
             <Button text={"Cancel"}  handleClick={()=>{}} color="black" backgroundColor="bg-gray-200"  />
             <Button text={"Save"}  handleClick={()=>{}} />

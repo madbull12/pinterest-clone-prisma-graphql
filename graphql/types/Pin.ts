@@ -112,6 +112,23 @@ export const PinsQuery = extendType({
 export const PinMutation = extendType({
     type:"Mutation",
     definition(t) {
+        t.nonNull.field("deletePin",{
+            type:"Pin",
+            args:{
+                pinId:nonNull(stringArg())
+            },
+            async resolve(_parent,{ pinId },ctx) {
+                if(!ctx.user) {
+                    throw new Error("You need to be logged in to perform an action")
+                }
+
+                return await ctx.prisma.pin.delete({
+                    where:{
+                        id:pinId
+                    }
+                })
+            }
+        })
         t.nonNull.field("createPin",{
             type:'Pin',
             args:{

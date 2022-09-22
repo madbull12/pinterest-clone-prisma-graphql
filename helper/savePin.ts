@@ -14,7 +14,7 @@ export default async function savePin(userId:string,boardId:string,pinId:any) {
                 }
               }),{
                 loading: "Saving pin.",
-                success: "Pin successfully created!🎉",
+                success: "Pin successfully saved!🎉",
                 error: `Something went wrong 😥 Please try again `,
               }
         );

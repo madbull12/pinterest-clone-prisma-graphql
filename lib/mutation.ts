@@ -60,3 +60,14 @@ export const createBoardMutation = gql`
     }
   
 `
+
+export const deletePinMutation = gql`
+    mutation Mutation($pinId: String!) {
+        deletePin(pinId: $pinId) {
+            title
+            id
+            userId
+        }
+    }
+
+`
