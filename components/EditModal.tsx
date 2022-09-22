@@ -8,7 +8,7 @@ import { useRecoilValue } from "recoil";
 import { editPinValue } from "../atom/editAtom";
 import { IPin } from "../interface";
 import { deletePinMutation } from "../lib/mutation";
-import { FeedQuery, firstBoardQuery, UserIdQuery } from "../lib/query";
+import { FeedQuery, firstBoardQuery, PinByUserEmail, UserIdQuery } from "../lib/query";
 import BoardDropdown from "./BoardDropdown";
 import BoardList from "./BoardList";
 import Button from "./Button";
@@ -16,10 +16,22 @@ import Loading from "./Loading";
 
 const EditModal = () => {
   const editPin = useRecoilValue<IPin | null>(editPinValue);
+  const { user } = useUser();
+  const { data:userId } = useQuery(UserIdQuery,{
+    variables:{
+      userId:user?.email
+    }
+  });
+  console.log(userId)
   const [deletePin] = useMutation(deletePinMutation,{
     refetchQueries:[
       {
         query:FeedQuery
+      },{
+        query:PinByUserEmail,
+        variables:{
+          userId:userId?.user.id
+        }
       }
     ]
   });
