@@ -1,5 +1,6 @@
 import { DateTimeResolver } from "graphql-scalars";
 import { asNexusMethod, extendType, nonNull, objectType, stringArg } from "nexus";
+import { resolve } from "path";
 
 const GQLDate = asNexusMethod(DateTimeResolver,"date");
 
@@ -68,6 +69,13 @@ export const SavedQuery = extendType({
 export const SaveMutation = extendType({
     type:"Mutation",
     definition(t) {
+        // t.nonNull.field("deleteSavedByPinId",{
+        //     type:"Saved",
+        //     args:{
+        //         pinId:nonNull(stringArg())
+        //     },
+       
+        // })
         t.nonNull.field("savePin",{
             type:"Saved",
             args:{

@@ -71,7 +71,7 @@ export const PinsQuery = extendType({
                 pinId:nonNull(stringArg())
             },
             resolve(_parent,{ pinId },ctx) {
-                return ctx.prisma.pin.findUnique({
+                 return ctx.prisma.pin.findUnique({
                     where:{
                         id:pinId
                     }
@@ -112,6 +112,7 @@ export const PinsQuery = extendType({
 export const PinMutation = extendType({
     type:"Mutation",
     definition(t) {
+        
         t.nonNull.field("deletePin",{
             type:"Pin",
             args:{
