@@ -55,8 +55,12 @@ const EditModal = () => {
         />
         
       </form>
-      <div className=" w-full   rounded-2xl">
-          <Button text={"Delete"} handleClick={()=>{}} />
+      <div className=" w-full   rounded-2xl flex justify-between mt-4">
+          <Button text={"Delete"} handleClick={()=>{}} color="black" backgroundColor="bg-gray-200" />
+          <div className="flex items-center gap-x-3">
+            <Button text={"Cancel"}  handleClick={()=>{}} color="black" backgroundColor="bg-gray-200"  />
+            <Button text={"Save"}  handleClick={()=>{}} />
+          </div>
        </div>
     </div>
   );
