@@ -28,7 +28,7 @@ export const Pin = objectType({
         })
         t.string("userId")
         t.field("user",{
-            type:User,
+            type:"User",
             async resolve(_parent,_args,ctx) {
                 return await ctx.prisma.pin
                     .findUnique({

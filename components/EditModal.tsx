@@ -8,7 +8,7 @@ import { MdArrowDropDown } from "react-icons/md";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { editModalState, editPinValue } from "../atom/editAtom";
 import { IPin } from "../interface";
-import { deletePinMutation } from "../lib/mutation";
+import { deletePinMutation, updatePinMutation } from "../lib/mutation";
 import { FeedQuery, firstBoardQuery, PinByUserEmail, UserIdQuery } from "../lib/query";
 import BoardDropdown from "./BoardDropdown";
 import BoardList from "./BoardList";
@@ -31,6 +31,33 @@ const EditModal = () => {
     getValues,
   } = useForm<IFormInput>();
   const { user } = useUser();
+
+  const [updatePin] = useMutation(updatePinMutation);
+  const onSubmit = async(data:IFormInput)=>{
+    const variables ={ 
+      ...data,
+      pinId:editPin?.id
+
+    }
+    try {
+      await toast.promise(
+        updatePin({
+          variables
+        }),
+        {
+          loading:'Updating pin',
+          success:"Pin successfully updated",
+          error:"Something went wrong!"
+        }
+      )
+    } catch(err) {
+      throw new Error("Something went wrong" + err)
+    }
+
+    setEditModal(false)
+
+  }
+
   const { data:userId } = useQuery(UserIdQuery,{
     variables:{
       userId:user?.email
@@ -67,12 +94,13 @@ const EditModal = () => {
 
 
   return (
-    <div
+    <form
       className="max-w-4xl mx-auto bg-white rounded-2xl p-4 relative"
       onClick={(e) => e.stopPropagation()}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <h1 className="text-center font-semibold text-2xl">Edit this Pin</h1>
-      <form className="flex gap-x-4 w-full mt-8 relative">
+      <div className="flex gap-x-4 w-full mt-8 relative" >
         <div className="w-3/4 space-y-6">
           <div className="flex  justify-between">
             <label className="flex-[0.25] py-2">Board</label>
@@ -105,20 +133,21 @@ const EditModal = () => {
           width={250}
           height={400}
         />
+
+      
         
-      </form>
+      </div>
       <div className=" w-full   rounded-2xl flex justify-between mt-4">
-          <Button text={"Delete"} handleClick={handleDeletePin} color="black" backgroundColor="bg-gray-200" />
-          <div className="flex items-center gap-x-3">
-            <Button text={"Cancel"}  handleClick={()=>{
-              setEditModal(false)
-            }} color="black" backgroundColor="bg-gray-200"  />
-            <Button text={"Save"}  handleClick={()=>{
-              
-            }} />
+              <Button text={"Delete"} handleClick={handleDeletePin} color="black" backgroundColor="bg-gray-200" />
+              <div className="flex items-center gap-x-3">
+                <Button text={"Cancel"}  handleClick={()=>{
+                  setEditModal(false)
+                }} color="black" backgroundColor="bg-gray-200"  />
+                <Button text={"Save"} type="submit" />
+              </div>
           </div>
-       </div>
-    </div>
+ 
+    </form>
   );
 };
 
