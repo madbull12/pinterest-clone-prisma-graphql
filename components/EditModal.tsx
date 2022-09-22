@@ -4,8 +4,8 @@ import Image from "next/image";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { MdArrowDropDown } from "react-icons/md";
-import { useRecoilValue } from "recoil";
-import { editPinValue } from "../atom/editAtom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { editModalState, editPinValue } from "../atom/editAtom";
 import { IPin } from "../interface";
 import { deletePinMutation } from "../lib/mutation";
 import { FeedQuery, firstBoardQuery, PinByUserEmail, UserIdQuery } from "../lib/query";
@@ -16,6 +16,7 @@ import Loading from "./Loading";
 
 const EditModal = () => {
   const editPin = useRecoilValue<IPin | null>(editPinValue);
+  const [openEditModal,setEditModal] = useRecoilState(editModalState)
   const { user } = useUser();
   const { data:userId } = useQuery(UserIdQuery,{
     variables:{
@@ -46,7 +47,8 @@ const EditModal = () => {
     loading:"Deleting pin",
     success:"Pin successfully deleted",
     error:"Something went wrong"
-  })
+  });
+  setEditModal(false)
   
   }
 
@@ -92,7 +94,9 @@ const EditModal = () => {
       <div className=" w-full   rounded-2xl flex justify-between mt-4">
           <Button text={"Delete"} handleClick={handleDeletePin} color="black" backgroundColor="bg-gray-200" />
           <div className="flex items-center gap-x-3">
-            <Button text={"Cancel"}  handleClick={()=>{}} color="black" backgroundColor="bg-gray-200"  />
+            <Button text={"Cancel"}  handleClick={()=>{
+              setEditModal(false)
+            }} color="black" backgroundColor="bg-gray-200"  />
             <Button text={"Save"}  handleClick={()=>{}} />
           </div>
        </div>
