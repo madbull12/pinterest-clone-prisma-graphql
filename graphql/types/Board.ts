@@ -1,3 +1,4 @@
+// import { Board, Board, Board } from "@prisma/client";
 import { booleanArg, extendType, nonNull, objectType, stringArg } from "nexus";
 
 export const Board = objectType({
@@ -9,7 +10,7 @@ export const Board = objectType({
         t.boolean("secret")
         t.field("user",{
             type:"User",
-            async resolve(_parent,args,ctx) {
+            async resolve(_parent:any,args,ctx) {
                 return await ctx.prisma.board
                     .findUnique({
                         where:{
@@ -21,7 +22,7 @@ export const Board = objectType({
         })
         t.list.field("saved",{
             type:"Saved",
-            async resolve(_parent,args,ctx) {
+            async resolve(_parent:any,args,ctx) {
                 return await ctx.prisma.board
                     .findUnique({
                         where:{
@@ -51,7 +52,7 @@ export const BoardQuery = extendType({
             }
 
         }),
-        t.nonNull.field("firstUserBoard",{
+        t.nonNull.field<any>("firstUserBoard",{
             type:"Board",
             args:{
                 userId:nonNull(stringArg())
@@ -65,7 +66,7 @@ export const BoardQuery = extendType({
             }
 
         }),
-        t.nonNull.field("boardPins",{
+        t.nonNull.field<any>("boardPins",{
             type:"Board",
             args:{
                 boardId:nonNull(stringArg())
