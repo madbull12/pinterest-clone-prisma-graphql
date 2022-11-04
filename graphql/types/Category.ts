@@ -5,9 +5,9 @@ export const Category = objectType({
     definition(t) {
         t.string("id")
         t.string("name")
-        t.list.field("pins",{
+        t.list.field<any>("pins",{
             type:"Pin",
-            async resolve(_parent,args,ctx) {
+            async resolve(_parent:any,args,ctx) {
                 return await ctx.prisma.category
                     .findUnique({
                         where:{

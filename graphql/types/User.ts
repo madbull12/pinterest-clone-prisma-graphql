@@ -10,7 +10,7 @@ export const User = objectType({
         t.field("role",{ type:Role })
         t.list.field("pins",{
             type:Pin,
-            async resolve(_parent,_args,ctx) {
+            async resolve(_parent:any,_args,ctx) {
                 return await ctx.prisma.user.findUnique({
                     where:{
                         id:_parent.id
@@ -25,7 +25,7 @@ export const User = objectType({
 export const UsersQuery = extendType({
     type:"Query",
     definition(t) {
-        t.nonNull.field("user",{
+        t.nonNull.field<any>("user",{
             type:'User',
             args:{
                 userId:nonNull(stringArg())

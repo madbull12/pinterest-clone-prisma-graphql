@@ -15,7 +15,7 @@ export const Comment = objectType({
         t.string("pinId")
         t.field("pin",{
             type:Pin,
-            async resolve(_parent,args,ctx) {
+            async resolve(_parent:any,args,ctx) {
                 return await ctx.prisma.comment.findUnique({
                     where:{
                         id:_parent.id
@@ -27,7 +27,7 @@ export const Comment = objectType({
         t.string("userId")
         t.field("user",{
             type:User,
-            async resolve(_parent,_args,ctx) {
+            async resolve(_parent:any,_args,ctx) {
                 return await ctx.prisma.comment
                     .findUnique({
                         where:{

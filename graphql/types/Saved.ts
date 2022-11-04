@@ -14,7 +14,7 @@ export const Saved = objectType({
         t.string("pinId")
         t.field("user",{
             type:"User",
-            async resolve(_parent,_args,ctx) {
+            async resolve(_parent:any,_args,ctx) {
                 return await ctx.prisma.saved
                     .findUnique({
                         where:{
@@ -26,7 +26,7 @@ export const Saved = objectType({
         })
         t.field("pin",{
             type:"Pin",
-            async resolve(_parent,_args,ctx) {
+            async resolve(_parent:any,_args,ctx) {
                 return await ctx.prisma.saved
                     .findUnique({
                         where:{
@@ -70,7 +70,7 @@ export const SaveMutation = extendType({
     type:"Mutation",
     definition(t) {
  
-        t.nonNull.field("savePin",{
+        t.nonNull.field<any>("savePin",{
             type:"Saved",
             args:{
                 pinId:nonNull(stringArg()),

@@ -1,3 +1,4 @@
+import { CategoriesOnPins, Category } from "@prisma/client";
 import { DateTimeResolver } from "graphql-scalars";
 import { objectType,extendType, enumType, nonNull, stringArg, queryField, asNexusMethod, list } from "nexus";  
 import { ICategory, IPin } from "../../interface";
@@ -14,9 +15,9 @@ export const Pin = objectType({
         t.string("title")
         t.string("imageUrl")
         t.string("description")
-        t.list.field("categories",{
+        t.list.field<any>("categories",{
             type:"Category",
-            async resolve(_parent,_args,ctx) {
+            async resolve(_parent:any,_args,ctx) {
                 return await ctx.prisma.pin
                     .findUnique({
                         where:{
@@ -29,7 +30,7 @@ export const Pin = objectType({
         t.string("userId")
         t.field("user",{
             type:"User",
-            async resolve(_parent,_args,ctx) {
+            async resolve(_parent:any,_args,ctx) {
                 return await ctx.prisma.pin
                     .findUnique({
                         where:{
@@ -41,7 +42,7 @@ export const Pin = objectType({
         })
         t.list.field("comments",{
             type:Comment,
-            async resolve(_parent,_args,ctx) {
+            async resolve(_parent:any,_args,ctx) {
                 return await ctx.prisma.pin
                     .findUnique({
                         where:{
@@ -57,7 +58,7 @@ export const Pin = objectType({
 export const PinsQuery = extendType({
     type:"Query",
     definition(t) {
-        t.nonNull.list.field("pins",{
+        t.nonNull.list.field<any>("pins",{
             type:'Pin',
             resolve(_parent,_args,ctx) {
                 return ctx.prisma.pin.findMany()
@@ -65,7 +66,7 @@ export const PinsQuery = extendType({
         
 
         })
-        t.nonNull.field("pin",{
+        t.nonNull.field<any>("pin",{
             type:'Pin',
             args:{
                 pinId:nonNull(stringArg())
@@ -112,7 +113,7 @@ export const PinsQuery = extendType({
 export const PinMutation = extendType({
     type:"Mutation",
     definition(t) {
-        t.nonNull.field("updatePin",{
+        t.nonNull.field<any>("updatePin",{
             type:"Pin",
             args:{
                 pinId:nonNull(stringArg()),
