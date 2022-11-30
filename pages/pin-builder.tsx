@@ -42,6 +42,7 @@ const PinBuilder = () => {
   const userId = data?.user.id;
   const [createPin, { error }] = useMutation(createPinMutation, {
     onCompleted: () => reset(),
+    
   });
 
   // image change
@@ -73,9 +74,7 @@ const PinBuilder = () => {
     });
   };
 
-  // useEffect(()=>{
-  //     console.log(imageSrc)
-  // },[imageSrc])
+
 
   const onSubmit = async (data: IFormInput) => {
     console.log(data);

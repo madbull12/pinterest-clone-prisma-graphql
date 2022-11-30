@@ -20,7 +20,7 @@ const Pin = ({ item,isEdit }:IProps) => {
             <span className='cursor-pointer'>
                   <Image src={item.imageUrl}  alt="pin" width={widthGenerator()} height={heightGenerator()} objectFit="cover" className='cursor-pointer rounded-2xl '  />
                   {!isEdit && (
-                   <h1 className=' font-semibold'>{item.title}</h1>
+                    <h1 className=' font-semibold'>{item.title}</h1>
 
                   )}
 
