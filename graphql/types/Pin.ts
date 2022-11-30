@@ -162,7 +162,7 @@ export const PinMutation = extendType({
                 title:nonNull(stringArg()),
                 imageUrl:nonNull(stringArg()),
                 description:stringArg(),
-                category:list(stringArg()),
+                categories:list(stringArg()),
                 userId:nonNull(stringArg())
                 
             },
@@ -182,7 +182,7 @@ export const PinMutation = extendType({
                 //         name:true
                 //     }
                 // });
-                console.log(args.category)
+                console.log(args.categories)
 
                 // const categoryMapped = categoryList.map((category:ICategory)=>{
                 //     return category.name;
@@ -200,7 +200,7 @@ export const PinMutation = extendType({
                     data:{
                         ...newPin,
                         categories:{
-                            connectOrCreate: args?.category.map((item:string)=>{
+                            connectOrCreate: args?.categories?.map((item:string)=>{
                                 return {
                                     where:{
                                         name:item

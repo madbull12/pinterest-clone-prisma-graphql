@@ -24,8 +24,31 @@ const PinBuilder = () => {
   const [textAreaCount, setTextAreaCount] = useState(500);
   const [categories, setCategories] = useState<any>([]);
 
-  const [imageSrc, setImageSrc] = useState<any>();
+  // const [imageSrc, setImageSrc] = useState<any>();
   // const [uploadData, setUploadData] = useState<any>();
+  const [selectedFile, setSelectedFile] = useState<any>();
+  const [preview, setPreview] = useState<string>();
+  useEffect(() => {
+    if (!selectedFile) {
+      setPreview(undefined);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(selectedFile);
+    setPreview(objectUrl);
+
+    // free memory when ever this component is unmounted
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [selectedFile]);
+  const onSelectFile = (e: any) => {
+    if (!e.target.files || e.target.files.length === 0) {
+      setSelectedFile(undefined);
+      return;
+    }
+
+    // I've kept this example simple by using the first image instead of multiple
+    setSelectedFile(e.target.files[0]);
+  };
 
   const {
     register,
@@ -39,14 +62,13 @@ const PinBuilder = () => {
       userId: user?.email,
     },
   });
+
   const userId = data?.user.id;
   const [createPin, { error }] = useMutation(createPinMutation, {
     onCompleted: () => reset(),
-    
   });
 
   // image change
-  console.log(getValues("imageUrl"));
 
   // function handleOnChangeImage(changeEvent:any) {
   //     const reader = new FileReader();
@@ -74,15 +96,13 @@ const PinBuilder = () => {
     });
   };
 
-
-
   const onSubmit = async (data: IFormInput) => {
     console.log(data);
     const { title, description } = data;
 
     // upload image
     const formData = new FormData();
-    formData.append("file", data.imageUrl[0]);
+    formData.append("file", selectedFile);
 
     formData.append("upload_preset", "uploads");
 
@@ -100,7 +120,7 @@ const PinBuilder = () => {
 
     const variables = {
       title,
-      category: categories,
+      categories,
       description,
       imageUrl,
       userId,
@@ -132,18 +152,17 @@ const PinBuilder = () => {
           </button>
         </div>
         <div className="flex gap-x-4 mt-2">
-          {imageSrc && (
+          {selectedFile ? (
             <>
-              <img src={imageSrc} className="h-full w-1/2 rounded-lg " />
+              <img src={preview} className="h-full w-1/2 rounded-lg " />
               <button
                 className="absolute w-10 h-10 rounded-full bg-white place-items-center grid opacity-75 m-4"
-                onClick={() => setImageSrc(null)}
+                onClick={() => setSelectedFile(undefined)}
               >
                 <HiTrash />
               </button>
             </>
-          )}
-          {!imageSrc && (
+          ) : (
             <div className="bg-gray-200  rounded-lg w-1/2 cursor-pointer p-4">
               <div className="rounded-lg  cursor-center  space-y-2  text-gray-500  border-dashed border-2 p-4 border-gray-300 w-full h-full">
                 <label
@@ -157,7 +176,7 @@ const PinBuilder = () => {
                     accept="image/png, image/gif, image/jpeg"
                     type="file"
                     id="upload"
-                    {...register("imageUrl")}
+                    onChange={onSelectFile}
                     className="h-full opacity-0 w-full cursor-pointer"
                   />
                 </label>

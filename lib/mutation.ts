@@ -13,7 +13,7 @@ export const createPinMutation = gql`
       imageUrl: $imageUrl
       userId: $userId
       description: $description
-      category: $category
+      categories: $category
     ) {
       categories {
         id
