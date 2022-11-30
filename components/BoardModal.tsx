@@ -1,7 +1,10 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useUser } from "@auth0/nextjs-auth0";
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 import toast from "react-hot-toast";
+import { useRecoilState } from "recoil";
+import { boardModalState } from "../atom/boardAtom";
+import useOutsideClick from "../hooks/useOutsideClick";
 import { createBoardMutation } from "../lib/mutation";
 import { UserIdQuery } from "../lib/query";
 import Backdrop from "./Backdrop";
@@ -10,6 +13,12 @@ const BoardModal = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [name, setName] = useState("");
   const { user } = useUser();
+  const modalRef = useRef<HTMLDivElement>(null);
+  const [openModal,setOpenModal] = useRecoilState(boardModalState)
+
+  useOutsideClick(modalRef,()=>{
+    setOpenModal(false)
+  })
 
   const handleOnChange = () => {
     setIsChecked(!isChecked);
@@ -40,6 +49,7 @@ const BoardModal = () => {
     <div
       className="p-8 rounded-3xl shadow-md max-w-xl mx-auto bg-white mt-36"
       onClick={(e) => e.stopPropagation()}
+      ref={modalRef}
     >
       <p className="text-xl mb-4 text-center font-semibold">Create Board</p>
       <form className="space-y-3 flex flex-col" onSubmit={handleSubmit}>

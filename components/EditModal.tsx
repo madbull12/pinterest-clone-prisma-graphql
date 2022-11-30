@@ -1,12 +1,13 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useUser } from "@auth0/nextjs-auth0";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { MdArrowDropDown } from "react-icons/md";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { editModalState, editPinValue } from "../atom/editAtom";
+import useOutsideClick from "../hooks/useOutsideClick";
 import { IPin } from "../interface";
 import { deletePinMutation, updatePinMutation } from "../lib/mutation";
 import { FeedQuery, firstBoardQuery, PinByUserEmail, UserIdQuery } from "../lib/query";
@@ -31,6 +32,10 @@ const EditModal = () => {
     getValues,
   } = useForm<IFormInput>();
   const { user } = useUser();
+  const modalRef = useRef<HTMLFormElement>(null);
+  useOutsideClick(modalRef,()=>{
+    setEditModal(false)
+  })
 
   const [updatePin] = useMutation(updatePinMutation);
   const onSubmit = async(data:IFormInput)=>{
@@ -98,6 +103,7 @@ const EditModal = () => {
       className="max-w-4xl mx-auto bg-white rounded-2xl p-4 relative"
       onClick={(e) => e.stopPropagation()}
       onSubmit={handleSubmit(onSubmit)}
+      ref={modalRef}
     >
       <h1 className="text-center font-semibold text-2xl">Edit this Pin</h1>
       <div className="flex gap-x-4 w-full mt-8 relative" >

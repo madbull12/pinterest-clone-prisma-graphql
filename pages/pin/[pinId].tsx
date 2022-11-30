@@ -36,6 +36,7 @@ import { useForm } from "react-hook-form";
 import apolloClient from "../../lib/apollo";
 import Button from "../../components/Button";
 import savePin from "../../helper/savePin";
+import useOutsideClick from "../../hooks/useOutsideClick";
 
 interface IProps {
   comment: IComment;
@@ -80,9 +81,10 @@ const BoardItem = ({ board }: { board: IBoard }) => {
 };
 
 const SaveDialog = ({ userBoards }: { userBoards: IBoard[] }) => {
-  console.log(userBoards)
+  console.log(userBoards);
+
   return (
-    <div className="bg-white p-4 shadow-md rounded-xl space-y-3">
+    <div className="bg-white p-4 shadow-md rounded-xl space-y-3" >
       <p className="text-center font-semibold">Save to board</p>
       <input
         type="text"
@@ -143,11 +145,12 @@ const PinDetail = () => {
   const router = useRouter();
   const { pinId } = router.query;
   const { user } = useUser();
+  const commentInputRef = useRef<any>(null)
 
   const [contentFocus, setContentFocus] = useState<boolean>(false);
   const [content, setContent] = useState<string>("");
 
-  const { reset, handleSubmit } = useForm();
+  const { handleSubmit } = useForm();
 
   // const [saveMutation, { error: saveError }] = useMutation(savePinMutation);
   const [deleteSave] = useMutation(deleteSaveMutation);
@@ -238,8 +241,15 @@ const PinDetail = () => {
       pinId,
     };
     try {
-      await createComment({ variables });
-      reset();
+      await toast.promise(
+        createComment({ variables }),
+        {
+          loading:"Posting comment...",
+          success:"Comment posted 👏👏",
+          error:"Oops something went wrong 😢"
+
+        }
+      );
     } catch (error) {
       console.error(error);
     }
@@ -354,6 +364,7 @@ const PinDetail = () => {
                     <input
                       onFocus={() => setContentFocus(true)}
                       onChange={(e) => setContent(e.target.value)}
+                      ref={commentInputRef}
                       type="text"
                       className="w-full p-3 outline-none border-gray-200 rounded-full border"
                       placeholder={`${
@@ -369,7 +380,7 @@ const PinDetail = () => {
                         className="px-4 py-2 bg-gray-200 text-gray-800 font-semibold rounded-full"
                         onClick={() => {
                           setContentFocus(false);
-                          reset();
+                          commentInputRef.current.value=""
                         }}
                       >
                         Cancel

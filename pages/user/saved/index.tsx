@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Loading from "../../../components/Loading";
 import UserProfile from "../../../components/UserProfile";
 import {
@@ -18,6 +18,7 @@ import BoardModal from "../../../components/BoardModal";
 import Backdrop from "../../../components/Backdrop";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { boardModalState, isOpen } from "../../../atom/boardAtom";
+import useOutsideClick from "../../../hooks/useOutsideClick";
 const BoardListPage = () => {
   const { user } = useUser();
   const { data: userId } = useQuery(UserIdQuery, {
@@ -33,9 +34,14 @@ const BoardListPage = () => {
   });
   console.log(data);
 
-  const [createOpen, setCreateOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null)
 
   const [openModal, setOpenModal] = useRecoilState(boardModalState);
+  useOutsideClick(dialogRef,()=>{
+    setDialogOpen(false)
+  })
+  
   const isBoardOpen = useRecoilValue(isOpen);
 
   useEffect(() => {
@@ -61,15 +67,15 @@ const BoardListPage = () => {
         <div className="relative self-end">
           <div
             className="hover:bg-gray-200 z-50 w-10 h-10 grid  place-items-center rounded-full "
-            onClick={() => setCreateOpen(!createOpen)}
+            onClick={() => setDialogOpen(!dialogOpen)}
           >
             <FiPlus
               className="text-2xl text-end cursor-pointer"
-              onClick={() => setCreateOpen(!createOpen)}
+              onClick={() => setDialogOpen(!dialogOpen)}
             />
           </div>
-          {createOpen && (
-            <div className="absolute -bottom-34 right-0 bg-white shadow-md rounded-lg z-50 px-2 py-3 w-40 ">
+          {dialogOpen && (
+            <div ref={dialogRef} className="absolute -bottom-34 right-0 bg-white shadow-md rounded-lg z-50 px-2 py-3 w-40 ">
               <p className="text-sm px-2">Create</p>
               <ul className="font-semibold  mt-2">
                 <li className="cursor-pointer  hover:bg-gray-200  p-2 rounded-lg">

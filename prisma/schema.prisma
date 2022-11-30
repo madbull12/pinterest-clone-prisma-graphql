@@ -48,7 +48,7 @@ model Saved {
   board         Board     @relation(fields: [boardId],references: [id])
   boardId       String
 
-  @@unique([userId,pinId])
+  @@unique([userId,pinId,boardId])
 }
 
 model Comment {
