@@ -38,7 +38,7 @@ const SearchPage = () => {
                         <div key={uuidv4()} className="relative my-3">
                             <Link href={`/pin/${item?.id}`}>
                             <span className='cursor-pointer'>
-                                <Image src={item.imageUrl}  alt="pin" width={widthGenerator()} height={heightGenerator()} objectFit="cover" className='cursor-pointer rounded-2xl '  />
+                                <Image src={item.media}  alt="pin" width={widthGenerator()} height={heightGenerator()} objectFit="cover" className='cursor-pointer rounded-2xl '  />
 
                                 <h1 className=' font-semibold'>{item.title}</h1>
                             </span>
