@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { Context, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import toast, { Toaster } from "react-hot-toast";
 import prisma from "../lib/prisma";
 import { createPinMutation } from "../lib/mutation";
 import { UserIdQuery } from "../lib/query";
-import { getSession, useUser } from "@auth0/nextjs-auth0";
 import { HiDotsHorizontal, HiTrash, HiUpload } from "react-icons/hi";
 import { MdFileUpload, MdUpload } from "react-icons/md";
 import Image from "next/image";
 import Button from "../components/Button";
+import { getSession, useSession } from "next-auth/react";
 
 interface IFormInput {
   title: string;
@@ -19,7 +19,7 @@ interface IFormInput {
 }
 
 const PinBuilder = () => {
-  const { user } = useUser();
+  const { data:session } = useSession();
   const [textAreaFocus, setTextAreaFocus] = useState(false);
   const [textAreaCount, setTextAreaCount] = useState(500);
   const [categories, setCategories] = useState<any>([]);
@@ -59,7 +59,7 @@ const PinBuilder = () => {
   } = useForm<IFormInput>();
   const { data } = useQuery(UserIdQuery, {
     variables: {
-      userId: user?.email,
+      userId: session?.user?.email,
     },
   });
 
@@ -116,13 +116,13 @@ const PinBuilder = () => {
     console.log(res);
 
     // end of upload image
-    const imageUrl = res.secure_url;
+    const media = res.secure_url;
 
     const variables = {
       title,
       categories,
       description,
-      imageUrl,
+      media,
       userId,
     };
     try {
@@ -154,13 +154,21 @@ const PinBuilder = () => {
         <div className="flex gap-x-4 mt-2">
           {selectedFile ? (
             <>
-              <img src={preview} className="h-full w-1/2 rounded-lg " />
-              <button
-                className="absolute w-10 h-10 rounded-full bg-white place-items-center grid opacity-75 m-4"
-                onClick={() => setSelectedFile(undefined)}
-              >
-                <HiTrash />
-              </button>
+              {selectedFile.type === "video/mp4" ? (
+                <video controls className="relative h-full w-full rounded-2xl">
+                  <source src={preview} type="video/mp4"></source>
+                </video>
+              ) : (
+                <div className="relative w-1/2 h-full">
+                  <img src={preview || ""}  className="w-full h-full rounded-lg " />
+                  <button
+                    className="absolute top-0 w-10 h-10 rounded-full bg-white place-items-center grid opacity-75 m-4"
+                    onClick={() => setSelectedFile(undefined)}
+                  >
+                    <HiTrash />
+                  </button>
+                </div>
+              )}
             </>
           ) : (
             <div className="bg-gray-200  rounded-lg w-1/2 cursor-pointer p-4">
@@ -170,10 +178,10 @@ const PinBuilder = () => {
                   className="items-center flex flex-col justify-center pt-16 cursor-pointer"
                 >
                   <HiUpload className="text-3xl" />
-                  <p>Click to upload image</p>
+                  <p>Click to upload image or video</p>
 
                   <input
-                    accept="image/png, image/gif, image/jpeg"
+                    accept="image/png, image/gif, image/jpeg,video/mp4,video/x-m4v,video/*"
                     type="file"
                     id="upload"
                     onChange={onSelectFile}
@@ -193,13 +201,13 @@ const PinBuilder = () => {
             />
             <div className="gap-x-3 items-center flex">
               <Image
-                src={user?.picture || ""}
+                src={session?.user?.image || ""}
                 width={50}
                 height={50}
                 className="rounded-full"
                 alt="profile"
               />
-              <p className="font-semibold">{user?.name}</p>
+              <p className="font-semibold">{session?.user?.name}</p>
             </div>
             <div className="flex flex-col">
               <textarea
@@ -266,14 +274,15 @@ const PinBuilder = () => {
   );
 };
 
-export const getServerSideProps = async ({ req, res }: any) => {
-  const session = getSession(req, res);
+export const getServerSideProps = async (context:any) => {
+  const session = getSession();
+  console.log(session)
 
   if (!session) {
     return {
       redirect: {
         permanent: false,
-        destination: "/api/auth/login",
+        destination: "/",
       },
       props: {},
     };

@@ -35,7 +35,7 @@ scalar DateTime
 type Mutation {
   createBoard(name: String!, secret: Boolean!, userId: String!): Board!
   createComment(content: String!, pinId: String!, userId: String!): Comment!
-  createPin(categories: [String], description: String, imageUrl: String!, title: String!, userId: String!): Pin!
+  createPin(categories: [String], description: String, media: String!, title: String!, userId: String!): Pin!
   deletePin(pinId: String!): Pin!
   deleteSave(saveId: String!): Saved!
   savePin(boardId: String!, pinId: String!, userId: String!): Saved!
@@ -48,7 +48,7 @@ type Pin {
   createdAt: DateTime
   description: String
   id: String
-  imageUrl: String
+  media: String
   title: String
   user: User
   userId: String

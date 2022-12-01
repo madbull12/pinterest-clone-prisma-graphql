@@ -4,7 +4,7 @@ export const FeedQuery = gql`
   query {
     pins {
       id
-      imageUrl
+      media
       title
     }
   }
@@ -14,7 +14,7 @@ export const SinglePinQuery = gql`
     pin(pinId: $pinId) {
       id
       title
-      imageUrl
+      media
       description
       categories {
         name
@@ -45,7 +45,7 @@ export const PinByUserEmail = gql`
     user(userId: $userId) {
       pins {
         id
-        imageUrl
+        media
         title
         description
       }
@@ -67,7 +67,7 @@ export const SavedPinsQuery = gql`
       id
       createdAt
       pin {
-        imageUrl
+        media
         id
       }
     }
@@ -78,7 +78,7 @@ export const UserSavedPins = gql`
   query ExampleQuery($userId: String!) {
     userSaved(userId: $userId) {
       pin {
-        imageUrl
+        media
         id
       }
       id
@@ -92,7 +92,7 @@ export const SearchPinQuery = gql`
     searchPins(searchTerm: $searchTerm) {
       title
       id
-      imageUrl
+      media
     }
   }
 `;
@@ -129,7 +129,7 @@ export const BoardPins = gql`
         pin {
           title
           id
-          imageUrl
+          media
         }
       }
       id

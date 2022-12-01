@@ -13,7 +13,7 @@ export const Pin = objectType({
         t.string("id")
         t.date("createdAt")
         t.string("title")
-        t.string("imageUrl")
+        t.string("media")
         t.string("description")
         t.list.field<any>("categories",{
             type:"Category",
@@ -72,6 +72,7 @@ export const PinsQuery = extendType({
                 pinId:nonNull(stringArg())
             },
             resolve(_parent,{ pinId },ctx) {
+                
                  return ctx.prisma.pin.findUnique({
                     where:{
                         id:pinId
@@ -160,7 +161,7 @@ export const PinMutation = extendType({
             type:'Pin',
             args:{
                 title:nonNull(stringArg()),
-                imageUrl:nonNull(stringArg()),
+                media:nonNull(stringArg()),
                 description:stringArg(),
                 categories:list(stringArg()),
                 userId:nonNull(stringArg())
@@ -172,7 +173,7 @@ export const PinMutation = extendType({
                 }
                 const newPin = {
                     title: args.title,
-                    imageUrl: args.imageUrl,
+                    media: args.media,
                     description: args.description,
                     userId:args.userId
                 }

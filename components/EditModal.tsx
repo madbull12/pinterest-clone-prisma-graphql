@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { useUser } from "@auth0/nextjs-auth0";
 import Image from "next/image";
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -15,6 +14,7 @@ import BoardDropdown from "./BoardDropdown";
 import BoardList from "./BoardList";
 import Button from "./Button";
 import Loading from "./Loading";
+import { useSession } from "next-auth/react";
 
 interface IFormInput {
   title:string;
@@ -31,7 +31,7 @@ const EditModal = () => {
     reset,
     getValues,
   } = useForm<IFormInput>();
-  const { user } = useUser();
+  const { data:session } = useSession()
   const modalRef = useRef<HTMLFormElement>(null);
   useOutsideClick(modalRef,()=>{
     setEditModal(false)
@@ -65,7 +65,7 @@ const EditModal = () => {
 
   const { data:userId } = useQuery(UserIdQuery,{
     variables:{
-      userId:user?.email
+      userId:session?.user?.email
     }
   });
   console.log(userId)
@@ -134,7 +134,7 @@ const EditModal = () => {
           </div>
         </div>
         <Image
-          src={editPin?.imageUrl ?? ""}
+          src={editPin?.media ?? ""}
           className="rounded-xl object-cover"
           width={250}
           height={400}

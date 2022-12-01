@@ -274,7 +274,7 @@ const PinDetail = () => {
         <section className="shadow-lg rounded-3xl w-full flex flex-col md:flex-row">
           <div className=" relative  ">
             <Image
-              src={pin.imageUrl}
+              src={pin.media}
               alt="image"
               width={700}
               height={650}

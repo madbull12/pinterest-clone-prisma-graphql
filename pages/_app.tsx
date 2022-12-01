@@ -1,40 +1,27 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
-import { ApolloProvider } from '@apollo/client'
-import apolloClient from '../lib/apollo'
-import Navbar from '../components/Navbar'
-import Layout from '../components/Layout'
-import { UserProvider } from '@auth0/nextjs-auth0'
-import { Toaster } from 'react-hot-toast'
-import {
-  RecoilRoot, useRecoilState,
+import "../styles/globals.css";
+import type { AppProps } from "next/app";
+import { ApolloProvider } from "@apollo/client";
+import apolloClient from "../lib/apollo";
+import Layout from "../components/Layout";
+import { Toaster } from "react-hot-toast";
+import { RecoilRoot, useRecoilState } from "recoil";
 
-} from 'recoil';
-import { useEffect } from 'react'
-import { useRouter } from 'next/router'
-import { searchResultState } from '../atom/searchAtom'
+import { SessionProvider } from "next-auth/react";
 
-function MyApp({ Component, pageProps }: AppProps) {
-
+function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <RecoilRoot>
-      <UserProvider>
-        <ApolloProvider client={apolloClient} >
+      <SessionProvider>
+        <ApolloProvider client={apolloClient}>
           <Toaster />
 
           <Layout>
             <Component {...pageProps} />
-
           </Layout>
-
         </ApolloProvider>
-      </UserProvider>
-
+      </SessionProvider>
     </RecoilRoot>
-
-
-  
-  )
+  );
 }
 
-export default MyApp
+export default MyApp;

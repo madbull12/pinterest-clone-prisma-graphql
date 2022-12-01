@@ -3,7 +3,7 @@ export interface IPin {
     id:string;
     title:string;
     description?:string;
-    imageUrl:string;
+    media:string
     category:string[];
     userId:string;
     comments:IComment[];

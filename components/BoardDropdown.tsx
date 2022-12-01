@@ -5,12 +5,13 @@ import { MdArrowDropDown } from "react-icons/md";
 import { firstBoardQuery, UserIdQuery } from "../lib/query";
 import BoardList from "./BoardList";
 import Loading from "./Loading";
+import { useSession } from 'next-auth/react'
 
 const BoardDropdown = () => {
-  const { user } = useUser();
+  const { data:session } = useSession();
   const { data: userId } = useQuery(UserIdQuery, {
     variables: {
-      userId: user?.email,
+      userId: session?.user?.email,
     },
   });
   const { data: firstBoard, loading } = useQuery(firstBoardQuery, {

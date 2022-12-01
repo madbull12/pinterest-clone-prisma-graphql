@@ -4,9 +4,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react'
 import { HiPlusCircle } from 'react-icons/hi';
+import { useSession } from "next-auth/react";
+
 
 const UserProfile = () => {
-    const { user } = useUser();
+    const { data:session } = useSession();
     const router = useRouter();
   return (
     <main className='flex justify-center items-center flex-col text-center'>
@@ -14,11 +16,11 @@ const UserProfile = () => {
             <HiPlusCircle className='text-gray-50 text-5xl absolute bottom-0 right-0' />
         </div>
         <div className='-mt-14'>
-         <Image src={user?.picture || ""} className="rounded-full " width={100} height={100} alt="avatar" />
+         <Image src={session?.user?.image || ""} className="rounded-full " width={100} height={100} alt="avatar" />
         </div>
         <div>
-            <h1 className='text-2xl font-semibold'>{user?.name}</h1>
-            <p className='text-sm text-gray-400'>@{user?.nickname}</p>
+            <h1 className='text-2xl font-semibold'>{session?.user?.name}</h1>
+            <p className='text-sm text-gray-400'>{session?.user?.email}</p>
         </div>
         <nav>
             <ul className='flex gap-x-4 font-semibold'>

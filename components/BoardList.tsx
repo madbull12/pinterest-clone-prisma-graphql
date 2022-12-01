@@ -7,6 +7,8 @@ import savePin from '../helper/savePin'
 import { IBoard } from '../interface'
 import { UserIdQuery,UserBoardsQuery } from '../lib/query'
 import Button from './Button'
+import { useSession } from 'next-auth/react'
+
 
 interface IBoardItem {
     board:IBoard;
@@ -15,10 +17,10 @@ interface IBoardItem {
 const BoardItem = ({ board,edit }: IBoardItem) => {
     const [showSaveBtn, setShowSaveBtn] = useState<boolean>(false);
     const router = useRouter();
-    const { user } = useUser()
+    const { data:session } = useSession()
     const { data: userId } = useQuery(UserIdQuery, {
       variables: {
-        userId: user?.email,
+        userId: session?.user?.email,
       },
     });
     const { pinId } = router.query;
@@ -69,10 +71,10 @@ const BoardItem = ({ board,edit }: IBoardItem) => {
   };
 
 const BoardList = () => {
-    const { user } = useUser();
+    const { data:session } = useSession();
     const { data:userId } = useQuery(UserIdQuery,{
         variables:{
-            userId:user?.email
+            userId:session?.user?.email
         }
     });
 

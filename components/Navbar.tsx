@@ -1,15 +1,14 @@
-import { useUser } from '@auth0/nextjs-auth0'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
 import Button from './Button'
 import Search from './Search'
+import { useSession, signIn, signOut } from "next-auth/react"
 
 const Navbar = () => {
 
-
-    const { user } = useUser();
+    const { status,data:session } = useSession();
     const router = useRouter();
   return (
     <nav className='py-4 px-2 max-w-7xl mx-auto'>
@@ -25,15 +24,15 @@ const Navbar = () => {
             </div>
             <Search />
             <div className='flex items-center gap-x-2'>
-                {user ? (
-                    <Button text="Logout" handleClick={()=>router.push("/api/auth/logout")} />
+                {status === "authenticated" ? (
+                    <Button text="Logout" handleClick={()=>signOut()} />
                 ):(
-                    <Button text="Login" handleClick={()=>router.push("/api/auth/login")} />
+                    <Button text="Login" handleClick={()=>signIn("google")} />
 
                 )}
-                {user && (
+                {status === "authenticated" && (
                     <Link href="/user/created">
-                     <Image src={user?.picture || ""} alt="avatar" width={40} height={40} className="cursor-pointer rounded-full" />
+                     <Image src={session?.user?.image || ""} alt="avatar" width={40} height={40} className="cursor-pointer rounded-full" />
                     
                     </Link>
 

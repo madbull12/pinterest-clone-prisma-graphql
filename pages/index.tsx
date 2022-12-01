@@ -3,12 +3,12 @@ import Head from 'next/head'
 import { IPin } from '../interface'
 import { useQuery } from '@apollo/client'
 import { FeedQuery } from '../lib/query'
-import { useUser } from '@auth0/nextjs-auth0'
 import Loading from '../components/Loading'
 import { useRecoilState } from 'recoil'
 import { searchResultState } from '../atom/searchAtom'
 import { v4 as uuidv4 } from 'uuid'
 import Pin from '../components/Pin'
+import { useSession } from 'next-auth/react'
 import MasonryWrapper from '../components/MasonryWrapper'
 
 
@@ -17,14 +17,13 @@ const Home: NextPage = () => {
 
   const [searchResults,setSearchResults] = useRecoilState<any>(searchResultState)
   console.log(searchResults)
-  const { user } = useUser();
+  const { data:session } = useSession();
   if(loading) return (
     <div className='justify-center flex py-4'>
       <Loading />
     </div>
   )
   if(error) return <p>{error.message}</p>
-  console.log(user)
 
 
   return (

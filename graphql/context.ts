@@ -1,24 +1,23 @@
 // /graphql/context.ts
-import { Claims, getSession } from '@auth0/nextjs-auth0'
+import { getSession } from 'next-auth/react'
 import { PrismaClient } from '@prisma/client'
 import prisma from '../lib/prisma'
+import { User } from 'next-auth'
 
 export type Context = {
-  user?: Claims
+  user?: User
   accessToken?: string
   prisma: PrismaClient
 }
 
 export async function createContext({ req,res }:any): Promise<Context> {
-  const session = getSession(req,res);
+  const session = getSession(req);
 
   if(!session) return { prisma }
 
-  const { user,accessToken } = session;
   
   return {
-    user,
-    accessToken,
+   
     prisma,
   }
 }
