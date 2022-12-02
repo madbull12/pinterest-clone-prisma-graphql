@@ -78,9 +78,7 @@ export const SaveMutation = extendType({
                 userId:nonNull(stringArg())
             },
             async resolve(_parent,args:any,ctx) {
-                if(!ctx.user) {
-                    throw new Error("You need to be logged in to perform an action")
-                }
+             
 
                 const saveData = {
                     pinId:args.pinId,

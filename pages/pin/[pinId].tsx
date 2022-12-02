@@ -25,7 +25,6 @@ import Image from "next/image";
 import { MdExpandMore } from "react-icons/md";
 import { v4 as uuidv4 } from "uuid";
 import Loading from "../../components/Loading";
-import { useUser } from "@auth0/nextjs-auth0";
 import {
   createCommentMutation,
   savePinMutation,
@@ -48,12 +47,8 @@ interface IProps {
 const BoardItem = ({ board }: { board: IBoard }) => {
   const [showSaveBtn, setShowSaveBtn] = useState<boolean>(false);
   const router = useRouter();
-  const { user } = useUser();
-  const { data: userId } = useQuery(UserIdQuery, {
-    variables: {
-      userId: user?.email,
-    },
-  });
+  const { data: session } = useSession();
+
   const { pinId } = router.query;
   console.log(board);
   return (
@@ -73,7 +68,7 @@ const BoardItem = ({ board }: { board: IBoard }) => {
         <Button
           text={"Save"}
           handleClick={() => {
-            savePin(userId?.user.id, board.id, pinId);
+            savePin(session?.user?.id as string, board.id, pinId);
           }}
         />
       )}
@@ -284,7 +279,7 @@ const PinDetail = () => {
               </div>
 
               <div className="ml-auto flex items-center gap-x-4">
-                {userBoards?.userBoards.length !== 0 ? (
+                {(userBoards?.userBoards.length !== 0 || status==="authenticated") ? (
                   <button
                     ref={btnRef}
                     className="flex items-center relative "
@@ -303,19 +298,20 @@ const PinDetail = () => {
                     )}
                   </button>
                 ) : null}
-
-                <Button
-                  text={"Save"}
-                  handleClick={() => {
-                    userBoards?.userBoards.length !== 0
-                      ? savePin(
-                          session?.user?.id as string,
-                          userBoards?.userBoards[0].id,
-                          pin.id
-                        )
-                      : setOpenModal(true);
-                  }}
-                />
+                {status === "authenticated" ? (
+                  <Button
+                    text={"Save"}
+                    handleClick={() => {
+                      userBoards?.userBoards.length !== 0
+                        ? savePin(
+                            session?.user?.id as string,
+                            userBoards?.userBoards[0].id,
+                            pin.id
+                          )
+                        : setOpenModal(true);
+                    }}
+                  />
+                ) : null}
               </div>
             </nav>
             <div className="mt-4 space-y-3">
