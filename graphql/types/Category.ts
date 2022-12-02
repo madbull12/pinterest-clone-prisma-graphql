@@ -25,7 +25,7 @@ export const Category = objectType({
 export const CategoryQuery = extendType({
     type:"Query",
     definition(t) {
-        t.list.nonNull.field("categories",{
+        t.list.nonNull.field<any>("categories",{
             type:"Category",
             resolve(_parent,args,ctx) {
                 return ctx.prisma.category.findMany()

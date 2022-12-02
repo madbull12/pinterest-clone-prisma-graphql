@@ -1,19 +1,19 @@
 import { objectType,asNexusMethod, extendType, nonNull, stringArg } from "nexus"
 import { DateTimeResolver } from "graphql-scalars";
-
+import { GraphQLDate } from 'graphql-iso-date'
 import { Pin } from "./Pin"
 import { User } from "./User"
 
-export const GQLDate = asNexusMethod(DateTimeResolver,"date");
+export const GQLDate = asNexusMethod(GraphQLDate as any, 'date')
 
 export const Comment = objectType({
     name:"Comment",
     definition(t) {
         t.string("id")
-        t.date<any>("createdAt")
+        t.string("createdAt")
         t.string("content")
         t.string("pinId")
-        t.field("pin",{
+        t.field<any>("pin",{
             type:Pin,
             async resolve(_parent:any,args,ctx) {
                 return await ctx.prisma.comment.findUnique({
@@ -25,7 +25,7 @@ export const Comment = objectType({
             }
         })
         t.string("userId")
-        t.field("user",{
+        t.field<any>("user",{
             type:User,
             async resolve(_parent:any,_args,ctx) {
                 return await ctx.prisma.comment
@@ -44,7 +44,7 @@ export const Comment = objectType({
 export const CommentMutation = extendType({
     type:"Mutation",
     definition(t){
-        t.nonNull.field("createComment",{
+        t.nonNull.field<any>("createComment",{
             type:"Comment",
             args:{
                 content:nonNull(stringArg()),
@@ -52,9 +52,7 @@ export const CommentMutation = extendType({
                 pinId:nonNull(stringArg())
             },
             async resolve(_parent,{ content,userId,pinId },ctx) {
-                if(!ctx.user) {
-                    throw new Error("You have to be logged in first in order to perform this action")
-                }
+             
 
                 const data = {
                     content,

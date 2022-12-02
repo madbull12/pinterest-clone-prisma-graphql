@@ -8,7 +8,7 @@ export const User = objectType({
         t.string("email")
         t.string("image")
         t.field("role",{ type:Role })
-        t.list.field("pins",{
+        t.list.field<any>("pins",{
             type:Pin,
             async resolve(_parent:any,_args,ctx) {
                 return await ctx.prisma.user.findUnique({

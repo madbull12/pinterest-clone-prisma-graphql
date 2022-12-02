@@ -19,7 +19,7 @@ type Category {
 
 type Comment {
   content: String
-  createdAt: DateTime
+  createdAt: String
   id: String
   pin: Pin
   pinId: String
@@ -28,9 +28,9 @@ type Comment {
 }
 
 """
-A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
 """
-scalar DateTime
+scalar Date
 
 type Mutation {
   createBoard(name: String!, secret: Boolean!, userId: String!): Board!
@@ -45,7 +45,7 @@ type Mutation {
 type Pin {
   categories: [Category]
   comments: [Comment]
-  createdAt: DateTime
+  createdAt: String
   description: String
   id: String
   media: String
@@ -73,7 +73,7 @@ enum Role {
 }
 
 type Saved {
-  createdAt: DateTime
+  createdAt: String
   id: String
   pin: Pin
   pinId: String

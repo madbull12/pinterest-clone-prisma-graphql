@@ -20,7 +20,7 @@ export const Board = objectType({
                     .user()
             }
         })
-        t.list.field("saved",{
+        t.list.field<any>("saved",{
             type:"Saved",
             async resolve(_parent:any,args,ctx) {
                 return await ctx.prisma.board
@@ -38,7 +38,7 @@ export const Board = objectType({
 export const BoardQuery = extendType({
     type:"Query",
     definition(t) {
-        t.list.nonNull.field("userBoards",{
+        t.list.nonNull.field<any>("userBoards",{
             type:"Board",
             args:{
                 userId:nonNull(stringArg())
@@ -87,7 +87,7 @@ export const BoardQuery = extendType({
 export const BoardMutation = extendType({
     type:"Mutation",
     definition(t) {
-        t.nonNull.field("createBoard",{
+        t.nonNull.field<any>("createBoard",{
             type:"Board",
             args:{
                 userId:nonNull(stringArg()),

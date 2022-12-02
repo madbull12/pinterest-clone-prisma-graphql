@@ -4,6 +4,7 @@ import { objectType,extendType, enumType, nonNull, stringArg, queryField, asNexu
 import { ICategory, IPin } from "../../interface";
 import { Comment } from "./Comment";
 import { User } from "./User";
+import { ObjectDefinitionBlock } from "nexus/dist/core";
 
  const GQLDate = asNexusMethod(DateTimeResolver,"date");
 
@@ -11,7 +12,7 @@ export const Pin = objectType({
     name:"Pin",
     definition(t) {
         t.string("id")
-        t.date<any>("createdAt")
+        t.string("createdAt")
         t.string("title")
         t.string("media")
         t.string("description")
@@ -40,7 +41,7 @@ export const Pin = objectType({
                     .user()
             }
         })
-        t.list.field("comments",{
+        t.list.field<any>("comments",{
             type:Comment,
             async resolve(_parent:any,_args,ctx) {
                 return await ctx.prisma.pin
@@ -82,7 +83,7 @@ export const PinsQuery = extendType({
             
 
         })
-        t.nonNull.list.field("searchPins",{
+        t.nonNull.list.field<any>("searchPins",{
             type:"Pin",
             args:{
                 searchTerm:nonNull(stringArg())
@@ -141,7 +142,7 @@ export const PinMutation = extendType({
             }
         })
         
-        t.nonNull.field("deletePin",{
+        t.nonNull.field<any>("deletePin",{
             type:"Pin",
             args:{
                 pinId:nonNull(stringArg())

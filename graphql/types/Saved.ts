@@ -9,7 +9,7 @@ export const Saved = objectType({
     name:"Saved",
     definition(t) {
         t.string("id")
-        t.date<any>("createdAt")
+        t.string("createdAt")
         t.string("userId")
         t.string("pinId")
         t.field("user",{
@@ -24,7 +24,7 @@ export const Saved = objectType({
                     .user()
             }
         })
-        t.field("pin",{
+        t.field<any>("pin",{
             type:"Pin",
             async resolve(_parent:any,_args,ctx) {
                 return await ctx.prisma.saved
@@ -43,13 +43,13 @@ export const SavedQuery = extendType({
     type:"Query",
     definition(t) {
         
-        t.nonNull.list.field("saved",{
+        t.nonNull.list.field<any>("saved",{
             type:"Saved",
             resolve(_parent,_args,ctx) {
                 return ctx.prisma.saved.findMany()
             }
         }),
-        t.nonNull.list.field("userSaved",{
+        t.nonNull.list.field<any>("userSaved",{
             type:"Saved",
             args:{
                 userId:nonNull(stringArg())
@@ -91,7 +91,7 @@ export const SaveMutation = extendType({
                 })
             }
         })
-        t.nonNull.field("deleteSave",{
+        t.nonNull.field<any>("deleteSave",{
             type:"Saved",
             args:{
                 saveId:nonNull(stringArg())
