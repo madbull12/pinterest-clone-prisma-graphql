@@ -10,7 +10,7 @@ export const Comment = objectType({
     name:"Comment",
     definition(t) {
         t.string("id")
-        t.date("createdAt")
+        t.date<any>("createdAt")
         t.string("content")
         t.string("pinId")
         t.field("pin",{

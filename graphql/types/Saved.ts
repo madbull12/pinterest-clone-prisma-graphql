@@ -9,7 +9,7 @@ export const Saved = objectType({
     name:"Saved",
     definition(t) {
         t.string("id")
-        t.date("createdAt")
+        t.date<any>("createdAt")
         t.string("userId")
         t.string("pinId")
         t.field("user",{

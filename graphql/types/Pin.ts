@@ -11,7 +11,7 @@ export const Pin = objectType({
     name:"Pin",
     definition(t) {
         t.string("id")
-        t.date("createdAt")
+        t.date<any>("createdAt")
         t.string("title")
         t.string("media")
         t.string("description")
