@@ -4,12 +4,13 @@ import { gql, useMutation, useQuery } from "@apollo/client";
 import toast, { Toaster } from "react-hot-toast";
 import prisma from "../lib/prisma";
 import { createPinMutation } from "../lib/mutation";
-import { UserIdQuery } from "../lib/query";
+import { FeedQuery, UserIdQuery } from "../lib/query";
 import { HiDotsHorizontal, HiTrash, HiUpload } from "react-icons/hi";
 import { MdFileUpload, MdUpload } from "react-icons/md";
 import Image from "next/image";
 import Button from "../components/Button";
 import { getSession, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 
 interface IFormInput {
@@ -29,6 +30,7 @@ const PinBuilder = () => {
   // const [uploadData, setUploadData] = useState<any>();
   const [selectedFile, setSelectedFile] = useState<any>();
   const [preview, setPreview] = useState<string>();
+  const router = useRouter()
   useEffect(() => {
     if (!selectedFile) {
       setPreview(undefined);
@@ -66,7 +68,12 @@ const PinBuilder = () => {
 
   // const userId = data?.user.id;
   const [createPin, { error }] = useMutation(createPinMutation, {
-    onCompleted: () => reset(),
+    onCompleted: () => {
+      reset()
+      setSelectedFile(undefined)
+      router.push("/")
+    },
+    refetchQueries:[FeedQuery]
   });
 
   // image change
@@ -275,23 +282,23 @@ const PinBuilder = () => {
   );
 };
 
-export const getServerSideProps = async ({ req }:any) => {
-  const session = await getSession();
-  console.log(session)
+// export const getServerSideProps = async ({ req }:any) => {
+//   const session = await getSession(req);
+//   console.log(session)
 
-  if (!session) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: "/",
-      },
-      props: {},
-    };
-  }
+//   if (!session) {
+//     return {
+//       redirect: {
+//         permanent: false,
+//         destination: "/",
+//       },
+//       props: {},
+//     };
+//   }
 
-  return {
-    props: {},
-  };
-};
+//   return {
+//     props: {},
+//   };
+// };
 
 export default PinBuilder;

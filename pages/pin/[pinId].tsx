@@ -38,6 +38,8 @@ import Button from "../../components/Button";
 import savePin from "../../helper/savePin";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { useSession } from "next-auth/react";
+import { useRecoilState } from "recoil";
+import { boardModalState } from "../../atom/boardAtom";
 
 interface IProps {
   comment: IComment;
@@ -46,14 +48,14 @@ interface IProps {
 const BoardItem = ({ board }: { board: IBoard }) => {
   const [showSaveBtn, setShowSaveBtn] = useState<boolean>(false);
   const router = useRouter();
-  const { user } = useUser()
+  const { user } = useUser();
   const { data: userId } = useQuery(UserIdQuery, {
     variables: {
       userId: user?.email,
     },
   });
   const { pinId } = router.query;
-  console.log(board)
+  console.log(board);
   return (
     <div
       className="flex items-center justify-between hover:bg-gray-100 rounded-lg p-1"
@@ -65,17 +67,15 @@ const BoardItem = ({ board }: { board: IBoard }) => {
         <p className="font-semibold">{board.name}</p>
       </div>
       {!showSaveBtn && (
-        <>
-          {board.secret && <AiFillLock className="text-lg" />}
-        
-        </>
-
+        <>{board.secret && <AiFillLock className="text-lg" />}</>
       )}
       {showSaveBtn && (
-        <Button text={"Save"} handleClick={() => {
-          savePin(userId?.user.id,board.id,pinId)
-        }} />
-
+        <Button
+          text={"Save"}
+          handleClick={() => {
+            savePin(userId?.user.id, board.id, pinId);
+          }}
+        />
       )}
     </div>
   );
@@ -85,7 +85,7 @@ const SaveDialog = ({ userBoards }: { userBoards: IBoard[] }) => {
   console.log(userBoards);
 
   return (
-    <div className="bg-white p-4 shadow-md rounded-xl space-y-3" >
+    <div className="bg-white p-4 shadow-md rounded-xl space-y-3">
       <p className="text-center font-semibold">Save to board</p>
       <input
         type="text"
@@ -145,8 +145,9 @@ const PinDetail = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const router = useRouter();
   const { pinId } = router.query;
-  const commentInputRef = useRef<any>(null)
-  const { data:session,status } = useSession();
+  const commentInputRef = useRef<any>(null);
+  const { data: session, status } = useSession();
+  console.log(session);
 
   const [contentFocus, setContentFocus] = useState<boolean>(false);
   const [content, setContent] = useState<string>("");
@@ -173,8 +174,6 @@ const PinDetail = () => {
   // }, []);
   console.log(openDialog);
 
-
-
   const { data, loading, error } = useQuery(SinglePinQuery, {
     variables: {
       pinId,
@@ -182,6 +181,7 @@ const PinDetail = () => {
   });
 
   const { pin }: { pin: IPin } = data || {};
+  const [openModal, setOpenModal] = useRecoilState(boardModalState);
 
   // const savePin = async () => {
   //   const variables = {
@@ -238,15 +238,11 @@ const PinDetail = () => {
       pinId,
     };
     try {
-      await toast.promise(
-        createComment({ variables }),
-        {
-          loading:"Posting comment...",
-          success:"Comment posted 👏👏",
-          error:"Oops something went wrong 😢"
-
-        }
-      );
+      await toast.promise(createComment({ variables }), {
+        loading: "Posting comment...",
+        success: "Comment posted 👏👏",
+        error: "Oops something went wrong 😢",
+      });
     } catch (error) {
       console.error(error);
     }
@@ -286,27 +282,40 @@ const PinDetail = () => {
                 <HiDownload />
                 <HiLink />
               </div>
-              <div className="ml-auto flex items-center gap-x-4">
-                <button
-                  ref={btnRef}
-                  className="flex items-center relative "
-                  onClick={() => setOpenDialog(!openDialog)}
-                >
-                  <MdExpandMore className="text-xl " />
-                  <p className="">{userBoards?.userBoards[0].name}</p>
-                  {openDialog && (
-                    <div
-                      onClick={(e) => e.stopPropagation()}
-                      className="absolute top-16 right-16 w-96 z-50"
-                    >
-                      <SaveDialog userBoards={userBoards?.userBoards} />
-                    </div>
-                  )}
-                </button>
 
-                  <Button text={"Save"} handleClick={()=>{
-                    savePin(session?.user?.id as string,userBoards?.userBoards[0].id,pin.id)
-                  }} />
+              <div className="ml-auto flex items-center gap-x-4">
+                {userBoards?.userBoards.length !== 0 ? (
+                  <button
+                    ref={btnRef}
+                    className="flex items-center relative "
+                    onClick={() => setOpenDialog(!openDialog)}
+                  >
+                    <MdExpandMore className="text-xl " />
+                    <p className="">{userBoards?.userBoards[0].name}</p>
+
+                    {openDialog && (
+                      <div
+                        onClick={(e) => e.stopPropagation()}
+                        className="absolute top-16 right-16 w-96 z-50"
+                      >
+                        <SaveDialog userBoards={userBoards?.userBoards} />
+                      </div>
+                    )}
+                  </button>
+                ) : null}
+
+                <Button
+                  text={"Save"}
+                  handleClick={() => {
+                    userBoards?.userBoards.length !== 0
+                      ? savePin(
+                          session?.user?.id as string,
+                          userBoards?.userBoards[0].id,
+                          pin.id
+                        )
+                      : setOpenModal(true);
+                  }}
+                />
               </div>
             </nav>
             <div className="mt-4 space-y-3">
@@ -349,7 +358,7 @@ const PinDetail = () => {
                   onSubmit={handleSubmit(addComment)}
                 >
                   <div className="flex gap-x-4 w-full items-center ">
-                    {status==='authenticated' && (
+                    {status === "authenticated" && (
                       <Image
                         src={session?.user?.image || ""}
                         width={40}
@@ -365,9 +374,11 @@ const PinDetail = () => {
                       type="text"
                       className="w-full p-3 outline-none border-gray-200 rounded-full border"
                       placeholder={`${
-                        status==="authenticated" ? "Add a comment" : "Please login first to comment"
+                        status === "authenticated"
+                          ? "Add a comment"
+                          : "Please login first to comment"
                       }`}
-                      disabled={status!=="authenticated"}
+                      disabled={status !== "authenticated"}
                     />
                   </div>
 
@@ -377,7 +388,7 @@ const PinDetail = () => {
                         className="px-4 py-2 bg-gray-200 text-gray-800 font-semibold rounded-full"
                         onClick={() => {
                           setContentFocus(false);
-                          commentInputRef.current.value=""
+                          commentInputRef.current.value = "";
                         }}
                       >
                         Cancel

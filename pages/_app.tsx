@@ -7,18 +7,21 @@ import { Toaster } from "react-hot-toast";
 import { RecoilRoot, useRecoilState } from "recoil";
 
 import { SessionProvider } from "next-auth/react";
+import AuthWrapper from "../components/AuthWrapper";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <RecoilRoot>
       <SessionProvider session={session}>
-        <ApolloProvider client={apolloClient}>
-          <Toaster />
+        <AuthWrapper>
+          <ApolloProvider client={apolloClient}>
+            <Toaster />
 
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </ApolloProvider>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </ApolloProvider>
+        </AuthWrapper>
       </SessionProvider>
     </RecoilRoot>
   );

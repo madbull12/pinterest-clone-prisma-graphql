@@ -123,9 +123,9 @@ export const PinMutation = extendType({
 
             },
             async resolve(_parent,{ title,description,pinId },ctx) {
-                if(!ctx.user) {
-                    throw new Error("You need to be logged in to perform an action")
-                }
+                // if(!ctx.user) {
+                //     throw new Error("You need to be logged in to perform an action")
+                // }
 
                 const userId = ctx.user.id;
 
@@ -173,10 +173,7 @@ export const PinMutation = extendType({
                 // if(!ctx.user) {
                 //     throw new Error("You need to be logged in to perform an action")
                 // }
-                if(!ctx.user) {
-                    throw new Error("You need to be logged in to perform an action")
-                }
-
+       
                 const newPin = {
                     title: args.title,
                     media: args.media,

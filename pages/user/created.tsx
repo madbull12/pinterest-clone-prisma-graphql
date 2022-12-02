@@ -17,11 +17,12 @@ import Backdrop from "../../components/Backdrop";
 import EditModal from "../../components/EditModal";
 import { isEditOpen } from "../../atom/editAtom";
 import { useRecoilValue } from "recoil";
+import { useSession } from "next-auth/react";
 const CreatedPins = () => {
-  const { user } = useUser();
+  const { data:session } = useSession()
   const { data, loading, error } = useQuery(PinByUserEmail, {
     variables: {
-      userId: user?.email,
+      userId: session?.user?.email,
     },
   });
   // const [isClicked, setIsClicked] = useState(false);

@@ -19,17 +19,18 @@ import Backdrop from "../../../components/Backdrop";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { boardModalState, isOpen } from "../../../atom/boardAtom";
 import useOutsideClick from "../../../hooks/useOutsideClick";
+import { useSession } from "next-auth/react";
 const BoardListPage = () => {
-  const { user } = useUser();
-  const { data: userId } = useQuery(UserIdQuery, {
-    variables: {
-      userId: user?.email,
-    },
-  });
+  // const { data: userId } = useQuery(UserIdQuery, {
+  //   variables: {
+  //     userId: user?.email,
+  //   },
+  // });
+  const { data:session } = useSession()
 
   const { data, loading, error } = useQuery(UserBoardsQuery, {
     variables: {
-      userId: userId?.user.id,
+      userId: session?.user?.id,
     },
   });
   console.log(data);
@@ -52,11 +53,7 @@ const BoardListPage = () => {
     <div>
       <UserProfile />
 
-      {isBoardOpen && (
-        <Backdrop>
-          <BoardModal />
-        </Backdrop>
-      )}
+
 
       {loading && (
         <div className="flex justify-center pt-4">

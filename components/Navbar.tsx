@@ -23,13 +23,10 @@ const Navbar = () => {
               src="https://www.freepnglogos.com/uploads/pinterest-logo-p-png-0.png"
             />
           </Link>
-          <li>
-            <Link
-              href={`${status === "authenticated" ? "/pin-builder" : toast.error("Please log in first")} `}
-            >
-              Create
-            </Link>
-          </li>
+          {status==="authenticated" ? (
+            <Link href="/pin-builder">Create</Link>
+
+          ):null}
         </div>
         <Search />
         <div className="flex items-center gap-x-2">
