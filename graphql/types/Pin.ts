@@ -127,6 +127,8 @@ export const PinMutation = extendType({
                     throw new Error("You need to be logged in to perform an action")
                 }
 
+                const userId = ctx.user.id;
+
             
                 return await ctx.prisma.pin.update({
                     where:{
@@ -146,9 +148,9 @@ export const PinMutation = extendType({
                 pinId:nonNull(stringArg())
             },
             async resolve(_parent,{ pinId },ctx) {
-                if(!ctx.user) {
-                    throw new Error("You need to be logged in to perform an action")
-                }
+                // if(!ctx.user) {
+                //     throw new Error("You need to be logged in to perform an action")
+                // }
 
                 return await ctx.prisma.pin.delete({
                     where:{
@@ -168,9 +170,13 @@ export const PinMutation = extendType({
                 
             },
             async resolve(_parent: any,args: any,ctx: any) {
+                // if(!ctx.user) {
+                //     throw new Error("You need to be logged in to perform an action")
+                // }
                 if(!ctx.user) {
                     throw new Error("You need to be logged in to perform an action")
                 }
+
                 const newPin = {
                     title: args.title,
                     media: args.media,
@@ -199,7 +205,10 @@ export const PinMutation = extendType({
           
                 return await ctx.prisma.pin.create({
                     data:{
+                        
                         ...newPin,
+                        
+                        
                         categories:{
                             connectOrCreate: args?.categories?.map((item:string)=>{
                                 return {
@@ -253,7 +262,9 @@ export const PinMutation = extendType({
                                 
                             
                         }
+                        
                     },
+                    
                 })
             }
         })

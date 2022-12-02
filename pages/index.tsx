@@ -18,6 +18,7 @@ const Home: NextPage = () => {
   const [searchResults,setSearchResults] = useRecoilState<any>(searchResultState)
   console.log(searchResults)
   const { data:session } = useSession();
+  console.log(session)
   if(loading) return (
     <div className='justify-center flex py-4'>
       <Loading />

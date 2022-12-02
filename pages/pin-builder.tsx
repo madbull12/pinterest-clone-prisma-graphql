@@ -11,6 +11,7 @@ import Image from "next/image";
 import Button from "../components/Button";
 import { getSession, useSession } from "next-auth/react";
 
+
 interface IFormInput {
   title: string;
   description: string;
@@ -19,7 +20,7 @@ interface IFormInput {
 }
 
 const PinBuilder = () => {
-  const { data:session } = useSession();
+  const { data:session }:any = useSession();
   const [textAreaFocus, setTextAreaFocus] = useState(false);
   const [textAreaCount, setTextAreaCount] = useState(500);
   const [categories, setCategories] = useState<any>([]);
@@ -57,13 +58,13 @@ const PinBuilder = () => {
     reset,
     getValues,
   } = useForm<IFormInput>();
-  const { data } = useQuery(UserIdQuery, {
-    variables: {
-      userId: session?.user?.email,
-    },
-  });
+  // const { data } = useQuery(UserIdQuery, {
+  //   variables: {
+  //     userId: session?.user?.email,
+  //   },
+  // });
 
-  const userId = data?.user.id;
+  // const userId = data?.user.id;
   const [createPin, { error }] = useMutation(createPinMutation, {
     onCompleted: () => reset(),
   });
@@ -123,7 +124,7 @@ const PinBuilder = () => {
       categories,
       description,
       media,
-      userId,
+      userId:session?.user.id,
     };
     try {
       await toast.promise(createPin({ variables }), {
@@ -274,8 +275,8 @@ const PinBuilder = () => {
   );
 };
 
-export const getServerSideProps = async (context:any) => {
-  const session = getSession();
+export const getServerSideProps = async ({ req }:any) => {
+  const session = await getSession();
   console.log(session)
 
   if (!session) {

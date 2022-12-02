@@ -37,6 +37,7 @@ import apolloClient from "../../lib/apollo";
 import Button from "../../components/Button";
 import savePin from "../../helper/savePin";
 import useOutsideClick from "../../hooks/useOutsideClick";
+import { useSession } from "next-auth/react";
 
 interface IProps {
   comment: IComment;
@@ -144,8 +145,8 @@ const PinDetail = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const router = useRouter();
   const { pinId } = router.query;
-  const { user } = useUser();
   const commentInputRef = useRef<any>(null)
+  const { data:session,status } = useSession();
 
   const [contentFocus, setContentFocus] = useState<boolean>(false);
   const [content, setContent] = useState<string>("");
@@ -172,11 +173,7 @@ const PinDetail = () => {
   // }, []);
   console.log(openDialog);
 
-  const { data: userId } = useQuery(UserIdQuery, {
-    variables: {
-      userId: user?.email,
-    },
-  });
+
 
   const { data, loading, error } = useQuery(SinglePinQuery, {
     variables: {
@@ -230,14 +227,14 @@ const PinDetail = () => {
 
   const { data: userBoards } = useQuery(UserBoardsQuery, {
     variables: {
-      userId: userId?.user.id,
+      userId: session?.user?.id,
     },
   });
 
   const addComment = async () => {
     const variables = {
       content,
-      userId: userId?.user.id,
+      userId: session?.user?.id,
       pinId,
     };
     try {
@@ -308,7 +305,7 @@ const PinDetail = () => {
                 </button>
 
                   <Button text={"Save"} handleClick={()=>{
-                    savePin(userId?.user.id,userBoards?.userBoards[0].id,pin.id)
+                    savePin(session?.user?.id as string,userBoards?.userBoards[0].id,pin.id)
                   }} />
               </div>
             </nav>
@@ -352,9 +349,9 @@ const PinDetail = () => {
                   onSubmit={handleSubmit(addComment)}
                 >
                   <div className="flex gap-x-4 w-full items-center ">
-                    {user && (
+                    {status==='authenticated' && (
                       <Image
-                        src={user?.picture || ""}
+                        src={session?.user?.image || ""}
                         width={40}
                         height={40}
                         className="rounded-full mr-4"
@@ -368,9 +365,9 @@ const PinDetail = () => {
                       type="text"
                       className="w-full p-3 outline-none border-gray-200 rounded-full border"
                       placeholder={`${
-                        user ? "Add a comment" : "Please login first to comment"
+                        status==="authenticated" ? "Add a comment" : "Please login first to comment"
                       }`}
-                      disabled={user === undefined}
+                      disabled={status!=="authenticated"}
                     />
                   </div>
 

@@ -11,7 +11,7 @@ import { SessionProvider } from "next-auth/react";
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <RecoilRoot>
-      <SessionProvider>
+      <SessionProvider session={session}>
         <ApolloProvider client={apolloClient}>
           <Toaster />
 
