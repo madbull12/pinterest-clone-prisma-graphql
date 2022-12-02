@@ -61,10 +61,8 @@ const BoardListPage = () => {
       )}
       <section className="mx-auto max-w-7xl mt-4 flex flex-col  ">
         <CreateDialog />
-        <div className=" grid sm:grid-cols-2 grid-cols-1 md:grid-cols-3 lg:grid-cols-4 p-4 gap-4">
-          <UserBoardsList userBoards={data?.userBoards} />
+        <UserBoardsList userBoards={data?.userBoards} />
     
-        </div>
       </section>
     </div>
   );

@@ -282,23 +282,6 @@ const PinBuilder = () => {
   );
 };
 
-// export const getServerSideProps = async ({ req }:any) => {
-//   const session = await getSession(req);
-//   console.log(session)
 
-//   if (!session) {
-//     return {
-//       redirect: {
-//         permanent: false,
-//         destination: "/",
-//       },
-//       props: {},
-//     };
-//   }
-
-//   return {
-//     props: {},
-//   };
-// };
 
 export default PinBuilder;

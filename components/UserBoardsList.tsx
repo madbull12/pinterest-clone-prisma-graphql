@@ -7,7 +7,7 @@ interface IProps {
 }
 const UserBoardsList = ({ userBoards }: IProps) => {
   return (
-    <>
+    <div className=" grid sm:grid-cols-2 grid-cols-1 md:grid-cols-3 lg:grid-cols-4 p-4 gap-4">
       {userBoards?.length !== 0 ? (
         <>
           {userBoards?.map((board: IBoard) => (
@@ -17,7 +17,7 @@ const UserBoardsList = ({ userBoards }: IProps) => {
       ) : (
         <h1 className="text-xl  font-semibold">No pins saved yet</h1>
       )}
-    </>
+    </div>
   );
 };
 
