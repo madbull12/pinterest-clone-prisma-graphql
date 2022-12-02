@@ -18,7 +18,7 @@ const Pin = ({ item, isEdit }: IProps) => {
     <div key={item.userId} className="relative my-3">
       <Link href={`/pin/${item?.id}`}>
         <span className="cursor-pointer">
-          {item.media.includes("video") ? (
+          {item.media.includes(".mp4") ? (
             <video controls className="relative h-full w-full rounded-2xl">
               <source src={item?.media} type="video/mp4"></source>
             </video>

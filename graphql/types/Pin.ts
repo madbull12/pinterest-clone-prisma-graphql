@@ -127,7 +127,6 @@ export const PinMutation = extendType({
                 //     throw new Error("You need to be logged in to perform an action")
                 // }
 
-                const userId = ctx.user.id;
 
             
                 return await ctx.prisma.pin.update({

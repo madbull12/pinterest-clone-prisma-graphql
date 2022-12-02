@@ -6,7 +6,6 @@ import UserProfile from "../../../components/UserProfile";
 import {
   SavedPinsQuery,
   UserBoardsQuery,
-  UserIdQuery,
   UserSavedPins,
 } from "../../../lib/query";
 import { v4 as uuidv4 } from "uuid";
@@ -28,7 +27,7 @@ const BoardListPage = () => {
   //     userId: user?.email,
   //   },
   // });
-  const { data:session } = useSession()
+  const { data:session }:any = useSession()
 
   const { data, loading, error } = useQuery(UserBoardsQuery, {
     variables: {

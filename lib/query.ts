@@ -40,7 +40,7 @@ export const SinglePinQuery = gql`
   }
 `;
 
-export const PinByUserEmail = gql`
+export const CreatedPins = gql`
   query Query($userId: String!) {
     user(userId: $userId) {
       pins {
@@ -53,13 +53,7 @@ export const PinByUserEmail = gql`
   }
 `;
 
-export const UserIdQuery = gql`
-  query User($userId: String!) {
-    user(userId: $userId) {
-      id
-    }
-  }
-`;
+
 
 export const SavedPinsQuery = gql`
   query Query {

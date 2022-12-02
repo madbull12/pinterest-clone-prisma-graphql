@@ -5,14 +5,13 @@ import { useRecoilState } from "recoil";
 import { boardModalState } from "../atom/boardAtom";
 import useOutsideClick from "../hooks/useOutsideClick";
 import { createBoardMutation } from "../lib/mutation";
-import { UserIdQuery } from "../lib/query";
 import { useSession } from 'next-auth/react'
 
 
 const BoardModal = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [name, setName] = useState("");
-  const { data:session } = useSession();
+  const { data:session }:any = useSession();
   const modalRef = useRef<HTMLDivElement>(null);
   const [openModal,setOpenModal] = useRecoilState(boardModalState)
 
@@ -25,15 +24,11 @@ const BoardModal = () => {
   };
 
   const [createBoard] = useMutation(createBoardMutation);
-  const { data: userId } = useQuery(UserIdQuery, {
-    variables: {
-      userId: session?.user?.email,
-    },
-  });
+
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    const variables = { name, userId: userId?.user.id, secret: isChecked };
+    const variables = { name, userId: session?.user?.id, secret: isChecked };
     try {
       await toast.promise(createBoard({ variables }), {
         loading: "Creating new board..",

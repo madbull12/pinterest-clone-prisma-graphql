@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 import { AiFillLock } from 'react-icons/ai'
 import savePin from '../helper/savePin'
 import { IBoard } from '../interface'
-import { UserIdQuery,UserBoardsQuery } from '../lib/query'
+import { UserBoardsQuery } from '../lib/query'
 import Button from './Button'
 import { useSession } from 'next-auth/react'
 import { v4 } from 'uuid'
@@ -18,12 +18,8 @@ interface IBoardItem {
 const BoardItem = ({ board,edit }: IBoardItem) => {
     const [showSaveBtn, setShowSaveBtn] = useState<boolean>(false);
     const router = useRouter();
-    const { data:session } = useSession()
-    const { data: userId } = useQuery(UserIdQuery, {
-      variables: {
-        userId: session?.user?.email,
-      },
-    });
+    const { data:session }:any = useSession()
+
     const { pinId } = router.query;
     console.log(board)
     return (
@@ -63,7 +59,7 @@ const BoardItem = ({ board,edit }: IBoardItem) => {
 
         {!edit && (
             <Button text='Save' handleClick={()=>{
-                savePin(userId?.user.id,board.id,pinId)
+                savePin(session?.user?.id,board.id,pinId)
             }} />
         )}
 
@@ -72,16 +68,12 @@ const BoardItem = ({ board,edit }: IBoardItem) => {
   };
 
 const BoardList = () => {
-    const { data:session } = useSession();
-    const { data:userId } = useQuery(UserIdQuery,{
-        variables:{
-            userId:session?.user?.email
-        }
-    });
+    const { data:session }:any = useSession();
+
 
     const { data: userBoards } = useQuery(UserBoardsQuery,{
         variables:{
-            userId:userId?.user.id
+            userId:session?.user?.id
         }
     });
 

@@ -2,21 +2,17 @@ import { useQuery } from "@apollo/client";
 import { useUser } from "@auth0/nextjs-auth0";
 import React, { useState } from "react";
 import { MdArrowDropDown } from "react-icons/md";
-import { firstBoardQuery, UserIdQuery } from "../lib/query";
+import { firstBoardQuery } from "../lib/query";
 import BoardList from "./BoardList";
 import Loading from "./Loading";
 import { useSession } from 'next-auth/react'
 
 const BoardDropdown = () => {
-  const { data:session } = useSession();
-  const { data: userId } = useQuery(UserIdQuery, {
-    variables: {
-      userId: session?.user?.email,
-    },
-  });
+  const { data:session }:any = useSession();
+
   const { data: firstBoard, loading } = useQuery(firstBoardQuery, {
     variables: {
-      userId: userId?.user.id,
+      userId: session?.user.id,
     },
   });
   const [openDropdown, setOpenDropdown] = useState(false);

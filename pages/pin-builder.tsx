@@ -4,14 +4,13 @@ import { gql, useMutation, useQuery } from "@apollo/client";
 import toast, { Toaster } from "react-hot-toast";
 import prisma from "../lib/prisma";
 import { createPinMutation } from "../lib/mutation";
-import { FeedQuery, UserIdQuery } from "../lib/query";
+import { FeedQuery } from "../lib/query";
 import { HiDotsHorizontal, HiTrash, HiUpload } from "react-icons/hi";
 import { MdFileUpload, MdUpload } from "react-icons/md";
 import Image from "next/image";
 import Button from "../components/Button";
 import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-
 
 interface IFormInput {
   title: string;
@@ -21,7 +20,7 @@ interface IFormInput {
 }
 
 const PinBuilder = () => {
-  const { data:session }:any = useSession();
+  const { data: session }: any = useSession();
   const [textAreaFocus, setTextAreaFocus] = useState(false);
   const [textAreaCount, setTextAreaCount] = useState(500);
   const [categories, setCategories] = useState<any>([]);
@@ -30,7 +29,7 @@ const PinBuilder = () => {
   // const [uploadData, setUploadData] = useState<any>();
   const [selectedFile, setSelectedFile] = useState<any>();
   const [preview, setPreview] = useState<string>();
-  const router = useRouter()
+  const router = useRouter();
   useEffect(() => {
     if (!selectedFile) {
       setPreview(undefined);
@@ -53,6 +52,8 @@ const PinBuilder = () => {
     setSelectedFile(e.target.files[0]);
   };
 
+  console.log(selectedFile)
+
   const {
     register,
     handleSubmit,
@@ -69,11 +70,11 @@ const PinBuilder = () => {
   // const userId = data?.user.id;
   const [createPin, { error }] = useMutation(createPinMutation, {
     onCompleted: () => {
-      reset()
-      setSelectedFile(undefined)
-      router.push("/")
+      reset();
+      setSelectedFile(undefined);
+      router.push("/");
     },
-    refetchQueries:[FeedQuery]
+    refetchQueries: [FeedQuery],
   });
 
   // image change
@@ -115,7 +116,9 @@ const PinBuilder = () => {
     formData.append("upload_preset", "uploads");
 
     const res = await fetch(
-      "https://api.cloudinary.com/v1_1/dem2vt6lj/image/upload",
+      `https://api.cloudinary.com/v1_1/dem2vt6lj/${
+        selectedFile.type === "video/mp4" ? "video" : "image"
+      }/upload`,
       {
         method: "POST",
         body: formData,
@@ -131,7 +134,7 @@ const PinBuilder = () => {
       categories,
       description,
       media,
-      userId:session?.user.id,
+      userId: session?.user.id,
     };
     try {
       await toast.promise(createPin({ variables }), {
@@ -163,12 +166,26 @@ const PinBuilder = () => {
           {selectedFile ? (
             <>
               {selectedFile.type === "video/mp4" ? (
-                <video controls className="relative h-full w-full rounded-2xl">
-                  <source src={preview} type="video/mp4"></source>
-                </video>
+                <div className="relative w-1/2 h-full">
+                  <video
+                    controls
+                    className="relative h-full w-full rounded-2xl"
+                  >
+                    <source src={preview} type="video/mp4"></source>
+                  </video>
+                  <button
+                    className="absolute top-0 w-10 h-10 rounded-full bg-white place-items-center grid opacity-75 m-4"
+                    onClick={() => setSelectedFile(undefined)}
+                  >
+                    <HiTrash />
+                  </button>
+                </div>
               ) : (
                 <div className="relative w-1/2 h-full">
-                  <img src={preview || ""}  className="w-full h-full rounded-lg " />
+                  <img
+                    src={preview || ""}
+                    className="w-full h-full rounded-lg "
+                  />
                   <button
                     className="absolute top-0 w-10 h-10 rounded-full bg-white place-items-center grid opacity-75 m-4"
                     onClick={() => setSelectedFile(undefined)}
@@ -281,7 +298,5 @@ const PinBuilder = () => {
     </div>
   );
 };
-
-
 
 export default PinBuilder;

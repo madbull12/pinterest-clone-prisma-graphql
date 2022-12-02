@@ -6,7 +6,7 @@ import React, { useCallback, useMemo, useState,useEffect } from "react";
 import Masonry from "react-masonry-css";
 import UserProfile from "../../components/UserProfile";
 import { IPin } from "../../interface";
-import { PinByUserEmail } from "../../lib/query";
+import { CreatedPins } from "../../lib/query";
 import { v4 as uuidv4 } from "uuid";
 import Loading from "../../components/Loading";
 import MasonryWrapper from "../../components/MasonryWrapper";
@@ -18,9 +18,9 @@ import EditModal from "../../components/EditModal";
 import { isEditOpen } from "../../atom/editAtom";
 import { useRecoilValue } from "recoil";
 import { useSession } from "next-auth/react";
-const CreatedPins = () => {
+const CreatedPinsPage = () => {
   const { data:session } = useSession()
-  const { data, loading, error } = useQuery(PinByUserEmail, {
+  const { data, loading, error } = useQuery(CreatedPins, {
     variables: {
       userId: session?.user?.email,
     },
@@ -69,4 +69,4 @@ const CreatedPins = () => {
   );
 };
 
-export default CreatedPins;
+export default CreatedPinsPage;

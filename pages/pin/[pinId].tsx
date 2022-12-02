@@ -11,7 +11,6 @@ import {
   firstBoardQuery,
   SinglePinQuery,
   UserBoardsQuery,
-  UserIdQuery,
   UserSavedPins,
 } from "../../lib/query";
 import {
@@ -47,7 +46,7 @@ interface IProps {
 const BoardItem = ({ board }: { board: IBoard }) => {
   const [showSaveBtn, setShowSaveBtn] = useState<boolean>(false);
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session }: any = useSession();
 
   const { pinId } = router.query;
   console.log(board);
@@ -141,7 +140,7 @@ const PinDetail = () => {
   const router = useRouter();
   const { pinId } = router.query;
   const commentInputRef = useRef<any>(null);
-  const { data: session, status } = useSession();
+  const { data: session, status }: any = useSession();
   console.log(session);
 
   const [contentFocus, setContentFocus] = useState<boolean>(false);
@@ -260,15 +259,21 @@ const PinDetail = () => {
           onClick={() => router.back()}
         />
         <section className="shadow-lg rounded-3xl w-full flex flex-col md:flex-row">
-          <div className=" relative  ">
-            <Image
-              src={pin.media}
-              alt="image"
-              width={700}
-              height={650}
-              objectFit="cover"
-              className="rounded-3xl"
-            />
+          <div className=" relative w-1/2 max-h-96 ">
+            {pin.media.includes("video") ? (
+              <video controls className="relative h-full w-full rounded-2xl">
+                <source src={pin?.media} type="video/mp4"></source>
+              </video>
+            ) : (
+              <Image
+                src={pin.media}
+                alt="image"
+                width={700}
+                height={650}
+                objectFit="cover"
+                className="rounded-3xl"
+              />
+            )}
           </div>
           <div className="p-8 w-full">
             <nav className="flex justify-between  items-center  ">
@@ -279,7 +284,8 @@ const PinDetail = () => {
               </div>
 
               <div className="ml-auto flex items-center gap-x-4">
-                {(userBoards?.userBoards.length !== 0 || status==="authenticated") ? (
+                {userBoards?.userBoards.length !== 0 ||
+                status === "authenticated" ? (
                   <button
                     ref={btnRef}
                     className="flex items-center relative "
