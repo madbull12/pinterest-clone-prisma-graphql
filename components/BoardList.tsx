@@ -8,6 +8,7 @@ import { IBoard } from '../interface'
 import { UserIdQuery,UserBoardsQuery } from '../lib/query'
 import Button from './Button'
 import { useSession } from 'next-auth/react'
+import { v4 } from 'uuid'
 
 
 interface IBoardItem {
@@ -88,7 +89,7 @@ const BoardList = () => {
   return (
     <div className='p-2 rounded-lg border-gray-200 border bg-white '>
         {userBoards?.userBoards.map((board:IBoard)=>(
-            <BoardItem board={board} edit={true} />
+            <BoardItem board={board} edit={true} key={v4()} />
         ))}
     </div>
   )

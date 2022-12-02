@@ -1,4 +1,5 @@
 import React from "react";
+import { v4 } from "uuid";
 import { IBoard } from "../interface";
 import UserBoard from "./UserBoard";
 
@@ -11,7 +12,7 @@ const UserBoardsList = ({ userBoards }: IProps) => {
       {userBoards?.length !== 0 ? (
         <>
           {userBoards?.map((board: IBoard) => (
-            <UserBoard board={board} />
+            <UserBoard board={board}  key={v4()}/>
           ))}
         </>
       ) : (
