@@ -1,10 +1,8 @@
 import { objectType,asNexusMethod, extendType, nonNull, stringArg } from "nexus"
 import { DateTimeResolver } from "graphql-scalars";
-import { GraphQLDate } from 'graphql-iso-date'
 import { Pin } from "./Pin"
 import { User } from "./User"
 
-export const GQLDate = asNexusMethod(GraphQLDate as any, 'date')
 
 export const Comment = objectType({
     name:"Comment",
