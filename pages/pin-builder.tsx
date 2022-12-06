@@ -52,7 +52,7 @@ const PinBuilder = () => {
     setSelectedFile(e.target.files[0]);
   };
 
-  console.log(selectedFile)
+  console.log(selectedFile);
 
   const {
     register,
@@ -136,16 +136,21 @@ const PinBuilder = () => {
       media,
       userId: session?.user.id,
     };
-    try {
-      await toast.promise(createPin({ variables }), {
-        loading: "Creating new pin..",
-        success: "Pin successfully created!🎉",
-        error: `Something went wrong 😥 Please try again -  ${error}`,
-      });
-    } catch (error) {
-      console.error(error);
+    if (categories?.length === 0) {
+      toast.error("Please add some categories");
+    } else {
+      try {
+        await toast.promise(createPin({ variables }), {
+          loading: "Creating new pin..",
+          success: "Pin successfully created!🎉",
+          error: `Something went wrong 😥 Please try again -  ${error}`,
+        });
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
+
   console.log(textAreaFocus);
   return (
     <div className="min-h-screen bg-gray-200 py-8">
@@ -271,7 +276,7 @@ const PinBuilder = () => {
                 className="px-4 py-2 outline-none focus:border-blue-500 focus:border-b-2"
                 placeholder="Add categories"
                 type="text"
-                {...register("category", { required: true })}
+                {...register("category")}
               />
               {/* <Button
                 text="Add"
