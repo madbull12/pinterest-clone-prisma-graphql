@@ -11,6 +11,7 @@ import Image from "next/image";
 import Button from "../components/Button";
 import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { ICategory } from "../interface";
 
 interface IFormInput {
   title: string;
@@ -23,7 +24,7 @@ const PinBuilder = () => {
   const { data: session }: any = useSession();
   const [textAreaFocus, setTextAreaFocus] = useState(false);
   const [textAreaCount, setTextAreaCount] = useState(500);
-  const [categories, setCategories] = useState<any>([]);
+  const [categories, setCategories] = useState<string[]>([]);
 
   // const [imageSrc, setImageSrc] = useState<any>();
   // const [uploadData, setUploadData] = useState<any>();
@@ -97,17 +98,20 @@ const PinBuilder = () => {
         duration: 2000,
       });
     } else {
-      setCategories((prev: any) => [...prev, category]);
+      setCategories((prev) => [...prev, category]);
     }
 
     reset({
       category: "",
     });
+
   };
 
   const onSubmit = async (data: IFormInput) => {
     console.log(data);
     const { title, description } = data;
+
+    console.log(categories)
 
     // upload image
     const formData = new FormData();

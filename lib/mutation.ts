@@ -6,14 +6,14 @@ export const createPinMutation = gql`
     $media: String!
     $userId: String!
     $description: String
-    $category: [String]
+    $categories: [String]!
   ) {
     createPin(
       title: $title
       media: $media
       userId: $userId
       description: $description
-      categories: $category
+      categories: $categories
     ) {
       categories {
         id

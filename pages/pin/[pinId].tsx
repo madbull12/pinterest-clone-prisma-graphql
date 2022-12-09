@@ -116,16 +116,18 @@ const SaveDialog = ({ userBoards }: { userBoards: IBoard[] }) => {
 const Comment = ({ comment }: IProps) => {
   return (
     <div key={uuidv4()} className={`flex gap-x-2 items-center`}>
-      <Image
-        className="rounded-full"
-        width={40}
-        height={40}
-        alt="user-picture"
-        src={
-          comment?.user?.image ||
-          "https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"
-        }
-      />
+      <div className="h-8 w-8 relative">
+        <Image
+          className="rounded-full"
+          layout="fill"
+          alt="user-picture"
+          src={
+            comment?.user?.image ||
+            "https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"
+          }
+        />
+      </div>
+   
       <div>
         <p className="text-gray-500">{comment.user.email}</p>
         <p className="text-lg">{comment.content}</p>
@@ -258,26 +260,27 @@ const PinDetail = () => {
           className="text-3xl cursor-pointer hidden md:block "
           onClick={() => router.back()}
         />
-        <section className="shadow-lg rounded-3xl w-full flex flex-col md:flex-row">
-          <div className=" relative w-1/2 max-h-96 ">
+        <section className="shadow-lg relative rounded-3xl w-full flex flex-col md:flex-row">
+          <div className="  w-full md:w-1/2 max-h-96 ">
             {pin.media.includes("video") ? (
               <video controls className="relative h-full w-full rounded-2xl">
                 <source src={pin?.media} type="video/mp4"></source>
               </video>
             ) : (
-              <Image
-                src={pin.media}
-                alt="image"
-                width={700}
-                height={650}
-                objectFit="cover"
-                className="rounded-3xl"
-              />
+              <div className="relative w-full h-96 mt-14  md:mt-0   ">
+                <Image
+                  src={pin.media}
+                  alt="image"
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-3xl "
+                />
+              </div>
             )}
           </div>
-          <div className="p-8 w-full">
-            <nav className="flex justify-between  items-center  ">
-              <div className="space-x-6 flex text-2xl">
+          <div className="p-4 md:p-8 w-full">
+            <nav className="flex justify-between md:static top-2 absolute w-full  left-0 px-4 items-center  ">
+              <div className="space-x-3 md:space-x-6   flex text-base md:text-2xl">
                 <HiDotsHorizontal />
                 <HiDownload />
                 <HiLink />
@@ -320,21 +323,23 @@ const PinDetail = () => {
                 ) : null}
               </div>
             </nav>
-            <div className="mt-4 space-y-3">
+            <div className="mt-8  pt-4 md:pt-0 space-y-3">
               <h1 className="text-2xl md:text-4xl font-bold">{pin.title}</h1>
               <p className="text-sm md:text-base">{pin.description}</p>
-              <div className="flex gap-x-3">
-                <Image
-                  alt="user-avatar"
-                  className="rounded-full"
-                  src={
-                    data?.pin.user.image ||
-                    "https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"
-                  }
-                  width={40}
-                  height={40}
-                />
-                <p>{data?.pin.user.email}</p>
+              <div className="flex gap-x-3 items-center">
+                <div className="relative w-8 h-8">
+                  <Image
+                    alt="user-avatar"
+                    className="rounded-full"
+                    src={
+                      data?.pin.user.image ||
+                      "https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"
+                    }
+                    layout="fill"
+                  />
+                </div>
+         
+                <p className="w-1/2 text-xs sm:text-sm md:text-base">{data?.pin.user.email}</p>
               </div>
               <div>
                 <div className="flex items-center gap-x-2 font-semibold text-xl">
@@ -374,7 +379,7 @@ const PinDetail = () => {
                       onChange={(e) => setContent(e.target.value)}
                       ref={commentInputRef}
                       type="text"
-                      className="w-full p-3 outline-none border-gray-200 rounded-full border"
+                      className="w-full py-1 px-2  md:px-4 md:py-2 outline-none border-gray-200 rounded-full text-sm md:text-base border"
                       placeholder={`${
                         status === "authenticated"
                           ? "Add a comment"
@@ -387,7 +392,7 @@ const PinDetail = () => {
                   {contentFocus && (
                     <div className=" self-end gap-x-2 flex items-center  mt-2">
                       <button
-                        className="px-4 py-2 bg-gray-200 text-gray-800 font-semibold rounded-full"
+                        className="py-1 px-2  md:px-4 md:py-2 bg-gray-200 text-gray-800 font-semibold rounded-full"
                         onClick={() => {
                           setContentFocus(false);
                           commentInputRef.current.value = "";
@@ -396,7 +401,7 @@ const PinDetail = () => {
                         Cancel
                       </button>
                       <button
-                        className="font-semibold bg-[#E60023] text-white rounded-full px-4 py-2"
+                        className="font-semibold bg-[#E60023] text-white rounded-full py-1 px-2  md:px-4 md:py-2"
                         disabled={content.length <= 0}
                       >
                         Done

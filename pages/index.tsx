@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from 'uuid'
 import Pin from '../components/Pin'
 import { useSession } from 'next-auth/react'
 import MasonryWrapper from '../components/MasonryWrapper'
+import Container from '../components/Container'
 
 
 const Home: NextPage = () => {
@@ -28,7 +29,7 @@ const Home: NextPage = () => {
 
 
   return (
-    <div className='p-4 max-w-7xl mx-auto'>
+    <Container>
       <Head>
         <title>Pinterest</title>
       </Head>
@@ -40,7 +41,7 @@ const Home: NextPage = () => {
             ))}
 
       </MasonryWrapper>
-    </div>
+    </Container>
   )
 }
 
