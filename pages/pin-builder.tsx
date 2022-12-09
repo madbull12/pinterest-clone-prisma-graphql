@@ -216,7 +216,7 @@ const PinBuilder = () => {
                       className="items-center flex flex-col justify-center pt-16 cursor-pointer"
                     >
                       <HiUpload className="text-3xl" />
-                      <p>Click to upload image or video</p>
+                      <p className="text-center">Click to upload image or video</p>
 
                       <input
                         accept="image/png, image/gif, image/jpeg,video/mp4,video/x-m4v,video/*"
@@ -283,7 +283,7 @@ const PinBuilder = () => {
                 </div>
                 <div className="flex items-center justify-between">
                   <input
-                    className="md:px-4 px-2 py-1 md:py-2 w-1/2 outline-none focus:border-blue-500 focus:border-b-2"
+                    className="md:px-4 px-2 py-1 md:py-2 w-1/2 sm:w-3/4 outline-none focus:border-blue-500 focus:border-b-2"
                     placeholder="Add categories"
                     type="text"
                     {...register("category")}

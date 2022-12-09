@@ -38,6 +38,7 @@ import useOutsideClick from "../../hooks/useOutsideClick";
 import { useSession } from "next-auth/react";
 import { useRecoilState } from "recoil";
 import { boardModalState } from "../../atom/boardAtom";
+import Container from "../../components/Container";
 
 interface IProps {
   comment: IComment;
@@ -254,7 +255,7 @@ const PinDetail = () => {
     );
   if (error) return <p>{error.message}</p>;
   return (
-    <main className="max-w-7xl mx-auto my-8 p-4">
+    <Container>
       <div className="flex gap-x-8">
         <HiArrowLeft
           className="text-3xl cursor-pointer hidden md:block "
@@ -414,7 +415,7 @@ const PinDetail = () => {
           </div>
         </section>
       </div>
-    </main>
+    </Container>
   );
 };
 
