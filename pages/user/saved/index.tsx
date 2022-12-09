@@ -21,6 +21,7 @@ import { useSession } from "next-auth/react";
 import UserBoard from "../../../components/UserBoard";
 import UserBoardsList from "../../../components/UserBoardsList";
 import CreateDialog from "../../../components/CreateDialog";
+import Container from "../../../components/Container";
 const BoardListPage = () => {
   // const { data: userId } = useQuery(UserIdQuery, {
   //   variables: {
@@ -48,7 +49,7 @@ const BoardListPage = () => {
   }, [isBoardOpen]);
 
   return (
-    <div>
+    <Container>
       <UserProfile />
 
 
@@ -63,7 +64,7 @@ const BoardListPage = () => {
         <UserBoardsList userBoards={data?.userBoards} />
     
       </section>
-    </div>
+    </Container>
   );
 };
 

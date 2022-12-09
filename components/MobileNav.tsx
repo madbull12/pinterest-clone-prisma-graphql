@@ -21,8 +21,8 @@ const MobileNav = () => {
         </Link>
       </li>
       <li className="cursor-pointer">
-        <Link href="/">
-          <FiPlus />
+        <Link href="/pin-builder">
+          <FiPlus className={`${router.pathname === "/pin-builder" ? "text-black" : null }`} />
         </Link>
       </li>
       <li className="cursor-pointer">

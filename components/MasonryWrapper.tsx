@@ -6,7 +6,7 @@ const MasonryWrapper = ({ children }: { children:React.ReactNode}) => {
         default: 4,
         1100: 3,
         700: 2,
-        500: 1
+        375: 1
       };
   return (
     <div className="relative">

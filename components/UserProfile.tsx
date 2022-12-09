@@ -5,18 +5,20 @@ import { useRouter } from 'next/router';
 import React from 'react'
 import { HiPlusCircle } from 'react-icons/hi';
 import { useSession } from "next-auth/react";
+import useMediaQuery from '../hooks/useMediaQuery';
 
 
 const UserProfile = () => {
     const { data:session } = useSession();
+    const isNotMobile = useMediaQuery('(min-width: 768px)')
     const router = useRouter();
   return (
     <main className='flex justify-center items-center flex-col text-center'>
-        <div className='w-1/2 h-80 rounded-3xl bg-gray-200 relative'>
-            <HiPlusCircle className='text-gray-50 text-5xl absolute bottom-0 right-0' />
+        <div className='w-1/2 h-44 sm:h-60 md:h-80 rounded-3xl bg-gray-200 relative'>
+            <HiPlusCircle className='text-gray-50 text-2xl sm:text-4xl md:text-5xl absolute bottom-0 right-0' />
         </div>
-        <div className='-mt-14'>
-         <Image src={session?.user?.image || ""} className="rounded-full " width={100} height={100} alt="avatar" />
+        <div className='-mt-8 md:-mt-14'>
+         <Image src={session?.user?.image || ""} className="rounded-full " width={isNotMobile ? 100 : 50 } height={isNotMobile ? 100 : 50 } alt="avatar" />
         </div>
         <div>
             <h1 className='text-2xl font-semibold'>{session?.user?.name}</h1>
