@@ -9,6 +9,17 @@ export const FeedQuery = gql`
     }
   }
 `;
+
+export const RelatedPins = gql`
+  query ExampleQuery($categories: [String]!,$pinId: String!) {
+    relatedPins(categories: $categories,pinId:$pinId) {
+      title
+      id
+      media
+    }
+  }
+`;
+
 export const SinglePinQuery = gql`
   query Pin($pinId: String!) {
     pin(pinId: $pinId) {
@@ -18,7 +29,6 @@ export const SinglePinQuery = gql`
       description
       categories {
         name
-        id
       }
       userId
       user {
@@ -52,8 +62,6 @@ export const CreatedPins = gql`
     }
   }
 `;
-
-
 
 export const SavedPinsQuery = gql`
   query Query {

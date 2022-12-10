@@ -34,7 +34,7 @@ const CreatedPinsPage = () => {
   }, [isEditOpenValue]);
 
   console.log(data);
-  if (data?.user.pins.length === 0) return <h1>No pins created </h1>;
+  if (data?.user.pins.length === 0) return <h1 className="p-4 text-2xl font-bold  text-center">No pins created </h1>;
 
   return (
     <Container>

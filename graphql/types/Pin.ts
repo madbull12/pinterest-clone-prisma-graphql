@@ -87,6 +87,31 @@ export const PinsQuery = extendType({
         });
       },
     });
+    t.nonNull.list.field<any>("relatedPins",{
+      type:'Pin',
+      args:{
+        categories:nonNull(list(stringArg())),
+        pinId:nonNull(stringArg())
+      },
+      resolve(_parent, { categories ,pinId },ctx) {
+        return ctx.prisma.pin.findMany({
+          where:{
+           OR:categories?.map((category:string)=>({
+              categories:{
+                some:{
+                  name:{
+                    contains:category
+                  }
+                }
+              }
+           })),
+           NOT:{
+            id:pinId
+           }
+          }
+        })
+      }
+    });
     t.nonNull.list.field<any>("searchPins", {
       type: "Pin",
       args: {

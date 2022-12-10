@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import {
   firstBoardQuery,
+  RelatedPins,
   SinglePinQuery,
   UserBoardsQuery,
   UserSavedPins,
@@ -19,7 +20,7 @@ import {
   HiDownload,
   HiLink,
 } from "react-icons/hi";
-import { IBoard, IComment, IPin, ISaved } from "../../interface";
+import { IBoard, ICategory, IComment, IPin, ISaved } from "../../interface";
 import Image from "next/image";
 import { MdExpandMore } from "react-icons/md";
 import { v4 as uuidv4 } from "uuid";
@@ -144,7 +145,6 @@ const PinDetail = () => {
   const { pinId } = router.query;
   const commentInputRef = useRef<any>(null);
   const { data: session, status }: any = useSession();
-  console.log(session);
 
   const [contentFocus, setContentFocus] = useState<boolean>(false);
   const [content, setContent] = useState<string>("");
@@ -169,7 +169,6 @@ const PinDetail = () => {
   //   document.body.addEventListener("click", closeDialog);
   //   return () => document.body.removeEventListener("click", closeDialog);
   // }, []);
-  console.log(openDialog);
 
   const { data, loading, error } = useQuery(SinglePinQuery, {
     variables: {
@@ -177,7 +176,17 @@ const PinDetail = () => {
     },
   });
 
+
+
   const { pin }: { pin: IPin } = data || {};
+  const { data:relatedPins } = useQuery(RelatedPins, {
+    variables: {
+      categories:pin?.categories?.map((category:ICategory)=>category.name),
+      pinId
+    },
+  });
+  console.log(relatedPins)
+
   const [openModal, setOpenModal] = useRecoilState(boardModalState);
 
   // const savePin = async () => {

@@ -14,6 +14,12 @@ import { useRouter } from "next/router";
 import { ICategory } from "../interface";
 import Container from "../components/Container";
 import useMediaQuery from "../hooks/useMediaQuery";
+import {
+  AiFillCloseCircle,
+  AiFillCloseSquare,
+  AiOutlineClose,
+} from "react-icons/ai";
+import CategoryTag from "../components/CategoryTag";
 
 interface IFormInput {
   title: string;
@@ -115,36 +121,38 @@ const PinBuilder = () => {
     console.log(categories);
 
     // upload image
-    const formData = new FormData();
-    formData.append("file", selectedFile);
+   
 
-    formData.append("upload_preset", "uploads");
 
-    const res = await fetch(
-      `https://api.cloudinary.com/v1_1/dem2vt6lj/${
-        selectedFile.type === "video/mp4" ? "video" : "image"
-      }/upload`,
-      {
-        method: "POST",
-        body: formData,
-      }
-    ).then((res) => res.json());
-    console.log(res);
-
-    // end of upload image
-    const media = res.secure_url;
-
-    const variables = {
-      title,
-      categories,
-      description,
-      media,
-      userId: session?.user.id,
-    };
     if (categories?.length === 0) {
       toast.error("Please add some categories");
     } else {
       try {
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+    
+        formData.append("upload_preset", "uploads");
+    
+        const res = await fetch(
+          `https://api.cloudinary.com/v1_1/dem2vt6lj/${
+            selectedFile.type === "video/mp4" ? "video" : "image"
+          }/upload`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        ).then((res) => res.json());
+        console.log(res);
+    
+        // end of upload image
+        const media = res.secure_url;
+        const variables = {
+          title,
+          categories,
+          description,
+          media,
+          userId: session?.user.id,
+        };
         await toast.promise(createPin({ variables }), {
           loading: "Creating new pin..",
           success: "Pin successfully created!🎉",
@@ -155,9 +163,13 @@ const PinBuilder = () => {
       }
     }
   };
-  const isNotMobile = useMediaQuery('(min-width: 768px)')
+  const isNotMobile = useMediaQuery("(min-width: 768px)");
 
   console.log(textAreaFocus);
+
+  const deleteCategory = (index:number) => {
+    setCategories(categories.filter((_, _index) => _index != index));
+  };
   return (
     <div className="bg-gray-200">
       <Container>
@@ -216,7 +228,9 @@ const PinBuilder = () => {
                       className="items-center flex flex-col justify-center pt-16 cursor-pointer"
                     >
                       <HiUpload className="text-3xl" />
-                      <p className="text-center">Click to upload image or video</p>
+                      <p className="text-center">
+                        Click to upload image or video
+                      </p>
 
                       <input
                         accept="image/png, image/gif, image/jpeg,video/mp4,video/x-m4v,video/*"
@@ -245,7 +259,9 @@ const PinBuilder = () => {
                     className="rounded-full"
                     alt="profile"
                   />
-                  <p className="font-semibold text-sm md:text-base">{session?.user?.name}</p>
+                  <p className="font-semibold text-sm md:text-base">
+                    {session?.user?.name}
+                  </p>
                 </div>
                 <div className="flex flex-col">
                   <textarea
@@ -281,14 +297,15 @@ const PinBuilder = () => {
                     </>
                   )}
                 </div>
-                <div className="flex items-center justify-between">
-                  <input
-                    className="md:px-4 px-2 py-1 md:py-2 w-1/2 sm:w-3/4 outline-none focus:border-blue-500 focus:border-b-2"
-                    placeholder="Add categories"
-                    type="text"
-                    {...register("category")}
-                  />
-                  {/* <Button
+                <div>
+                  <div className="flex items-center justify-between">
+                    <input
+                      className="md:px-4 px-2 py-1 md:py-2 w-1/2 sm:w-3/4 outline-none focus:border-blue-500 focus:border-b-2"
+                      placeholder="Add categories"
+                      type="text"
+                      {...register("category")}
+                    />
+                    {/* <Button
                 text="Add"
                 handleClick={(e: React.SyntheticEvent) => {
                   e.preventDefault();
@@ -296,16 +313,24 @@ const PinBuilder = () => {
                   addCategory();
                 }}
               /> */}
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
 
-                      addCategory();
-                    }}
-                    className="px-2 md:px-4 py-1 bg-[#E60023] text-white font-semibold rounded-full"
-                  >
-                    Add
-                  </button>
+                        addCategory();
+                      }}
+                      className="px-2 md:px-4 py-1 bg-[#E60023] text-white font-semibold rounded-full"
+                    >
+                      Add
+                    </button>
+                  </div>
+                  <div className="flex items-center flex-wrap gap-x-4 mt-4 ">
+                    {categories.map((category, i) => (
+                      <div onClick={()=>deleteCategory(i)}>
+                        <CategoryTag category={category} key={i} />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

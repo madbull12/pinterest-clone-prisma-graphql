@@ -4,7 +4,7 @@ export interface IPin {
     title:string;
     description?:string;
     media:string
-    category:string[];
+    categories:ICategory[]
     userId:string;
     comments:IComment[];
 }
