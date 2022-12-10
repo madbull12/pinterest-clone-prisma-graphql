@@ -326,8 +326,8 @@ const PinBuilder = () => {
                   </div>
                   <div className="flex items-center flex-wrap gap-x-4 mt-4 ">
                     {categories.map((category, i) => (
-                      <div onClick={()=>deleteCategory(i)}>
-                        <CategoryTag category={category} key={i} />
+                      <div onClick={()=>deleteCategory(i)} key={i}>
+                        <CategoryTag category={category}  />
                       </div>
                     ))}
                   </div>

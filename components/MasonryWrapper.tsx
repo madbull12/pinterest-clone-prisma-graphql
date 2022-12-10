@@ -15,7 +15,9 @@ const MasonryWrapper = ({ children }: { children:React.ReactNode}) => {
           className="my-masonry-grid"
           columnClassName="my-masonry-grid_column"
       >
-          {children}
+        {children}
+
+      
       </Masonry>
     </div>
 

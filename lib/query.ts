@@ -11,8 +11,8 @@ export const FeedQuery = gql`
 `;
 
 export const RelatedPins = gql`
-  query ExampleQuery($categories: [String]!,$pinId: String!) {
-    relatedPins(categories: $categories,pinId:$pinId) {
+  query ExampleQuery($categories: [String]!, $pinId: String!) {
+    relatedPins(categories: $categories, pinId: $pinId) {
       title
       id
       media
@@ -106,6 +106,11 @@ export const UserBoardsQuery = gql`
       name
       userId
       secret
+      saved {
+        pin {
+          media
+        }
+      }
     }
   }
 `;

@@ -40,6 +40,7 @@ import { useSession } from "next-auth/react";
 import { useRecoilState } from "recoil";
 import { boardModalState } from "../../atom/boardAtom";
 import Container from "../../components/Container";
+import RelatedPinsComponent from "../../components/RelatedPins";
 
 interface IProps {
   comment: IComment;
@@ -424,6 +425,7 @@ const PinDetail = () => {
           </div>
         </section>
       </div>
+      <RelatedPinsComponent pins={relatedPins?.relatedPins} />
     </Container>
   );
 };

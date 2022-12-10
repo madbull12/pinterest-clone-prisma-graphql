@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { IPin } from "../interface";
 
 interface IProps {
@@ -8,16 +8,28 @@ interface IProps {
   isEdit?: boolean;
 }
 const Pin = ({ item, isEdit }: IProps) => {
-  const widthGenerator = () => {
+  // const [width,setWidth] = useState<number>();
+  // const [height,setHeight] = useState<number>();
+
+  const widthGenerator = useCallback(() => {
     return Math.floor(Math.random() * (450 - 300 + 1) + 300);
-  };
-  const heightGenerator = () => {
+
+  },[])
+ 
+  const heightGenerator = useCallback(()=>{
     return Math.floor(Math.random() * (450 - 300 + 1) + 300);
-  };
+
+  },[]) 
+
+  // const aspectGenerator = () => {
+  //   const aspects = ["aspect-square", "aspect-video"];
+
+  //   return aspects[Math.floor(Math.random() * aspects.length)];
+  // };
   return (
-    <div key={item.userId} className="relative my-3">
+    <div key={item.userId} className="relative  my-3">
       <Link href={`/pin/${item?.id}`}>
-        <span className="cursor-pointer">
+        <span className="cursor-pointer flex flex-col">
           {item.media.includes(".mp4") ? (
             <video controls className="relative h-full w-full rounded-2xl">
               <source src={item?.media} type="video/mp4"></source>
@@ -25,17 +37,21 @@ const Pin = ({ item, isEdit }: IProps) => {
           ) : (
             <>
               <Image
-                src={item.media}
-                alt="pin"
+                src={item?.media}
                 width={widthGenerator()}
                 height={heightGenerator()}
                 objectFit="cover"
-                className="cursor-pointer rounded-2xl "
+                className="rounded-2xl"
+
               />
-              {!isEdit && <h1 className=" font-semibold">{item.title}</h1>}
+
+
             </>
           )}
+        {!isEdit && <h1 className="font-semibold">{item.title}</h1>}
+
         </span>
+
       </Link>
     </div>
   );
