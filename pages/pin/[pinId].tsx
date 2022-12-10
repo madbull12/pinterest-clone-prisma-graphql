@@ -301,7 +301,7 @@ const PinDetail = () => {
                     {openDialog && (
                       <div
                         onClick={(e) => e.stopPropagation()}
-                        className="absolute top-16 right-16 w-96 z-50"
+                        className="absolute top-8 -right-8 sm:right-8 w-56 sm:w-96 z-50"
                       >
                         <SaveDialog userBoards={userBoards?.userBoards} />
                       </div>

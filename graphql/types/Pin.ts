@@ -1,4 +1,4 @@
-import { CategoriesOnPins, Category } from "@prisma/client";
+import {  Category } from "@prisma/client";
 import { DateTimeResolver } from "graphql-scalars";
 import {
   objectType,
@@ -202,18 +202,20 @@ export const PinMutation = extendType({
           data: {
             ...newPin,
 
-            categories: args?.categories?.forEach((item: string) => {
-              return {
-                connectOrCreate: {
-                  where: {
-                    name: item,
-                  },
-                  create: {
-                    name: item,
-                  },
+            categories: {
+              connectOrCreate:args.categories.map((item:string)=>({
+                where:{
+                  name:item
                 },
-              };
-            }),
+                create:{
+                  name:item
+                },
+
+              })),
+       
+                 
+                
+            },
 
             // const categoryExists = categoryList.find((_category:ICategory)=>_category.name === item)
             // if(categoryExists) {

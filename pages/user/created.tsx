@@ -39,11 +39,7 @@ const CreatedPinsPage = () => {
   return (
     <Container>
       <div className="relative">
-        {isEditOpenValue && (
-          <Backdrop>
-            <EditModal />
-          </Backdrop>
-        )}
+      
 
         <UserProfile />
         {loading && (

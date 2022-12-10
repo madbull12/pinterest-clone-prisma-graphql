@@ -69,7 +69,7 @@ model Pin {
   title       String
   media       String
   description String?
-  categories  CategoriesOnPins[]
+  categories  Category[]
   userId      String
   user        User               @relation(fields: [userId], references: [id])
   comments    Comment[]
@@ -117,17 +117,17 @@ model Board {
 model Category {
   id   String             @id @default(uuid())
   name String             @unique
-  pins CategoriesOnPins[]
+  pins Pin[]
 }
 
-model CategoriesOnPins {
-  pinId      String
-  pin        Pin      @relation(fields: [pinId], references: [id])
-  category   Category @relation(fields: [categoryId], references: [id])
-  categoryId String
+// model CategoriesOnPins {
+//   pinId      String
+//   pin        Pin      @relation(fields: [pinId], references: [id])
+//   category   Category @relation(fields: [categoryId], references: [id])
+//   categoryId String
 
-  @@id([pinId, categoryId])
-}
+//   @@id([pinId, categoryId])
+// }
 
 enum Role {
   USER

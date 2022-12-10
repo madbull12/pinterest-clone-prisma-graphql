@@ -175,7 +175,7 @@ const PinBuilder = () => {
                 Publish
               </button>
             </div>
-            <div className="flex flex-col gap-y-4 mt-4 sm:flex-row items-center w-full sm:gap-x-4 ">
+            <div className="flex flex-col gap-y-4 mt-4 sm:flex-row items-center sm:items-start w-full sm:gap-x-4 ">
               {selectedFile ? (
                 <>
                   {selectedFile.type === "video/mp4" ? (
