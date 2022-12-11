@@ -2,6 +2,7 @@ import { IBoard } from "../interface";
 import { useState } from "react";
 import BoardSaveItem from "./BoardSaveItem";
 import { v4 as uuidv4 } from "uuid";
+import Link from "next/link";
 const SaveDialog = ({ userBoards }: { userBoards: IBoard[] }) => {
   console.log(userBoards);
   const [filter, setFilter] = useState<string>("");
@@ -18,26 +19,39 @@ const SaveDialog = ({ userBoards }: { userBoards: IBoard[] }) => {
       <div>
         <p className="text-xs text-start px-2">All boards</p>
         <div className="flex flex-col gap-y-2 mt-2">
-          {userBoards
-            ?.filter((board: IBoard) => board.name.includes(filter))
-            .map((board: IBoard) => (
-              <BoardSaveItem key={uuidv4()} board={board} />
+          {userBoards?.length === 0 ? (
+            <>
+              <h1 className="text-sm md:text-base">
+                No boards.{" "}
+                <Link href="/user/saved">
+                  <span className="underline text-xs md:text-sm">Create here</span>
+                </Link>
+              </h1>
+            </>
+          ) : (
+            <>
+              {userBoards
+                ?.filter((board: IBoard) => board.name.includes(filter))
+                .map((board: IBoard) => (
+                  <BoardSaveItem key={uuidv4()} board={board} />
 
-              // <div
-              //   key={uuidv4()}
-              //   className="flex items-center justify-between hover:bg-gray-100 rounded-lg p-1"
-              // >
-              //   <div className="flex items-center gap-x-2">
-              //     <div className="bg-gray-300 w-12 h-12 rounded-lg"></div>
-              //     <p className="font-semibold">{board.name}</p>
-              //   </div>
-              //   {board.secret && (
-              //     <AiFillLock className="text-lg" />
+                  // <div
+                  //   key={uuidv4()}
+                  //   className="flex items-center justify-between hover:bg-gray-100 rounded-lg p-1"
+                  // >
+                  //   <div className="flex items-center gap-x-2">
+                  //     <div className="bg-gray-300 w-12 h-12 rounded-lg"></div>
+                  //     <p className="font-semibold">{board.name}</p>
+                  //   </div>
+                  //   {board.secret && (
+                  //     <AiFillLock className="text-lg" />
 
-              //   )}
-              //   <Button text={"Save"} handleClick={()=>{}} />
-              // </div>
-            ))}
+                  //   )}
+                  //   <Button text={"Save"} handleClick={()=>{}} />
+                  // </div>
+                ))}
+            </>
+          )}
         </div>
       </div>
     </div>

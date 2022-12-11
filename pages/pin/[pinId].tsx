@@ -209,7 +209,7 @@ const PinDetail = () => {
                     onClick={() => setOpenDialog(!openDialog)}
                   >
                     <MdExpandMore className="text-xl " />
-                    <p className="">{userBoards?.userBoards[0].name}</p>
+                    <p className="">{userBoards?.userBoards[0]?.name}</p>
 
                     {openDialog && (
                       <div
