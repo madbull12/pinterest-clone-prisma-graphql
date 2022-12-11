@@ -1,13 +1,35 @@
 import Link from "next/link";
 import React from "react";
 import { IBoard } from "../interface";
+import { ReactPhotoCollage } from "react-photo-collage";
+import { FiLock } from "react-icons/fi";
 
 const UserBoard = ({ board }: { board: IBoard }) => {
-  console.log(board)
+  console.log(board);
+  const setting = {
+    width: "300px",
+
+    height: ["150px", "100px"],
+    layout: [1,3],
+    photos: board.saved.map((item) => {
+      return {
+        source: item.pin.media,
+      };
+    }),
+    showNumOfRemainingPhotos: true,
+  };
   return (
     <Link href={`saved/${board.id}`}>
-      <div className="bg-gray-400 hover:-translate-y-2 duration-100 ease-in hover:shadow-md cursor-pointer   h-32  rounded-lg grid place-items-center text-white font-bold">
-        <p>{board.name}</p>
+      <div className="cursor-pointer relative space-y-2">
+        <div >
+          <ReactPhotoCollage {...setting} />
+
+        </div>
+        <p className="font-bold">{board.name}</p>
+        <p>
+          {board.saved.length} pins 
+        </p>
+        {board.secret ? <FiLock className="absolute top-0 left-2 text-white text-2xl" /> : null}
       </div>
     </Link>
   );

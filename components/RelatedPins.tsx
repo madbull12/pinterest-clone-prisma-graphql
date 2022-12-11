@@ -9,7 +9,7 @@ const RelatedPinsComponent = ({ pins }: { pins: IPin[] }) => {
       <h1 className="text-2xl font-bold text-center ">More like this </h1>
       <MasonryWrapper>
         {pins?.map((pin) => (
-          <Pin item={pin} />
+          <Pin item={pin} key={pin.id} />
         ))}
       </MasonryWrapper>
     </div>
