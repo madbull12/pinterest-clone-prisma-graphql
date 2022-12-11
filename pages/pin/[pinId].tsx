@@ -32,114 +32,15 @@ import {
 } from "../../lib/mutation";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import apolloClient from "../../lib/apollo";
 import Button from "../../components/Button";
 import savePin from "../../helper/savePin";
-import useOutsideClick from "../../hooks/useOutsideClick";
 import { useSession } from "next-auth/react";
 import { useRecoilState } from "recoil";
 import { boardModalState } from "../../atom/boardAtom";
 import Container from "../../components/Container";
 import RelatedPinsComponent from "../../components/RelatedPins";
-
-interface IProps {
-  comment: IComment;
-}
-
-const BoardItem = ({ board }: { board: IBoard }) => {
-  const [showSaveBtn, setShowSaveBtn] = useState<boolean>(false);
-  const router = useRouter();
-  const { data: session }: any = useSession();
-
-  const { pinId } = router.query;
-  console.log(board);
-  return (
-    <div
-      className="flex items-center justify-between hover:bg-gray-100 rounded-lg p-1"
-      onMouseEnter={() => setShowSaveBtn(true)}
-      onMouseLeave={() => setShowSaveBtn(false)}
-    >
-      <div className="flex items-center gap-x-2">
-        <div className="bg-gray-300 w-12 h-12 rounded-lg"></div>
-        <p className="font-semibold">{board.name}</p>
-      </div>
-      {!showSaveBtn && (
-        <>{board.secret && <AiFillLock className="text-lg" />}</>
-      )}
-      {showSaveBtn && (
-        <Button
-          text={"Save"}
-          handleClick={() => {
-            savePin(session?.user?.id as string, board.id, pinId);
-          }}
-        />
-      )}
-    </div>
-  );
-};
-
-const SaveDialog = ({ userBoards }: { userBoards: IBoard[] }) => {
-  console.log(userBoards);
-  const [filter,setFilter] = useState<string>("")
-
-  return (
-    <div className="bg-white p-4 shadow-md rounded-xl space-y-3">
-      <p className="text-center font-semibold">Save to board</p>
-      <input
-        type="text"
-        placeholder="Search"
-        onChange={(e)=>setFilter(e.target.value)}
-        className="px-4 py-2 border-2 outline-none rounded-full border-gray-300 w-full focus:ring-4 ring-blue-300 "
-      />
-      <div>
-        <p className="text-xs text-start px-2">All boards</p>
-        <div className="flex flex-col gap-y-2 mt-2">
-          {userBoards?.filter((board:IBoard)=>board.name.includes(filter)).map((board: IBoard) => (
-            <BoardItem key={uuidv4()} board={board} />
-
-            // <div
-            //   key={uuidv4()}
-            //   className="flex items-center justify-between hover:bg-gray-100 rounded-lg p-1"
-            // >
-            //   <div className="flex items-center gap-x-2">
-            //     <div className="bg-gray-300 w-12 h-12 rounded-lg"></div>
-            //     <p className="font-semibold">{board.name}</p>
-            //   </div>
-            //   {board.secret && (
-            //     <AiFillLock className="text-lg" />
-
-            //   )}
-            //   <Button text={"Save"} handleClick={()=>{}} />
-            // </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const Comment = ({ comment }: IProps) => {
-  return (
-    <div key={uuidv4()} className={`flex gap-x-2 items-center`}>
-      <div className="h-8 w-8 relative">
-        <Image
-          className="rounded-full"
-          layout="fill"
-          alt="user-picture"
-          src={
-            comment?.user?.image ||
-            "https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"
-          }
-        />
-      </div>
-   
-      <div>
-        <p className="text-gray-500">{comment.user.email}</p>
-        <p className="text-lg">{comment.content}</p>
-      </div>
-    </div>
-  );
-};
+import Comment from "../../components/Comment";
+import SaveDialog from "../../components/SaveDialog";
 
 const PinDetail = () => {
   const [expandComment, setExpandComment] = useState(false);
