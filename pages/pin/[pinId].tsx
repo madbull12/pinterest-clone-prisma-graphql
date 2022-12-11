@@ -80,6 +80,7 @@ const BoardItem = ({ board }: { board: IBoard }) => {
 
 const SaveDialog = ({ userBoards }: { userBoards: IBoard[] }) => {
   console.log(userBoards);
+  const [filter,setFilter] = useState<string>("")
 
   return (
     <div className="bg-white p-4 shadow-md rounded-xl space-y-3">
@@ -87,12 +88,13 @@ const SaveDialog = ({ userBoards }: { userBoards: IBoard[] }) => {
       <input
         type="text"
         placeholder="Search"
+        onChange={(e)=>setFilter(e.target.value)}
         className="px-4 py-2 border-2 outline-none rounded-full border-gray-300 w-full focus:ring-4 ring-blue-300 "
       />
       <div>
         <p className="text-xs text-start px-2">All boards</p>
         <div className="flex flex-col gap-y-2 mt-2">
-          {userBoards?.map((board: IBoard) => (
+          {userBoards?.filter((board:IBoard)=>board.name.includes(filter)).map((board: IBoard) => (
             <BoardItem key={uuidv4()} board={board} />
 
             // <div
