@@ -16,7 +16,7 @@
     "@apollo/server": "^4.2.2",
     "@auth0/nextjs-auth0": "^1.9.1",
     "@next-auth/prisma-adapter": "^1.0.5",
-    "@prisma/client": "^4.7.0",
+    "@prisma/client": "^4.7.1",
     "apollo-server-micro": "^3.11.1",
     "graphql": "^16.6.0",
     "graphql-scalars": "^1.18.0",
