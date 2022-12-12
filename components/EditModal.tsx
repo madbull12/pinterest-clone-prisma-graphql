@@ -145,7 +145,7 @@ const EditModal = () => {
             </div>
           </div>
           {editPin?.media.includes("video") ? (
-            <video controls className="relative h-full w-1/2 rounded-2xl">
+            <video controls className="relative h-full w-full md:w-1/2 rounded-2xl">
               <source src={editPin?.media} type="video/mp4"></source>
             </video>
           ) : (
@@ -173,6 +173,7 @@ const EditModal = () => {
         <div className="absolute bottom-0 left-2">
           <Button
             text={"Delete"}
+            type="button"
             handleClick={handleDeletePin}
             color="black"
             backgroundColor="bg-gray-200"
