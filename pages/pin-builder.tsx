@@ -206,7 +206,7 @@ const PinBuilder = () => {
                       </button>
                     </div>
                   ) : (
-                    <div className="relative w-1/2 h-full">
+                    <div className="relative w-full md:w-1/2 h-full">
                       <img
                         src={preview || ""}
                         className="w-full h-full rounded-lg "

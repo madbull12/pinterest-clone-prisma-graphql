@@ -177,7 +177,7 @@ const PinDetail = () => {
         <section className="shadow-lg relative rounded-3xl w-full flex flex-col md:flex-row">
           <div className="  w-full md:w-1/2 max-h-96 ">
             {pin.media.includes("video") ? (
-              <video controls className="relative h-full w-full rounded-2xl">
+              <video controls className="relative h-96 mt-14  md:mt-0  w-full rounded-2xl">
                 <source src={pin?.media} type="video/mp4"></source>
               </video>
             ) : (
