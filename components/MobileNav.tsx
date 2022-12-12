@@ -11,9 +11,13 @@ import {
   FiSearch,
   FiUser,
 } from "react-icons/fi";
+import { MdExplore } from "react-icons/md";
+import { useRecoilState } from "recoil";
+import { searchModalState } from "../atom/searchAtom";
 
 const MobileNav = () => {
   const { status, data: session } = useSession();
+  const [searchOpen, setSearchOpen] = useRecoilState(searchModalState);
   const router = useRouter();
   return (
     <nav className="flex z-[999] gap-x-2 text-2xl list-none fixed bottom-0 right-0 left-0 items-center bg-white justify-between p-4 text-gray-500">
@@ -24,10 +28,14 @@ const MobileNav = () => {
           />
         </Link>
       </li>
-      <li className="cursor-pointer">
-        <Link href="/">
-          <FiSearch />
-        </Link>
+      <li
+        className="cursor-pointer"
+        onClick={() => {
+          setSearchOpen(true);
+          window.scroll(0, 0);
+        }}
+      >
+        <FiSearch />
       </li>
       <li className="cursor-pointer">
         <Link href="/pin-builder">
@@ -39,11 +47,11 @@ const MobileNav = () => {
         </Link>
       </li>
       <li className="cursor-pointer">
-        {status === "authenticated" ? (
-          <FiLogOut onClick={() => signOut()} />
-        ) : (
-          <FiLogIn onClick={() => signIn()} />
-        )}
+        <Link href={"/"}>
+          <MdExplore     className={`${
+              router.pathname === "/explore" ? "text-black" : null
+            }`}/>
+        </Link>
       </li>
       <li className="cursor-pointer">
         {status === "authenticated" ? (

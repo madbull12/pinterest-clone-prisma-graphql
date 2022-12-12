@@ -37,11 +37,6 @@ const BoardListPage = () => {
   });
   console.log(data);
 
-  const isBoardOpen = useRecoilValue(isOpen);
-
-  useEffect(() => {
-    document.body.style.overflow = isBoardOpen ? "hidden" : "scroll";
-  }, [isBoardOpen]);
 
   return (
     <Container>

@@ -131,6 +131,15 @@ export const PinsQuery = extendType({
                   contains: searchTerm,
                 },
               },
+              {
+                categories:{
+                  some:{
+                    name:{
+                      contains:searchTerm
+                    }
+                  }
+                }
+              }
             ],
           },
         });

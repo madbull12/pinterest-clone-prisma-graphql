@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { FiSearch } from 'react-icons/fi'
 import { useRecoilState } from 'recoil';
-import { searchResultState } from '../atom/searchAtom';
+import { searchModalState, searchResultState } from '../atom/searchAtom';
 import apolloClient from '../lib/apollo';
 import { SearchPinQuery } from '../lib/query';
 
@@ -19,6 +19,8 @@ const Search = () => {
     const { register,handleSubmit,reset } = useForm<IFormInput>();
 
     const router = useRouter();
+  const [searchOpen, setSearchOpen] = useRecoilState(searchModalState);
+
 
   
 
@@ -34,6 +36,7 @@ const Search = () => {
             console.log(err);
         }   finally{
             reset()
+            setSearchOpen(false)
         }
   
     }
@@ -41,7 +44,7 @@ const Search = () => {
     
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={`flex w-1/2 gap-x-2 items-center ${searchFocus ? "ring-blue-300 ring-4" : ""}  bg-gray-200 px-4 py-2 rounded-full`}>
+    <form onSubmit={handleSubmit(onSubmit)} className={`flex w-full md:w-1/2 gap-x-2 items-center ${searchFocus ? "ring-blue-300 ring-4" : ""}  bg-gray-200 px-4 py-2 rounded-full`}>
         <FiSearch className='text-gray-500 text-xl ' />
         <input type="text" {...register("searchTerm")}  className='outline-none bg-transparent w-full ' onFocus={()=>setSearchFocus(true)} onBlur={()=>setSearchFocus(false)} placeholder='Search ' />
     </form>
