@@ -7,7 +7,7 @@ import { FiLock } from "react-icons/fi";
 const UserBoard = ({ board }: { board: IBoard }) => {
   console.log(board);
   const setting = {
-    width: "300px",
+    width: "250px",
 
     height: ["150px", "100px"],
     layout: [1,3],
@@ -20,8 +20,8 @@ const UserBoard = ({ board }: { board: IBoard }) => {
   };
   return (
     <Link href={`saved/${board.id}`}>
-      <div className="cursor-pointer relative space-y-2">
-        <div >
+      <div className="cursor-pointer relative space-y-2 ">
+        <div>
           <ReactPhotoCollage {...setting} />
 
         </div>

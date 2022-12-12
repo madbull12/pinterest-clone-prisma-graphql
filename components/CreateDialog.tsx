@@ -14,7 +14,7 @@ const CreateDialog = () => {
         setDialogOpen(false)
       })
   return (
-    <div className="relative self-end">
+    <div className="relative ">
           <div
             className="hover:bg-gray-200 z-50 w-10 h-10 grid  place-items-center rounded-full "
             onClick={() => setDialogOpen(!dialogOpen)}

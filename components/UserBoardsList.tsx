@@ -8,7 +8,7 @@ interface IProps {
 }
 const UserBoardsList = ({ userBoards }: IProps) => {
   return (
-    <div className=" grid sm:grid-cols-2 grid-cols-1 md:grid-cols-3 lg:grid-cols-4 p-4 gap-4">
+    <div className="flex flex-wrap items-center p-4 gap-4  justify-center md:justify-start">
       {userBoards?.length !== 0 ? (
         <>
           {userBoards?.map((board: IBoard) => (

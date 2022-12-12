@@ -8,7 +8,7 @@ interface IProps {
 const Comment = ({comment}:IProps) => {
   return (
     <div  className={`flex gap-x-2 items-center`}>
-      <div className="h-8 w-8 relative">
+      <div className="h-6 w-6 md:h-8 md:w-8 relative">
         <Image
           className="rounded-full"
           layout="fill"
@@ -21,8 +21,8 @@ const Comment = ({comment}:IProps) => {
       </div>
    
       <div>
-        <p className="text-gray-500">{comment.user.email}</p>
-        <p className="text-lg">{comment.content}</p>
+        <p className=" text-sm md:text-base text-gray-500">{comment.user.email}</p>
+        <p className="text-sm md:text-base lg:text-lg">{comment.content}</p>
       </div>
     </div>
   )
