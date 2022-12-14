@@ -124,18 +124,21 @@ export const PinsQuery = extendType({
               {
                 title: {
                   contains: searchTerm,
+                  mode:"insensitive"
                 },
               },
               {
                 description: {
                   contains: searchTerm,
+                  mode:"insensitive"
                 },
               },
               {
                 categories:{
                   some:{
                     name:{
-                      contains:searchTerm
+                      contains:searchTerm,
+                      mode:"insensitive"
                     }
                   }
                 }

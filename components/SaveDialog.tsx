@@ -31,7 +31,7 @@ const SaveDialog = ({ userBoards }: { userBoards: IBoard[] }) => {
           ) : (
             <>
               {userBoards
-                ?.filter((board: IBoard) => board.name.includes(filter))
+                ?.filter((board: IBoard) => board.name.toLowerCase().includes(filter.toLowerCase()))
                 .map((board: IBoard) => (
                   <BoardSaveItem key={uuidv4()} board={board} />
 
