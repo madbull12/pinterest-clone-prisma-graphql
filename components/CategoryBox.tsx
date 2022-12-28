@@ -16,7 +16,7 @@ const CategoryBox = ({ category }: { category: CategoryWithPins }) => {
             className="rounded-3xl"
           />
           <div className="absolute top-0 right-0 bottom-0 left-0 bg-[#03030383] rounded-3xl"></div>
-          <p className="text-white absolute font-semibold">{category.name}</p>
+          <p className="text-white absolute font-semibold capitalize">{category.name}</p>
         </div>
       ) : null}
     </div>

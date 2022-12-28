@@ -242,10 +242,10 @@ export const PinMutation = extendType({
             categories: {
               connectOrCreate:args.categories.map((item:string)=>({
                 where:{
-                  name:item
+                  name:item.toLowerCase()
                 },
                 create:{
-                  name:item
+                  name:item.toLowerCase()
                 },
 
               })),
