@@ -47,10 +47,12 @@ const MobileNav = () => {
         </Link>
       </li>
       <li className="cursor-pointer">
-        <Link href={"/"}>
-          <MdExplore     className={`${
+        <Link href={"/explore"}>
+          <MdExplore
+            className={`${
               router.pathname === "/explore" ? "text-black" : null
-            }`}/>
+            }`}
+          />
         </Link>
       </li>
       <li className="cursor-pointer">

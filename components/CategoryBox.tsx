@@ -1,10 +1,12 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
 import React from "react";
 import { CategoryWithPins } from "../interface";
 
 const CategoryBox = ({ category }: { category: CategoryWithPins }) => {
+  const router = useRouter()
   return (
-    <div className="rounded-lg cursor-pointer">
+    <div onClick={()=>router.push(`/search?q=${category.name}`)} className="rounded-lg cursor-pointer">
       {category.pins.length !== 0 ? (
         <div className="relative   w-full h-44 grid place-items-center">
           <Image
