@@ -28,7 +28,39 @@ export const CategoryQuery = extendType({
         t.list.nonNull.field<any>("categories",{
             type:"Category",
             resolve(_parent,args,ctx) {
-                return ctx.prisma.category.findMany()
+                return ctx.prisma.category.findMany({
+                    include:{
+                        pins:{
+                            select:{
+                                media:true
+                            }
+                        }
+                    }
+                })
+            }
+        }),
+        t.list.nonNull.field<any>("categoriesHighestPins",{
+            type:"Category",
+            resolve(_parent,args,ctx) {
+                return ctx.prisma.category.findMany({
+                    include:{
+                        pins:{
+                            select:{
+                                media:true,
+                                
+                            },
+                           
+                            
+                        }
+                    },
+                    orderBy:{
+                        pins:{
+                            _count:"desc"
+                        }
+                    }
+                
+                })
+
             }
         })
     }

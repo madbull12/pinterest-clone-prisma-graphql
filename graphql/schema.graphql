@@ -52,6 +52,7 @@ type Pin {
 type Query {
   boardPins(boardId: String!): Board!
   categories: [Category!]
+  categoriesHighestPins: [Category!]
   firstUserBoard(userId: String!): Board!
   pin(pinId: String!): Pin!
   pins: [Pin]!

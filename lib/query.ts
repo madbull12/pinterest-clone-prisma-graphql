@@ -89,6 +89,28 @@ export const UserSavedPins = gql`
   }
 `;
 
+export const CategoriesWithLargestPins = gql`
+  query ExampleQuery {
+    categoriesHighestPins {
+      pins {
+        media
+      }
+      name
+    }
+  }
+`;
+
+export const CategoriesQuery = gql`
+  query ExampleQuery {
+    categories {
+      name
+      pins {
+        media
+      }
+    }
+  }
+`;
+
 export const SearchPinQuery = gql`
   query Query($searchTerm: String!) {
     searchPins(searchTerm: $searchTerm) {

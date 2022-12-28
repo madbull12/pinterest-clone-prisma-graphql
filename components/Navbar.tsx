@@ -27,7 +27,7 @@ const Navbar = () => {
             <Link href="/pin-builder">Create</Link>
 
           ):null}
-            <Link href="/pin-builder">Explore</Link>
+            <Link href="/explore">Explore</Link>
 
         </div>
         <Search />
