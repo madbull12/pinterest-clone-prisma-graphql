@@ -10,23 +10,23 @@ export const Board = objectType({
         t.boolean("secret")
         t.field("user",{
             type:"User",
-            async resolve(_parent:any,args,ctx) {
+            async resolve(_parent,_,ctx) {
                 return await ctx.prisma.board
                     .findUnique({
                         where:{
-                            id:_parent.id
+                            id:_parent.id as string
                         }
                     })
                     .user()
-            }
+            } 
         })
         t.list.field<any>("saved",{
             type:"Saved",
-            async resolve(_parent:any,args,ctx) {
+            async resolve(_parent:any,_,ctx) {
                 return await ctx.prisma.board
                     .findUnique({
                         where:{
-                            id:_parent.id
+                            id:_parent.id as string
                         }
                     })
                     .saved()
@@ -38,7 +38,7 @@ export const Board = objectType({
 export const BoardQuery = extendType({
     type:"Query",
     definition(t) {
-        t.list.nonNull.field<any>("userBoards",{
+        t.list.nonNull.field("userBoards",{
             type:"Board",
             args:{
                 userId:nonNull(stringArg())

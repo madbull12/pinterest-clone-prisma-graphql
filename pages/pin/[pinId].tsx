@@ -1,19 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import { AiFillLock } from "react-icons/ai";
-import React, {
-  ButtonHTMLAttributes,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import {
-  firstBoardQuery,
-  RelatedPins,
-  SinglePinQuery,
-  UserBoardsQuery,
-  UserSavedPins,
-} from "../../lib/query";
+import React, { useRef, useState } from "react";
+import { RelatedPins, SinglePinQuery, UserBoardsQuery } from "../../lib/query";
 import {
   HiArrowLeft,
   HiDotsHorizontal,
@@ -25,11 +13,7 @@ import Image from "next/image";
 import { MdExpandMore } from "react-icons/md";
 import { v4 as uuidv4 } from "uuid";
 import Loading from "../../components/Loading";
-import {
-  createCommentMutation,
-  savePinMutation,
-  deleteSaveMutation,
-} from "../../lib/mutation";
+import { createCommentMutation, deleteSaveMutation } from "../../lib/mutation";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import Button from "../../components/Button";
@@ -41,9 +25,13 @@ import Container from "../../components/Container";
 import RelatedPinsComponent from "../../components/RelatedPins";
 import Comment from "../../components/Comment";
 import SaveDialog from "../../components/SaveDialog";
+import { useCopyToClipboard } from "../../hooks/useCopyToClipboard";
+import useOutsideClick from "../../hooks/useOutsideClick";
 
 const PinDetail = () => {
   const [expandComment, setExpandComment] = useState(false);
+  const [value, copy] = useCopyToClipboard();
+  const saveDialogRef = useRef<HTMLDivElement>(null);
   const [openDialog, setOpenDialog] = useState(false);
   const router = useRouter();
   const { pinId } = router.query;
@@ -62,17 +50,9 @@ const PinDetail = () => {
   });
   const btnRef = useRef(null);
 
-  // useEffect(() => {
-  //   const closeDialog = (e: any) => {
-  //     console.log(e);
-  //     if (e.path[0].tagname !== btnRef.current) {
-  //       setOpenDialog(false);
-  //     }
-  //   };
-
-  //   document.body.addEventListener("click", closeDialog);
-  //   return () => document.body.removeEventListener("click", closeDialog);
-  // }, []);
+  useOutsideClick(saveDialogRef, () => {
+    setOpenDialog(false);
+  });
 
   const { data, loading, error } = useQuery(SinglePinQuery, {
     variables: {
@@ -80,60 +60,16 @@ const PinDetail = () => {
     },
   });
 
-
-
   const { pin }: { pin: IPin } = data || {};
-  const { data:relatedPins } = useQuery(RelatedPins, {
+  const { data: relatedPins } = useQuery(RelatedPins, {
     variables: {
-      categories:pin?.categories?.map((category:ICategory)=>category.name),
-      pinId
+      categories: pin?.categories?.map((category: ICategory) => category.name),
+      pinId,
     },
   });
-  console.log(relatedPins)
+  console.log(relatedPins);
 
   const [openModal, setOpenModal] = useRecoilState(boardModalState);
-
-  // const savePin = async () => {
-  //   const variables = {
-  //     userId: userId?.user.id,
-  //     pinId,
-  //   };
-
-  //   const {
-  //     data: { userSaved },
-  //   } = await apolloClient.query({
-  //     query: UserSavedPins,
-  //     variables: {
-  //       userId: userId?.user.id,
-  //     },
-  //   });
-  //   const alreadySaved = userSaved.find((_pin: ISaved) => _pin.pinId === pinId);
-  //   console.log(alreadySaved);
-  //   if (alreadySaved) {
-  //     try {
-  //       await toast.promise(
-  //         deleteSave({ variables: { saveId: alreadySaved.id } }),
-  //         {
-  //           loading: "Removing pin from save...",
-  //           success: "Pin successfully removed from your saved!🎉",
-  //           error: `Something went wrong 😥 Please try again -  ${saveError?.message}`,
-  //         }
-  //       );
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   } else {
-  //     try {
-  //       await toast.promise(saveMutation({ variables }), {
-  //         loading: "Saving pin..",
-  //         success: "Pin successfully saved!🎉",
-  //         error: `Something went wrong 😥 Please try again -  ${saveError?.message}`,
-  //       });
-  //     } catch (_error) {
-  //       console.error(_error);
-  //     }
-  //   }
-  // };
 
   const { data: userBoards } = useQuery(UserBoardsQuery, {
     variables: {
@@ -155,6 +91,8 @@ const PinDetail = () => {
       });
     } catch (error) {
       console.error(error);
+    } finally {
+      setContent("");
     }
   };
 
@@ -177,7 +115,10 @@ const PinDetail = () => {
         <section className="shadow-lg relative rounded-3xl w-full flex flex-col md:flex-row">
           <div className="  w-full md:w-1/2 max-h-96 ">
             {pin.media.includes("video") ? (
-              <video controls className="relative h-96 mt-14  md:mt-0  w-full rounded-2xl">
+              <video
+                controls
+                className="relative h-96 mt-14  md:mt-0  w-full rounded-2xl"
+              >
                 <source src={pin?.media} type="video/mp4"></source>
               </video>
             ) : (
@@ -197,7 +138,13 @@ const PinDetail = () => {
               <div className="space-x-3 md:space-x-6   flex text-base md:text-2xl">
                 <HiDotsHorizontal />
                 <HiDownload />
-                <HiLink />
+                <HiLink
+                  className="cursor-pointer"
+                  onClick={() => {
+                    copy(window.location.href);
+                    toast.success("Link copied to clipboard");
+                  }}
+                />
               </div>
 
               <div className="ml-auto flex items-center gap-x-4">
@@ -214,6 +161,7 @@ const PinDetail = () => {
                     {openDialog && (
                       <div
                         onClick={(e) => e.stopPropagation()}
+                        ref={saveDialogRef}
                         className="absolute top-8 -right-8 sm:right-8 w-56 sm:w-96 z-50"
                       >
                         <SaveDialog userBoards={userBoards?.userBoards} />
@@ -252,20 +200,22 @@ const PinDetail = () => {
                     layout="fill"
                   />
                 </div>
-         
-                <p className="w-1/2 text-xs sm:text-sm md:text-base">{data?.pin.user.email}</p>
+
+                <p className="w-1/2 text-xs sm:text-sm md:text-base">
+                  {data?.pin.user.email}
+                </p>
               </div>
               <div>
-                <div className="flex items-center gap-x-2 font-semibold text-xl">
-                  <span>
-                    {pin.comments.length === 0 ? "" : pin.comments.length}{" "}
-                    Comments
-                  </span>
-                  <MdExpandMore
-                    className="text-4xl animate-bounce cursor-pointer"
+                {pin.comments.length !== 0 ? (
+                  <div
+                    className="flex items-center gap-x-2 font-semibold text-xl mb-4 cursor-pointer"
                     onClick={() => setExpandComment((prev) => !prev)}
-                  />
-                </div>
+                  >
+                    <span>{pin.comments.length} Comments</span>
+                    <MdExpandMore className="text-2xl  " />
+                  </div>
+                ) : null}
+
                 {expandComment && (
                   <div className="space-y-2 my-2">
                     {pin.comments.map((comment: IComment) => (
@@ -292,11 +242,14 @@ const PinDetail = () => {
                       onFocus={() => setContentFocus(true)}
                       onChange={(e) => setContent(e.target.value)}
                       ref={commentInputRef}
+                      value={content}
                       type="text"
                       className="w-full py-1 px-2  md:px-4 md:py-2 outline-none border-gray-200 rounded-full text-sm md:text-base border"
                       placeholder={`${
                         status === "authenticated"
-                          ? "Add a comment"
+                          ? pin.comments.length === 0
+                            ? "Be the first person to comment"
+                            : "Add a comment"
                           : "Please login first to comment"
                       }`}
                       disabled={status !== "authenticated"}

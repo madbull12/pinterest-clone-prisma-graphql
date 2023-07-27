@@ -5,6 +5,7 @@ import apolloClient from "../lib/apollo";
 import Layout from "../components/Layout";
 import { Toaster } from "react-hot-toast";
 import { RecoilRoot, useRecoilState } from "recoil";
+import NextTopLoader from "nextjs-toploader";
 
 import { SessionProvider } from "next-auth/react";
 import AuthWrapper from "../components/AuthWrapper";
@@ -18,6 +19,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
             <Toaster />
 
             <Layout>
+              <NextTopLoader color="#E60023" shadow="none"showSpinner={false}/>
               <Component {...pageProps} />
             </Layout>
           </ApolloProvider>

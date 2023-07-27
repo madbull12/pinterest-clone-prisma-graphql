@@ -11,12 +11,12 @@ const Pin = ({ item, isEdit }: IProps) => {
   // const [width,setWidth] = useState<number>();
   // const [height,setHeight] = useState<number>();
 
-  const widthGenerator = useCallback(() => {
+  const widthGenerator = useMemo(() => {
     return Math.floor(Math.random() * (450 - 300 + 1) + 300);
 
   },[])
  
-  const heightGenerator = useCallback(()=>{
+  const heightGenerator = useMemo(()=>{
     return Math.floor(Math.random() * (450 - 300 + 1) + 300);
 
   },[]) 
@@ -38,8 +38,8 @@ const Pin = ({ item, isEdit }: IProps) => {
             <>
               <Image
                 src={item?.media}
-                width={widthGenerator()}
-                height={heightGenerator()}
+                width={widthGenerator}
+                height={heightGenerator}
                 objectFit="cover"
                 className="rounded-2xl"
 
