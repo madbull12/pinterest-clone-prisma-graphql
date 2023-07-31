@@ -1,13 +1,12 @@
 import { useQuery } from '@apollo/client'
-import { Board } from '@prisma/client';
 import { useRouter } from 'next/router';
 import React from 'react'
 import { MdLock } from 'react-icons/md';
-import { ISaved } from '../../../interface';
-import { BoardPins } from '../../../lib/query';
+import { ISaved } from '../../../../interface';
+import { BoardPins } from '../../../../lib/query';
 import { v4 as uuidv4 } from 'uuid'
-import Pin from '../../../components/Pin';
-import MasonryWrapper from '../../../components/MasonryWrapper';
+import Pin from '../../../../components/Pin';
+import MasonryWrapper from '../../../../components/MasonryWrapper';
 
 const BoardDetails = () => {
   const router = useRouter();

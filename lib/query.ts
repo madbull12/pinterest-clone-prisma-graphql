@@ -139,6 +139,17 @@ export const UserBoardsQuery = gql`
   }
 `;
 
+export const SingleUserQuery = gql`
+  query User($userId: String!) {
+    user(userId: $userId) {
+      image
+      name
+      id
+      email
+    }
+  }
+`;
+
 export const firstBoardQuery = gql`
   query ExampleQuery($userId: String!) {
     firstUserBoard(userId: $userId) {

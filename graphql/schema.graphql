@@ -82,6 +82,7 @@ type User {
   email: String
   id: String
   image: String
+  name: String
   pins: [Pin]
   role: Role
 }

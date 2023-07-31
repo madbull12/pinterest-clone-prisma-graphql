@@ -5,6 +5,7 @@ export const User = objectType({
     name:"User",
     definition(t) {
         t.string("id")
+        t.string("name")
         t.string("email")
         t.string("image")
         t.field("role",{ type:Role })
@@ -34,7 +35,7 @@ export const UsersQuery = extendType({
                 return ctx.prisma.user
                     .findUnique({
                         where:{
-                            email:userId
+                            id:userId
                         }
                     })
             }

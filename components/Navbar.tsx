@@ -38,7 +38,7 @@ const Navbar = () => {
             <Button text="Login" handleClick={() => signIn("google")} />
           )}
           {status === "authenticated" && (
-            <Link href="/user/created">
+            <Link href={`/user/${session.user?.id}/created`}>
               <Image
                 src={session?.user?.image || ""}
                 alt="avatar"

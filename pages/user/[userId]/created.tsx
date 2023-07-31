@@ -1,24 +1,27 @@
 import { useQuery } from "@apollo/client";
 
 import React, { useEffect } from "react";
-import UserProfile from "../../components/UserProfile";
-import { IPin } from "../../interface";
-import { CreatedPins } from "../../lib/query";
+import UserProfile from "../../../components/UserProfile";
+import { IPin } from "../../../interface";
+import { CreatedPins } from "../../../lib/query";
 import { v4 as uuidv4 } from "uuid";
-import Loading from "../../components/Loading";
-import MasonryWrapper from "../../components/MasonryWrapper";
-import Pin from "../../components/Pin";
-import HoverEdit from "../../components/HoverEdit";
+import Loading from "../../../components/Loading";
+import MasonryWrapper from "../../../components/MasonryWrapper";
+import Pin from "../../../components/Pin";
+import HoverEdit from "../../../components/HoverEdit";
 
-import { isEditOpen } from "../../atom/editAtom";
+import { isEditOpen } from "../../../atom/editAtom";
 import { useRecoilValue } from "recoil";
 import { useSession } from "next-auth/react";
-import Container from "../../components/Container";
+import Container from "../../../components/Container";
+import { useRouter } from "next/router";
 const CreatedPinsPage = () => {
-  const { data: session } = useSession();
-  const { data, loading, error } = useQuery(CreatedPins, {
+  const router= useRouter();
+
+  const { userId } = router.query;
+  const { data, loading } = useQuery(CreatedPins, {
     variables: {
-      userId: session?.user?.email,
+      userId,
     },
   });
   // const [isClicked, setIsClicked] = useState(false);

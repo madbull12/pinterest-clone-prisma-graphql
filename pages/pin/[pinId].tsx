@@ -28,6 +28,8 @@ import { useCopyToClipboard } from "../../hooks/useCopyToClipboard";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { useSavedMutation } from "../../hooks/useSaved";
 import { BoardWithPayload } from "../../types/board";
+import Link from "next/link";
+import { Pin } from "@prisma/client";
 
 const PinDetail = () => {
   const [expandComment, setExpandComment] = useState(false);
@@ -184,9 +186,7 @@ const PinDetail = () => {
                       handleClick={() => {
                         userBoards?.userBoards.length !== 0
                           ? savedInBoard
-                            ? handleDeleteSavedPin(
-                                savedInBoard?.id
-                              )
+                            ? handleDeleteSavedPin(savedInBoard?.id)
                             : handleSavePin()
                           : setOpenModal(true);
                       }}
@@ -198,23 +198,26 @@ const PinDetail = () => {
             <div className="mt-8  pt-4 md:pt-0 space-y-3">
               <h1 className="text-2xl md:text-4xl font-bold">{pin.title}</h1>
               <p className="text-sm md:text-base">{pin.description}</p>
-              <div className="flex gap-x-3 items-center">
-                <div className="relative w-8 h-8">
-                  <Image
-                    alt="user-avatar"
-                    className="rounded-full"
-                    src={
-                      data?.pin.user.image ||
-                      "https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"
-                    }
-                    layout="fill"
-                  />
-                </div>
+              <Link href={`/user/${data?.pin.user.id}/created`}>
+                <div className="flex gap-x-3 cursor-pointer items-center">
+                  <div className="relative w-8 h-8">
+                    <Image
+                      alt="user-avatar"
+                      className="rounded-full"
+                      src={
+                        data?.pin.user.image ||
+                        "https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"
+                      }
+                      layout="fill"
+                    />
+                  </div>
 
-                <p className="w-1/2 text-xs sm:text-sm md:text-base">
-                  {data?.pin.user.email}
-                </p>
-              </div>
+                  <p className="w-1/2 text-xs sm:text-sm md:text-base">
+                    {data?.pin.user.email}
+                  </p>
+                </div>
+              </Link>
+
               <div>
                 {pin.comments.length !== 0 ? (
                   <div
