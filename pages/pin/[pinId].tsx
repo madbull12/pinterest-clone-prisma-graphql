@@ -17,7 +17,6 @@ import { createCommentMutation, deleteSaveMutation } from "../../lib/mutation";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import Button from "../../components/Button";
-import savePin from "../../helper/savePin";
 import { useSession } from "next-auth/react";
 import { useRecoilState } from "recoil";
 import { boardModalState } from "../../atom/boardAtom";
@@ -27,6 +26,8 @@ import Comment from "../../components/Comment";
 import SaveDialog from "../../components/SaveDialog";
 import { useCopyToClipboard } from "../../hooks/useCopyToClipboard";
 import useOutsideClick from "../../hooks/useOutsideClick";
+import { useSavedMutation } from "../../hooks/useSaved";
+import { BoardWithPayload } from "../../types/board";
 
 const PinDetail = () => {
   const [expandComment, setExpandComment] = useState(false);
@@ -43,8 +44,6 @@ const PinDetail = () => {
 
   const { handleSubmit } = useForm();
 
-  // const [saveMutation, { error: saveError }] = useMutation(savePinMutation);
-  const [deleteSave] = useMutation(deleteSaveMutation);
   const [createComment] = useMutation(createCommentMutation, {
     refetchQueries: [SinglePinQuery],
   });
@@ -61,6 +60,7 @@ const PinDetail = () => {
   });
 
   const { pin }: { pin: IPin } = data || {};
+
   const { data: relatedPins } = useQuery(RelatedPins, {
     variables: {
       categories: pin?.categories?.map((category: ICategory) => category.name),
@@ -96,7 +96,15 @@ const PinDetail = () => {
     }
   };
 
-  console.log(userBoards);
+  const payload = {
+    boardId: userBoards?.userBoards[0].id,
+    userId: session?.user?.id as string,
+    pinId: pinId as string,
+  };
+  const { handleDeleteSavedPin, handleSavePin } = useSavedMutation(payload);
+  const savedInBoard = userBoards?.userBoards[0].saved.find(
+    (v: any) => v.pin.id === pinId
+  );
 
   if (loading)
     return (
@@ -169,20 +177,22 @@ const PinDetail = () => {
                     )}
                   </button>
                 ) : null}
-                {status === "authenticated" ? (
-                  <Button
-                    text={"Save"}
-                    handleClick={() => {
-                      userBoards?.userBoards.length !== 0
-                        ? savePin(
-                            session?.user?.id as string,
-                            userBoards?.userBoards[0].id,
-                            pin.id
-                          )
-                        : setOpenModal(true);
-                    }}
-                  />
-                ) : null}
+                <>
+                  {status === "authenticated" ? (
+                    <Button
+                      text={savedInBoard ? "Unsave" : "Save"}
+                      handleClick={() => {
+                        userBoards?.userBoards.length !== 0
+                          ? savedInBoard
+                            ? handleDeleteSavedPin(
+                                savedInBoard?.id
+                              )
+                            : handleSavePin()
+                          : setOpenModal(true);
+                      }}
+                    />
+                  ) : null}
+                </>
               </div>
             </nav>
             <div className="mt-8  pt-4 md:pt-0 space-y-3">

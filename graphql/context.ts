@@ -1,8 +1,10 @@
 // /graphql/context.ts
-import { GetSessionParams, getSession } from 'next-auth/react'
+import {  getSession } from 'next-auth/react'
 import { PrismaClient } from '@prisma/client'
 import prisma from '../lib/prisma'
-import { DefaultUser, User,Session } from 'next-auth'
+import { DefaultUser, User,Session, unstable_getServerSession } from 'next-auth'
+import { authOptions } from '../pages/api/auth/[...nextauth]'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 export type Context = {
   user?: DefaultUser;
@@ -10,8 +12,11 @@ export type Context = {
   prisma: PrismaClient
 }
 
-export async function createContext({ req }:any): Promise<Context> {
-  const session = await getSession(req);
+
+
+export async function createContext({ req,res }:{req:NextApiRequest,res:NextApiResponse }): Promise<Context> {
+  const session = await unstable_getServerSession(req,res,authOptions);
+  console.log(session)
   const user = session?.user;
 
 

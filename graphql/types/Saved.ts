@@ -80,8 +80,6 @@ export const SaveMutation = extendType({
         userId: nonNull(stringArg()),
       },
       async resolve(_parent, args: any, ctx) {
-        const userId = ctx.user?.id;
-
         const saveData = {
           pinId: args.pinId,
           userId: args.userId,
@@ -91,22 +89,18 @@ export const SaveMutation = extendType({
         const existingSaved = await ctx.prisma.saved.findUnique({
           where: {
             userId_pinId_boardId: {
-              userId: userId as string,
+              userId: args.userId as string,
               pinId: args.pinId as string,
               boardId: args.boardId as string,
             },
           },
         });
+        if(!ctx.user) {
+          throw new Error("Unauthorized!");
+        }
+
         if (existingSaved) {
-          return await ctx.prisma.saved.delete({
-            where: {
-              userId_pinId_boardId: {
-                userId: userId as string,
-                pinId: args.pinId as string,
-                boardId: args.boardId as string,
-              },
-            },
-          });
+          throw new Error("Pin already saved")
         }
 
         return await ctx.prisma.saved.create({
@@ -118,11 +112,19 @@ export const SaveMutation = extendType({
       type: "Saved",
       args: {
         saveId: nonNull(stringArg()),
+  
       },
       async resolve(_parent, { saveId }, ctx) {
+
+        if(!ctx.user) {
+          throw new Error("Unauthorized!");
+        }
+
+        // if(ctx.user.id === )
+
         return await ctx.prisma.saved.delete({
           where: {
-            id: saveId,
+            id:saveId
           },
         });
       },

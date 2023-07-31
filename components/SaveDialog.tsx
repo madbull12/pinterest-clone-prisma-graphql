@@ -3,7 +3,8 @@ import { useState } from "react";
 import BoardSaveItem from "./BoardSaveItem";
 import { v4 as uuidv4 } from "uuid";
 import Link from "next/link";
-const SaveDialog = ({ userBoards }: { userBoards: IBoard[] }) => {
+import { BoardWithPayload } from "../types/board";
+const SaveDialog = ({ userBoards }: { userBoards: BoardWithPayload[] }) => {
   console.log(userBoards);
   const [filter, setFilter] = useState<string>("");
 
@@ -31,8 +32,8 @@ const SaveDialog = ({ userBoards }: { userBoards: IBoard[] }) => {
           ) : (
             <>
               {userBoards
-                ?.filter((board: IBoard) => board.name.toLowerCase().includes(filter.toLowerCase()))
-                .map((board: IBoard) => (
+                ?.filter((board) => board.name.toLowerCase().includes(filter.toLowerCase()))
+                .map((board) => (
                   <BoardSaveItem key={uuidv4()} board={board} />
 
                   // <div

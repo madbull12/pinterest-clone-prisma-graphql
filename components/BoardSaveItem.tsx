@@ -6,13 +6,26 @@ import savePin from '../helper/savePin';
 import { IBoard } from '../interface';
 import Button from './Button';
 
-const BoardSaveItem = ({ board }: { board: IBoard }) => {
+import { useSavedMutation } from '../hooks/useSaved';
+import { BoardWithPayload } from '../types/board';
+
+
+const BoardSaveItem = ({ board }: { board: BoardWithPayload }) => {
     const [showSaveBtn, setShowSaveBtn] = useState<boolean>(false);
     const router = useRouter();
-    const { data: session }: any = useSession();
-  
+    const { data: session } = useSession();
+
     const { pinId } = router.query;
-    console.log(board);
+
+    const payload = {
+      boardId:board.id,
+      userId:session?.user?.id as string,
+      pinId:pinId as string,
+    }
+    const { handleDeleteSavedPin,handleSavePin } = useSavedMutation(payload);
+    const savedInBoard = board.saved.find((v)=>v.pin.id===pinId);
+    console.log(savedInBoard,board.saved)    
+
     return (
       <div
         className="flex items-center justify-between hover:bg-gray-100 rounded-lg p-1"
@@ -28,9 +41,10 @@ const BoardSaveItem = ({ board }: { board: IBoard }) => {
         )}
         {showSaveBtn && (
           <Button
-            text={"Save"}
+            text={savedInBoard ? "Unsave" : "Save"}
             handleClick={() => {
-              savePin(session?.user?.id as string, board.id, pinId);
+              savedInBoard ? handleDeleteSavedPin(savedInBoard.id) : handleSavePin()
+
             }}
           />
         )}

@@ -129,8 +129,10 @@ export const UserBoardsQuery = gql`
       userId
       secret
       saved {
+        id
         pin {
           media
+          id
         }
       }
     }
