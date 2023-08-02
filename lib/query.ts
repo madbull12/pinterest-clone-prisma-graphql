@@ -175,6 +175,7 @@ export const BoardPins = gql`
           media
         }
       }
+      
       id
       name
       secret

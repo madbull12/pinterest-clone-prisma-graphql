@@ -19,7 +19,7 @@ const UserBoard = ({ board }: { board: IBoard }) => {
     showNumOfRemainingPhotos: true,
   };
   return (
-    <Link href={`saved/${board.id}`}>
+    <Link href={`/board/${board.id}`}>
       <div className="cursor-pointer relative space-y-2 ">
         <div>
           <ReactPhotoCollage {...setting} />
