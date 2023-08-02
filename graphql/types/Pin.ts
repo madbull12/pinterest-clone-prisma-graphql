@@ -164,9 +164,9 @@ export const PinMutation = extendType({
         title: stringArg(),
       },
       async resolve(_parent, { title, description, pinId }, ctx) {
-        // if(!ctx.user) {
-        //     throw new Error("You need to be logged in to perform an action")
-        // }
+        if(!ctx.user) {
+            throw new Error("You need to be logged in to perform an action")
+        }
 
         return await ctx.prisma.pin.update({
           where: {
@@ -186,9 +186,9 @@ export const PinMutation = extendType({
         pinId: nonNull(stringArg()),
       },
       async resolve(_parent, { pinId }, ctx) {
-        // if(!ctx.user) {
-        //     throw new Error("You need to be logged in to perform an action")
-        // }
+        if(!ctx.user) {
+            throw new Error("You need to be logged in to perform an action")
+        }
 
         return await ctx.prisma.pin.delete({
           where: {
@@ -207,9 +207,9 @@ export const PinMutation = extendType({
         userId: nonNull(stringArg()),
       },
       async resolve(_parent: any, args: any, ctx: any) {
-        // if(!ctx.user) {
-        //     throw new Error("You need to be logged in to perform an action")
-        // }
+        if(!ctx.user) {
+            throw new Error("You need to be logged in to perform an action")
+        }
 
         const newPin = {
           title: args.title,

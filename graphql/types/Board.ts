@@ -96,6 +96,9 @@ export const BoardMutation = extendType({
 
             },
             async resolve(_parent,args,ctx) {
+                if(!ctx.user) {
+                    throw new Error("Unauthorized!");
+                  }
                 return await ctx.prisma.board
                     .create({
                         data:{
