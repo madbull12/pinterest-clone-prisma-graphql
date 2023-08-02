@@ -17,7 +17,7 @@ import Container from "../../../components/Container";
 import { useRouter } from "next/router";
 const CreatedPinsPage = () => {
   const router= useRouter();
-
+  const { data:session } = useSession();
   const { userId } = router.query;
   const { data, loading } = useQuery(CreatedPins, {
     variables: {
@@ -48,7 +48,8 @@ const CreatedPinsPage = () => {
         <MasonryWrapper>
           {data?.user.pins.map((item: IPin) => (
             <div key={uuidv4()} className="relative cursor-pointer ">
-              <HoverEdit item={item} />
+              {session?.user?.id === data?.user.id ? <HoverEdit item={item} /> : null}
+              
 
               <Pin item={item} isEdit={true} />
             </div>

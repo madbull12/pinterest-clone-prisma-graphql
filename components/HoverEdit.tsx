@@ -12,12 +12,12 @@ const HoverEdit:React.FC<{ item:IPin }> = ({ item }) => {
   const [isHover, setIsHover] = useState(false);
   return (
     <div
-      className=" absolute z-50  h-full w-full rounded-lg "
+      className=" absolute z-50  top-0 right-0 bottom-0 left-0 rounded-lg "
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
       {isHover && (
-        <div className="w-full h-[98%] bg-[#0008] rounded-2xl">
+        <div className="w-full h-full bg-[#00000031] rounded-2xl">
           <div className="bg-white opacity-1 absolute right-0 mx-auto bottom-4 left-0 w-8 h-8 rounded-full text-black grid place-items-center">
             <MdEdit onClick={()=>{
               window.scrollTo(0,0)

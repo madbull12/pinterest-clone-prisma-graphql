@@ -53,6 +53,7 @@ export const SinglePinQuery = gql`
 export const CreatedPins = gql`
   query Query($userId: String!) {
     user(userId: $userId) {
+      id
       pins {
         id
         media
