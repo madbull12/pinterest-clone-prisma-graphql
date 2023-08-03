@@ -189,6 +189,7 @@ export const SingleBoard = gql`
       id
       name
       secret
+      description
     }
   }
 `;

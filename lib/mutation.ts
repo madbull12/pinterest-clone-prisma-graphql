@@ -88,3 +88,25 @@ export const updatePinMutation = gql`
     }
   }
 `;
+
+export const updateBoardMutation = gql`
+  mutation Mutation(
+    $updateBoardId: String!
+    $name: String!
+    $secret: Boolean!
+    $description: String
+  ) {
+    updateBoard(
+      id: $updateBoardId
+      name: $name
+      secret: $secret
+      description: $description
+    ) {
+      id
+      name
+      description
+      secret
+  
+    }
+  }
+`;

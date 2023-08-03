@@ -3,6 +3,7 @@
 
 
 type Board {
+  description: String
   id: String
   name: String
   saved: [Saved]
@@ -34,6 +35,7 @@ type Mutation {
   deletePin(pinId: String!): Pin!
   deleteSave(saveId: String!): Saved!
   savePin(boardId: String!, pinId: String!, userId: String!): Saved!
+  updateBoard(description: String, id: String!, name: String!, secret: Boolean!): Board!
   updatePin(description: String, pinId: String!, title: String): Pin!
 }
 

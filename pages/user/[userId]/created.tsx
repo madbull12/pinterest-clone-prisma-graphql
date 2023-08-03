@@ -27,7 +27,7 @@ const CreatedPinsPage = () => {
   // const [isClicked, setIsClicked] = useState(false);
   const isEditOpenValue = useRecoilValue(isEditOpen);
   useEffect(() => {
-    document.body.style.overflow = isEditOpenValue ? "hidden" : "scroll";
+    document.body.style.overflowY = isEditOpenValue ? "hidden" : "scroll";
   }, [isEditOpenValue]);
 
   console.log(data);

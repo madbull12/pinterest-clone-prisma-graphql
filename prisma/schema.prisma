@@ -12,8 +12,8 @@ datasource db {
 
 // code above unchanged
 model User {
-  id            String    @id @default(cuid())
-  createdAt     DateTime  @default(now())
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
 
   name          String?
   email         String?   @unique
@@ -63,15 +63,15 @@ model Session {
 }
 
 model Pin {
-  id          String             @id @default(uuid())
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
+  id          String     @id @default(uuid())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
   title       String
   media       String
   description String?
   categories  Category[]
   userId      String
-  user        User               @relation(fields: [userId], references: [id])
+  user        User       @relation(fields: [userId], references: [id])
   comments    Comment[]
   saved       Saved[]
 }
@@ -84,7 +84,7 @@ model Saved {
   user      User     @relation(fields: [userId], references: [id])
   pinId     String
   pin       Pin      @relation(fields: [pinId], references: [id], onDelete: Cascade)
-  board     Board    @relation(fields: [boardId], references: [id])
+  board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
   boardId   String
 
   @@unique([userId, pinId, boardId])
@@ -102,21 +102,22 @@ model Comment {
 }
 
 model Board {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
-  saved     Saved[]
-  secret    Boolean
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  name        String
+  description String?
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  saved       Saved[]
+  secret      Boolean
 
   @@unique([userId, name])
 }
 
 model Category {
-  id   String             @id @default(uuid())
-  name String             @unique
+  id   String @id @default(uuid())
+  name String @unique
   pins Pin[]
 }
 

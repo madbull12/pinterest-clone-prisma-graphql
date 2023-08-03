@@ -24,9 +24,7 @@ const BoardDetails = () => {
       boardId: router?.query.boardId,
     },
   });
-  const [_,setEditBoard] = useRecoilState<any>(boardEditModal);
-
-
+  const [_, setEditBoard] = useRecoilState<any>(boardEditModal);
 
   console.log(boardPins);
   if (loading) return <Loading />;
@@ -39,7 +37,13 @@ const BoardDetails = () => {
         <h1 className="text-center text-3xl font-semibold">
           {boardPins?.boardPins.name}
         </h1>
-        <div onClick={()=>setEditBoard(true)} className="rounded-full bg-gray-300 h-10 w-10 grid place-items-center cursor-pointer">
+        <div
+          onClick={() => {
+            window.scrollTo({top:0})
+            setEditBoard(true);
+          }}
+          className="rounded-full bg-gray-300 h-10 w-10 grid place-items-center cursor-pointer"
+        >
           <AiFillEdit />
         </div>
         {boardPins?.boardPins.secret && (
