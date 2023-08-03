@@ -16,8 +16,8 @@ import { useSession } from "next-auth/react";
 import Container from "../../../components/Container";
 import { useRouter } from "next/router";
 const CreatedPinsPage = () => {
-  const router= useRouter();
-  const { data:session } = useSession();
+  const router = useRouter();
+  const { data: session } = useSession();
   const { userId } = router.query;
   const { data, loading } = useQuery(CreatedPins, {
     variables: {
@@ -31,10 +31,6 @@ const CreatedPinsPage = () => {
   }, [isEditOpenValue]);
 
   console.log(data);
-  if (data?.user.pins.length === 0)
-    return (
-      <h1 className="p-4 text-2xl font-bold  text-center">No pins created </h1>
-    );
 
   return (
     <Container>
@@ -45,11 +41,17 @@ const CreatedPinsPage = () => {
             <Loading />
           </div>
         )}
+        {data?.user.pins.length === 0 && (
+          <h1 className="p-4 text-2xl font-bold  text-center">
+            No pins created{" "}
+          </h1>
+        )}
         <MasonryWrapper>
           {data?.user.pins.map((item: IPin) => (
             <div key={uuidv4()} className="relative cursor-pointer ">
-              {session?.user?.id === data?.user.id ? <HoverEdit item={item} /> : null}
-              
+              {session?.user?.id === data?.user.id ? (
+                <HoverEdit item={item} />
+              ) : null}
 
               <Pin item={item} isEdit={true} />
             </div>

@@ -175,7 +175,17 @@ export const BoardPins = gql`
           media
         }
       }
-      
+
+      id
+      name
+      secret
+    }
+  }
+`;
+
+export const SingleBoard = gql`
+  query ExampleQuery($boardId: String!) {
+    singleBoard(boardId: $boardId) {
       id
       name
       secret

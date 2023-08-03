@@ -1,6 +1,6 @@
-import React, { ReactNode,useEffect } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { useRecoilValue } from "recoil";
-import { isOpen } from "../atom/boardAtom";
+import { isEditBoardOpen, isOpen } from "../atom/boardAtom";
 import { isEditOpen } from "../atom/editAtom";
 import { isSearchOpen } from "../atom/searchAtom";
 import useMediaQuery from "../hooks/useMediaQuery";
@@ -10,19 +10,20 @@ import EditModal from "./EditModal";
 import MobileNav from "./MobileNav";
 import Navbar from "./Navbar";
 import SearchModal from "./SearchModal";
-
+import BoardEditModal from "./BoardEditModal";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const isBoardOpen = useRecoilValue(isOpen);
-  const isNotMobile = useMediaQuery('(min-width: 768px)')
-const isEditOpenValue = useRecoilValue(isEditOpen);
-const searchOpen  = useRecoilValue(isSearchOpen)
+  const isNotMobile = useMediaQuery("(min-width: 768px)");
+  const isEditOpenValue = useRecoilValue(isEditOpen);
+  const searchOpen = useRecoilValue(isSearchOpen);
+  const _isEditBoardOpen = useRecoilValue(isEditBoardOpen);
 
-
-useEffect(() => {
-  document.body.style.overflow = isBoardOpen ? "hidden" : "scroll";
-  document.body.style.overflow = searchOpen ? "hidden" : "scroll";
-}, [isBoardOpen,searchOpen]);
+  useEffect(() => {
+    document.body.style.overflowY = isBoardOpen ? "hidden" : "scroll";
+    document.body.style.overflowY = searchOpen ? "hidden" : "scroll";
+    document.body.style.overflowY = _isEditBoardOpen? "hidden" : "scroll";
+  }, [isBoardOpen, searchOpen,_isEditBoardOpen]);
 
   return (
     <div>
@@ -31,18 +32,24 @@ useEffect(() => {
           <BoardModal />
         </Backdrop>
       )}
-        {isEditOpenValue && (
-          <Backdrop>
-            <EditModal />
-          </Backdrop>
-        )}
-        {searchOpen && (
-          <Backdrop>
-            <SearchModal />
-          </Backdrop>
-        )}
+      {isEditOpenValue && (
+        <Backdrop>
+          <EditModal />
+        </Backdrop>
+      )}
+      {searchOpen && (
+        <Backdrop>
+          <SearchModal />
+        </Backdrop>
+      )}
+
+      {_isEditBoardOpen && (
+        <Backdrop>
+          <BoardEditModal />
+        </Backdrop>
+      )}
       {isNotMobile ? <Navbar /> : <MobileNav />}
-      
+
       {children}
     </div>
   );

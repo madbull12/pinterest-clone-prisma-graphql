@@ -99,12 +99,12 @@ const PinDetail = () => {
   };
 
   const payload = {
-    boardId: userBoards?.userBoards[0].id,
+    boardId: userBoards?.userBoards[0]?.id,
     userId: session?.user?.id as string,
     pinId: pinId as string,
   };
   const { handleDeleteSavedPin, handleSavePin } = useSavedMutation(payload);
-  const savedInBoard = userBoards?.userBoards[0].saved.find(
+  const savedInBoard = userBoards?.userBoards[0]?.saved.find(
     (v: any) => v.pin.id === pinId
   );
 

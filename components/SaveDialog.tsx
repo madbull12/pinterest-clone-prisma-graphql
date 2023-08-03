@@ -4,10 +4,11 @@ import BoardSaveItem from "./BoardSaveItem";
 import { v4 as uuidv4 } from "uuid";
 import Link from "next/link";
 import { BoardWithPayload } from "../types/board";
+import { useSession } from "next-auth/react";
 const SaveDialog = ({ userBoards }: { userBoards: BoardWithPayload[] }) => {
   console.log(userBoards);
   const [filter, setFilter] = useState<string>("");
-
+  const { data:session } = useSession()
   return (
     <div className="bg-white p-4 shadow-md rounded-xl space-y-3">
       <p className="text-center font-semibold">Save to board</p>
@@ -24,7 +25,7 @@ const SaveDialog = ({ userBoards }: { userBoards: BoardWithPayload[] }) => {
             <>
               <h1 className="text-sm md:text-base">
                 No boards.{" "}
-                <Link href="/user/saved">
+                <Link href={`/user/${session?.user?.id}/saved`}>
                   <span className="underline text-xs md:text-sm">Create here</span>
                 </Link>
               </h1>

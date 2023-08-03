@@ -91,8 +91,23 @@ export const BoardQuery = extendType({
             }
             return boardUnique;
           }
+          return boardUnique;
+
         },
-      });
+      })
+      t.nonNull.field<any>("singleBoard",{
+        type:"Board",
+        args:{
+          boardId:nonNull(stringArg())
+        },
+        async resolve(_parent,{ boardId }, ctx) {
+          return await ctx.prisma.board.findUnique({
+            where:{
+              id:boardId
+            }
+          })
+        }
+      })
   },
 });
 

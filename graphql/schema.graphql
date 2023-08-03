@@ -59,6 +59,7 @@ type Query {
   relatedPins(categories: [String]!, pinId: String!): [Pin]!
   saved: [Saved]!
   searchPins(searchTerm: String!): [Pin]!
+  singleBoard(boardId: String!): Board!
   user(userId: String!): User!
   userBoards(userId: String!): [Board!]
   userSaved(userId: String!): [Saved]!
