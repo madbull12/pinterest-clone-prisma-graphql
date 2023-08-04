@@ -1,19 +1,13 @@
-import {  Category } from "@prisma/client";
 import { DateTimeResolver } from "graphql-scalars";
 import {
   objectType,
   extendType,
-  enumType,
   nonNull,
   stringArg,
-  queryField,
   asNexusMethod,
   list,
 } from "nexus";
-import { ICategory, IPin } from "../../interface";
 import { Comment } from "./Comment";
-import { User } from "./User";
-import { ObjectDefinitionBlock } from "nexus/dist/core";
 
 const GQLDate = asNexusMethod(DateTimeResolver, "date");
 
