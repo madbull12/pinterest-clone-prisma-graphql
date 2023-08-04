@@ -6,7 +6,7 @@ export const Board = objectType({
   definition(t) {
     t.string("id");
     t.string("name");
-    t.nullable.string("description");
+    t.string("description");
     t.string("userId");
     t.boolean("secret");
     t.field("user", {
@@ -172,7 +172,7 @@ export const BoardMutation = extendType({
           data: {
             name: args.name,
             secret: args.secret,
-            description:args.description
+            description:args?.description 
           },
         });
       },

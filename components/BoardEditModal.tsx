@@ -40,17 +40,17 @@ const BoardEditModal = () => {
     resolver: zodResolver(boardValidation),
   });
 
-  console.log(data);
   const onSubmit:SubmitHandler<ValidationBoard> = async(data) => {
+    console.log(data)
+
     await updateBoard({
       variables:{
-        id:boardId,
+        updateBoardId:boardId,
         name:data.name,
         secret:data.secret,
         description:data.description,
       }
     })
-    console.log(data)
   }
 
   return (
