@@ -13,7 +13,7 @@ const BoardModal = () => {
   const [name, setName] = useState("");
   const { data:session }:any = useSession();
   const modalRef = useRef<HTMLDivElement>(null);
-  const [openModal,setOpenModal] = useRecoilState(boardModalState)
+  const [_,setOpenModal] = useRecoilState(boardModalState)
 
   useOutsideClick(modalRef,()=>{
     setOpenModal(false)
@@ -38,6 +38,8 @@ const BoardModal = () => {
     } catch (err) {
       console.log(err);
     }
+    setOpenModal(false)
+
   };
 
   return (

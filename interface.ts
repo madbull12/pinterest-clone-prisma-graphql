@@ -61,3 +61,9 @@ export type CategoryWithPins = Prisma.CategoryGetPayload<{
     };
   };
 }>;
+
+export type CommentWithPayload = Prisma.CommentGetPayload<{
+  include:{
+    user:true
+  }
+}>

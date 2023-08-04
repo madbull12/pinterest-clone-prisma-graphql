@@ -43,6 +43,7 @@ export const SinglePinQuery = gql`
           id
           email
           image
+          name
         }
         userId
       }
