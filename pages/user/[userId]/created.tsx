@@ -2,7 +2,6 @@ import { useQuery } from "@apollo/client";
 
 import React, { useEffect } from "react";
 import UserProfile from "../../../components/UserProfile";
-import { IPin } from "../../../interface";
 import { CreatedPins } from "../../../lib/query";
 import { v4 as uuidv4 } from "uuid";
 import Loading from "../../../components/Loading";
@@ -15,6 +14,7 @@ import { useRecoilValue } from "recoil";
 import { useSession } from "next-auth/react";
 import Container from "../../../components/Container";
 import { useRouter } from "next/router";
+import { PinWithPayload } from "../../../interface";
 const CreatedPinsPage = () => {
   const router = useRouter();
   const { data: session } = useSession();
@@ -47,7 +47,7 @@ const CreatedPinsPage = () => {
           </h1>
         )}
         <MasonryWrapper>
-          {data?.user.pins.map((item: IPin) => (
+          {data?.user.pins.map((item: PinWithPayload) => (
             <div key={uuidv4()} className="relative cursor-pointer ">
               {session?.user?.id === data?.user.id ? (
                 <HoverEdit item={item} />

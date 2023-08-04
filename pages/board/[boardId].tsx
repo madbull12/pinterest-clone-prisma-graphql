@@ -2,7 +2,6 @@ import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import React from "react";
 import { MdLock } from "react-icons/md";
-import { ISaved } from "../../interface";
 import { BoardPins } from "../../lib/query";
 import { v4 as uuidv4 } from "uuid";
 import Pin from "../../components/Pin";
@@ -12,6 +11,7 @@ import { AiFillEdit } from "react-icons/ai";
 import Container from "../../components/Container";
 import { useRecoilState } from "recoil";
 import { boardEditModal } from "../../atom/boardAtom";
+import { SavedWithPayload } from "../../interface";
 
 const BoardDetails = () => {
   const router = useRouter();
@@ -39,7 +39,7 @@ const BoardDetails = () => {
         </h1>
         <div
           onClick={() => {
-            window.scrollTo({top:0})
+            window.scrollTo({ top: 0 });
             setEditBoard(true);
           }}
           className="rounded-full bg-gray-300 h-10 w-10 grid place-items-center cursor-pointer"
@@ -52,15 +52,13 @@ const BoardDetails = () => {
             <p>Secret board</p>
           </div>
         )}
-        <p>
-          {boardPins?.boardPins?.description}
-        </p>
+        <p>{boardPins?.boardPins?.description}</p>
         <div className="self-start w-full">
           <p className="text-xl font-semibold px-4">
             {boardPins?.boardPins.saved.length} pins
           </p>
           <MasonryWrapper>
-            {boardPins?.boardPins.saved.map((item: ISaved) => (
+            {boardPins?.boardPins.saved.map((item: SavedWithPayload) => (
               <Pin key={uuidv4()} item={item.pin} />
             ))}
           </MasonryWrapper>

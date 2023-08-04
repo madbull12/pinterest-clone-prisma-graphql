@@ -1,15 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React from "react";
 import Button from "./Button";
 import Search from "./Search";
 import { useSession, signIn, signOut } from "next-auth/react";
-import toast from "react-hot-toast";
 
 const Navbar = () => {
   const { status, data: session } = useSession();
-  const router = useRouter();
   return (
     <nav className="py-4 px-2 max-w-7xl mx-auto">
       <ul className="flex items-center justify-between">
@@ -23,12 +20,10 @@ const Navbar = () => {
               src="https://www.freepnglogos.com/uploads/pinterest-logo-p-png-0.png"
             />
           </Link>
-          {status==="authenticated" ? (
+          {status === "authenticated" ? (
             <Link href="/pin-builder">Create</Link>
-
-          ):null}
-            <Link href="/explore">Explore</Link>
-
+          ) : null}
+          <Link href="/explore">Explore</Link>
         </div>
         <Search />
         <div className="flex items-center gap-x-2">

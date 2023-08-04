@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { MdEdit } from "react-icons/md";
 import { useRecoilState } from "recoil";
 import { editModalState, editPinState } from "../atom/editAtom";
-import { IPin } from "../interface";
+import { Pin } from "@prisma/client";
 
 
-const HoverEdit:React.FC<{ item:IPin }> = ({ item }) => {
+const HoverEdit:React.FC<{ item:Pin }> = ({ item }) => {
   const [openEditModal, setEditModal] = useRecoilState(editModalState);
 
   const [editPin,setEditPin] = useRecoilState<any>(editPinState);

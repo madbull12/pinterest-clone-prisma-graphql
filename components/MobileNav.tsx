@@ -1,23 +1,16 @@
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import {
-  FiHome,
-  FiLogIn,
-  FiLogOut,
-  FiPlus,
-  FiSearch,
-  FiUser,
-} from "react-icons/fi";
+import { FiHome, FiLogIn, FiPlus, FiSearch } from "react-icons/fi";
 import { MdExplore } from "react-icons/md";
 import { useRecoilState } from "recoil";
 import { searchModalState } from "../atom/searchAtom";
 
 const MobileNav = () => {
   const { status, data: session } = useSession();
-  const [searchOpen, setSearchOpen] = useRecoilState(searchModalState);
+  const [_, setSearchOpen] = useRecoilState(searchModalState);
   const router = useRouter();
   return (
     <nav className="flex z-[999] gap-x-2 text-2xl list-none fixed bottom-0 right-0 left-0 items-center bg-white justify-between p-4 text-gray-500">

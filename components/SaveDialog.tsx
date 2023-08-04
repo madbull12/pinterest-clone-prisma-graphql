@@ -1,9 +1,8 @@
-import { IBoard } from "../interface";
 import { useState } from "react";
 import BoardSaveItem from "./BoardSaveItem";
 import { v4 as uuidv4 } from "uuid";
 import Link from "next/link";
-import { BoardWithPayload } from "../types/board";
+import { BoardWithPayload } from "../interface";
 import { useSession } from "next-auth/react";
 const SaveDialog = ({ userBoards }: { userBoards: BoardWithPayload[] }) => {
   console.log(userBoards);

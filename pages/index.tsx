@@ -1,6 +1,5 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { IPin } from '../interface'
 import { useQuery } from '@apollo/client'
 import { FeedQuery } from '../lib/query'
 import Loading from '../components/Loading'
@@ -11,6 +10,7 @@ import Pin from '../components/Pin'
 import { useSession } from 'next-auth/react'
 import MasonryWrapper from '../components/MasonryWrapper'
 import Container from '../components/Container'
+import { PinWithPayload } from '../interface'
 
 
 const Home: NextPage = () => {
@@ -36,7 +36,7 @@ const Home: NextPage = () => {
       <p className='text-center font-semibold  py-4 text-lg '>For you</p>
       <MasonryWrapper>
 
-            {data?.pins?.map((item:IPin)=>(
+            {data?.pins?.map((item:PinWithPayload)=>(
               <Pin key={uuidv4()} item={item} />
             ))}
 

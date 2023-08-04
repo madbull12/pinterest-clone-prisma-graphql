@@ -1,7 +1,4 @@
 import React, { ReactNode } from "react";
-import { useRecoilState } from "recoil";
-import { boardModalState } from "../atom/boardAtom";
-import { editModalState } from "../atom/editAtom";
 
 const Backdrop = ({ children }: { children: ReactNode }) => {
 

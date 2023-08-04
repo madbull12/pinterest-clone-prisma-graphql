@@ -3,13 +3,12 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { HiPlusCircle } from "react-icons/hi";
-import { useSession } from "next-auth/react";
 import useMediaQuery from "../hooks/useMediaQuery";
 import { useQuery } from "@apollo/client";
 import { SingleUserQuery } from "../lib/query";
 
 const UserProfile = () => {
-//   const { data: session } = useSession();
+  //   const { data: session } = useSession();
   const isNotMobile = useMediaQuery("(min-width: 768px)");
   const router = useRouter();
   const { userId } = router?.query;
@@ -18,7 +17,6 @@ const UserProfile = () => {
       userId,
     },
   });
-
 
   return (
     <main className="flex justify-center items-center flex-col text-center">

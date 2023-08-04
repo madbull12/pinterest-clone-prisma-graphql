@@ -1,5 +1,4 @@
 import { useQuery } from "@apollo/client";
-import { useUser } from "@auth0/nextjs-auth0";
 import React, { useState } from "react";
 import { MdArrowDropDown } from "react-icons/md";
 import { firstBoardQuery } from "../lib/query";

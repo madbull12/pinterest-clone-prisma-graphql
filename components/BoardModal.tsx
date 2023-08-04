@@ -1,30 +1,28 @@
-import { useMutation, useQuery } from "@apollo/client";
-import React, { useState,useRef } from "react";
+import { useMutation } from "@apollo/client";
+import React, { useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { useRecoilState } from "recoil";
 import { boardModalState } from "../atom/boardAtom";
 import useOutsideClick from "../hooks/useOutsideClick";
 import { createBoardMutation } from "../lib/mutation";
-import { useSession } from 'next-auth/react'
-
+import { useSession } from "next-auth/react";
 
 const BoardModal = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [name, setName] = useState("");
-  const { data:session }:any = useSession();
+  const { data: session }: any = useSession();
   const modalRef = useRef<HTMLDivElement>(null);
-  const [_,setOpenModal] = useRecoilState(boardModalState)
+  const [_, setOpenModal] = useRecoilState(boardModalState);
 
-  useOutsideClick(modalRef,()=>{
-    setOpenModal(false)
-  })
+  useOutsideClick(modalRef, () => {
+    setOpenModal(false);
+  });
 
   const handleOnChange = () => {
     setIsChecked(!isChecked);
   };
 
   const [createBoard] = useMutation(createBoardMutation);
-
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -38,8 +36,7 @@ const BoardModal = () => {
     } catch (err) {
       console.log(err);
     }
-    setOpenModal(false)
-
+    setOpenModal(false);
   };
 
   return (

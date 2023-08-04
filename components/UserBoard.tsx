@@ -1,10 +1,10 @@
 import Link from "next/link";
 import React from "react";
-import { IBoard } from "../interface";
 import { ReactPhotoCollage } from "react-photo-collage";
 import { FiLock } from "react-icons/fi";
+import { BoardWithPayload } from "../interface";
 
-const UserBoard = ({ board }: { board: IBoard }) => {
+const UserBoard = ({ board }: { board: BoardWithPayload }) => {
   console.log(board);
   const setting = {
     width: "250px",

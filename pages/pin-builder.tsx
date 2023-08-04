@@ -1,24 +1,16 @@
-import React, { Context, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { gql, useMutation, useQuery } from "@apollo/client";
-import toast, { Toaster } from "react-hot-toast";
-import prisma from "../lib/prisma";
+import { useMutation } from "@apollo/client";
+import toast from "react-hot-toast";
 import { createPinMutation } from "../lib/mutation";
 import { FeedQuery } from "../lib/query";
 import { HiDotsHorizontal, HiTrash, HiUpload } from "react-icons/hi";
-import { MdFileUpload, MdUpload } from "react-icons/md";
 import Image from "next/image";
-import Button from "../components/Button";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { ICategory } from "../interface";
 import Container from "../components/Container";
 import useMediaQuery from "../hooks/useMediaQuery";
-import {
-  AiFillCloseCircle,
-  AiFillCloseSquare,
-  AiOutlineClose,
-} from "react-icons/ai";
+
 import CategoryTag from "../components/CategoryTag";
 
 interface IFormInput {
@@ -121,8 +113,6 @@ const PinBuilder = () => {
     console.log(categories);
 
     // upload image
-   
-
 
     if (categories?.length === 0) {
       toast.error("Please add some categories");
@@ -130,9 +120,9 @@ const PinBuilder = () => {
       try {
         const formData = new FormData();
         formData.append("file", selectedFile);
-    
+
         formData.append("upload_preset", "uploads");
-    
+
         const res = await fetch(
           `https://api.cloudinary.com/v1_1/dem2vt6lj/${
             selectedFile.type === "video/mp4" ? "video" : "image"
@@ -143,7 +133,7 @@ const PinBuilder = () => {
           }
         ).then((res) => res.json());
         console.log(res);
-    
+
         // end of upload image
         const media = res.secure_url;
         const variables = {
@@ -167,7 +157,7 @@ const PinBuilder = () => {
 
   console.log(textAreaFocus);
 
-  const deleteCategory = (index:number) => {
+  const deleteCategory = (index: number) => {
     setCategories(categories.filter((_, _index) => _index != index));
   };
   return (
@@ -326,8 +316,8 @@ const PinBuilder = () => {
                   </div>
                   <div className="flex items-center flex-wrap gap-x-4 mt-4 ">
                     {categories.map((category, i) => (
-                      <div onClick={()=>deleteCategory(i)} key={i}>
-                        <CategoryTag category={category}  />
+                      <div onClick={() => deleteCategory(i)} key={i}>
+                        <CategoryTag category={category} />
                       </div>
                     ))}
                   </div>

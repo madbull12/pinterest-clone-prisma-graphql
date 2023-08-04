@@ -1,17 +1,17 @@
 import React from "react";
 import { v4 } from "uuid";
-import { IBoard } from "../interface";
+import { BoardWithPayload } from "../interface";
 import UserBoard from "./UserBoard";
 
 interface IProps {
-  userBoards: IBoard[];
+  userBoards: BoardWithPayload[];
 }
 const UserBoardsList = ({ userBoards }: IProps) => {
   return (
     <div className="flex flex-wrap items-center p-4 gap-4  justify-center md:justify-start">
       {userBoards?.length !== 0 ? (
         <>
-          {userBoards?.map((board: IBoard) => (
+          {userBoards?.map((board) => (
             <UserBoard board={board}  key={v4()}/>
           ))}
         </>

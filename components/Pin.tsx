@@ -1,10 +1,10 @@
+import { Pin } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useCallback, useMemo, useState } from "react";
-import { IPin } from "../interface";
+import React, { useMemo } from "react";
 
 interface IProps {
-  item: IPin;
+  item: Pin;
   isEdit?: boolean;
 }
 const Pin = ({ item, isEdit }: IProps) => {
@@ -13,13 +13,11 @@ const Pin = ({ item, isEdit }: IProps) => {
 
   const widthGenerator = useMemo(() => {
     return Math.floor(Math.random() * (450 - 300 + 1) + 300);
+  }, []);
 
-  },[])
- 
-  const heightGenerator = useMemo(()=>{
+  const heightGenerator = useMemo(() => {
     return Math.floor(Math.random() * (450 - 300 + 1) + 300);
-
-  },[]) 
+  }, []);
 
   // const aspectGenerator = () => {
   //   const aspects = ["aspect-square", "aspect-video"];
@@ -42,16 +40,11 @@ const Pin = ({ item, isEdit }: IProps) => {
                 height={heightGenerator}
                 objectFit="cover"
                 className="rounded-2xl"
-
               />
-
-
             </>
           )}
-        {!isEdit && <h1 className="font-semibold">{item.title}</h1>}
-
+          {!isEdit && <h1 className="font-semibold">{item.title}</h1>}
         </span>
-
       </Link>
     </div>
   );

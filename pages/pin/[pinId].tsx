@@ -8,7 +8,7 @@ import {
   HiDownload,
   HiLink,
 } from "react-icons/hi";
-import { IBoard, ICategory, IComment, IPin, ISaved } from "../../interface";
+import { ICategory, PinWithPayload } from "../../interface";
 import Image from "next/image";
 import { MdExpandMore } from "react-icons/md";
 import { v4 as uuidv4 } from "uuid";
@@ -27,10 +27,8 @@ import SaveDialog from "../../components/SaveDialog";
 import { useCopyToClipboard } from "../../hooks/useCopyToClipboard";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { useSavedMutation } from "../../hooks/useSaved";
-import { BoardWithPayload } from "../../types/board";
 import Link from "next/link";
-import { Pin } from "@prisma/client";
-
+import { Category } from "@prisma/client";
 const PinDetail = () => {
   const [expandComment, setExpandComment] = useState(false);
   const [value, copy] = useCopyToClipboard();
@@ -61,11 +59,11 @@ const PinDetail = () => {
     },
   });
 
-  const { pin }: { pin: IPin } = data || {};
+  const { pin }: { pin: PinWithPayload } = data || {};
 
   const { data: relatedPins } = useQuery(RelatedPins, {
     variables: {
-      categories: pin?.categories?.map((category: ICategory) => category.name),
+      categories: pin?.categories?.map((category: Category) => category.name),
       pinId,
     },
   });
@@ -231,7 +229,7 @@ const PinDetail = () => {
 
                 {expandComment && (
                   <div className="space-y-2 my-2">
-                    {pin.comments.map((comment: IComment) => (
+                    {pin.comments.map((comment) => (
                       <Comment key={uuidv4()} comment={comment} />
                     ))}
                   </div>

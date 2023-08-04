@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import useOutsideClick from "../hooks/useOutsideClick";
 import { useRecoilState } from "recoil";
 import { boardEditModal } from "../atom/boardAtom";
@@ -19,12 +19,10 @@ const BoardEditModal = () => {
     setModalOpen(false);
   });
 
-  const [updateBoard] = useMutation(updateBoardMutation,{
-    onCompleted() {
-    },
-  })
-  const [deleteBoard] = useMutation(deleteBoardMutation)
-
+  const [updateBoard] = useMutation(updateBoardMutation, {
+    onCompleted() {},
+  });
+  const [deleteBoard] = useMutation(deleteBoardMutation);
 
   const { boardId } = useRouter().query;
 
@@ -42,38 +40,42 @@ const BoardEditModal = () => {
     resolver: zodResolver(boardValidation),
   });
 
-  const handleDeleteBoard = async() => {
-    await toast.promise(deleteBoard({
-      variables:{
-        deleteBoardId:boardId,
-
+  const handleDeleteBoard = async () => {
+    await toast.promise(
+      deleteBoard({
+        variables: {
+          deleteBoardId: boardId,
+        },
+      }),
+      {
+        loading: "Deleting board",
+        success: "Board deleted",
+        error: "Oops something went wrong...",
       }
-    }),{
-      loading:"Deleting board",
-      success:"Board deleted",
-      error:"Oops something went wrong..."
-    }) ;
-    setModalOpen(false)
-  }
+    );
+    setModalOpen(false);
+  };
 
-  const onSubmit:SubmitHandler<ValidationBoard> = async(data) => {
-    console.log(data)
+  const onSubmit: SubmitHandler<ValidationBoard> = async (data) => {
+    console.log(data);
 
-   await toast.promise(updateBoard({
-      variables:{
-        updateBoardId:boardId,
-        name:data.name,
-        secret:data.secret,
-        description:data.description,
+    await toast.promise(
+      updateBoard({
+        variables: {
+          updateBoardId: boardId,
+          name: data.name,
+          secret: data.secret,
+          description: data.description,
+        },
+      }),
+      {
+        loading: "Updating board",
+        success: "Board Updated",
+        error: "Oops something went wrong...",
       }
-    }),{
-      loading:"Updating board",
-      success:"Board Updated",
-      error:"Oops something went wrong..."
-    }) ;
-    setModalOpen(false)
-
-  }
+    );
+    setModalOpen(false);
+  };
 
   return (
     <div
@@ -86,13 +88,15 @@ const BoardEditModal = () => {
       ) : (
         <>
           <p className="text-xl mb-4 text-center font-semibold">Edit board</p>
-          <form className="space-y-3 flex flex-col" onSubmit={handleSubmit(onSubmit)}>
+          <form
+            className="space-y-3 flex flex-col"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <div className="flex flex-col gap-y-2">
               <label className="text-xs">Name</label>
               <input
                 // onChange={(e) => setName(e.target.value)}
                 {...register("name")}
-
                 defaultValue={data?.singleBoard?.name}
                 type="text"
                 className="rounded-xl border-2 px-4 py-3 outline-none ring-blue-300 focus:ring-4 border-gray-300"
@@ -127,7 +131,11 @@ const BoardEditModal = () => {
             </div>
             <div className="flex flex-col gap-y-2">
               <label className="text-xs">Action</label>
-              <button onClick={handleDeleteBoard} type="button" className="font-semibold text-xl self-start">
+              <button
+                onClick={handleDeleteBoard}
+                type="button"
+                className="font-semibold text-xl self-start"
+              >
                 Delete board
               </button>
             </div>

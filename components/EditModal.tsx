@@ -1,21 +1,18 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import Image from "next/image";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { MdArrowDropDown } from "react-icons/md";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { editModalState, editPinValue } from "../atom/editAtom";
 import useOutsideClick from "../hooks/useOutsideClick";
-import { IPin } from "../interface";
 import { deletePinMutation, updatePinMutation } from "../lib/mutation";
-import { CreatedPins, FeedQuery, firstBoardQuery } from "../lib/query";
+import { CreatedPins, FeedQuery } from "../lib/query";
 import BoardDropdown from "./BoardDropdown";
-import BoardList from "./BoardList";
 import Button from "./Button";
-import Loading from "./Loading";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { Pin } from "@prisma/client";
 
 interface IFormInput {
   title: string;
@@ -23,7 +20,7 @@ interface IFormInput {
 }
 
 const EditModal = () => {
-  const editPin = useRecoilValue<IPin | null>(editPinValue);
+  const editPin = useRecoilValue<Pin | null>(editPinValue);
   const router = useRouter();
   console.log(editPin);
   const [openEditModal, setEditModal] = useRecoilState(editModalState);
@@ -139,7 +136,7 @@ const EditModal = () => {
               <label className="flex-[0.25]">Description</label>
               <textarea
                 {...register("description")}
-                defaultValue={editPin?.description}
+                defaultValue={editPin?.description as string}
                 className="px-4 py-2 flex-[.75] outline-none focus:ring-4 ring-blue-300 border-2 border-gray-300 rounded-2xl"
               />
             </div>

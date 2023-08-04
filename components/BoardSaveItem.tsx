@@ -2,12 +2,10 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react'
 import { AiFillLock } from 'react-icons/ai';
-import savePin from '../helper/savePin';
-import { IBoard } from '../interface';
 import Button from './Button';
 
 import { useSavedMutation } from '../hooks/useSaved';
-import { BoardWithPayload } from '../types/board';
+import { BoardWithPayload } from '../interface';
 
 
 const BoardSaveItem = ({ board }: { board: BoardWithPayload }) => {
