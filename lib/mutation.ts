@@ -106,7 +106,14 @@ export const updateBoardMutation = gql`
       name
       description
       secret
-  
+    }
+  }
+`;
+
+export const deleteBoardMutation = gql`
+  mutation Mutation($deleteBoardId: String!) {
+    deleteBoard(id: $deleteBoardId) {
+      id
     }
   }
 `;

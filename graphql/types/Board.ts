@@ -1,5 +1,12 @@
 // import { Board, Board, Board } from "@prisma/client";
-import { booleanArg, extendType, nonNull, nullable, objectType, stringArg } from "nexus";
+import {
+  booleanArg,
+  extendType,
+  nonNull,
+  nullable,
+  objectType,
+  stringArg,
+} from "nexus";
 
 export const Board = objectType({
   name: "Board",
@@ -147,32 +154,66 @@ export const BoardMutation = extendType({
         id: nonNull(stringArg()),
         name: nonNull(stringArg()),
         secret: nonNull(booleanArg()),
-        description:nullable(stringArg())
+        description: nullable(stringArg()),
       },
       async resolve(_parent, args, ctx) {
         if (!ctx.user) {
           throw new Error("Unauthorized!");
         }
 
-        const isRightUser = (await ctx.prisma.board.findUnique({
-          where:{
-            // user
-            id:args.id
-          }
-        }))?.userId === ctx.user?.id;
+        const isRightUser =
+          (
+            await ctx.prisma.board.findUnique({
+              where: {
+                // user
+                id: args.id,
+              },
+            })
+          )?.userId === ctx.user?.id;
 
-        if(!isRightUser) {
-          throw new Error("You have no right to use this resource")
+        if (!isRightUser) {
+          throw new Error("You have no right to use this resource");
         }
 
         return await ctx.prisma.board.update({
-          where:{
-            id:args.id
+          where: {
+            id: args.id,
           },
           data: {
             name: args.name,
             secret: args.secret,
-            description:args?.description 
+            description: args?.description,
+          },
+        });
+      },
+    });
+    t.nonNull.field<any>("deleteBoard", {
+      type: "Board",
+      args: {
+        id: nonNull(stringArg()),
+      },
+      async resolve(_parent, args, ctx) {
+        if (!ctx.user) {
+          throw new Error("Unauthorized!");
+        }
+
+        const isRightUser =
+          (
+            await ctx.prisma.board.findUnique({
+              where: {
+                // user
+                id: args.id,
+              },
+            })
+          )?.userId === ctx.user?.id;
+
+        if (!isRightUser) {
+          throw new Error("You have no right to use this resource");
+        }
+
+        return await ctx.prisma.board.delete({
+          where: {
+            id: args.id,
           },
         });
       },

@@ -9,7 +9,8 @@ import Loading from "./Loading";
 import { ValidationBoard, boardValidation } from "../lib/validations/board";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { updateBoardMutation } from "../lib/mutation";
+import { deleteBoardMutation, updateBoardMutation } from "../lib/mutation";
+import { toast } from "react-hot-toast";
 
 const BoardEditModal = () => {
   const modalRef = useRef<HTMLDivElement>(null);
@@ -20,9 +21,10 @@ const BoardEditModal = () => {
 
   const [updateBoard] = useMutation(updateBoardMutation,{
     onCompleted() {
-      console.log("haha")
     },
   })
+  const [deleteBoard] = useMutation(deleteBoardMutation)
+
 
   const { boardId } = useRouter().query;
 
@@ -40,17 +42,37 @@ const BoardEditModal = () => {
     resolver: zodResolver(boardValidation),
   });
 
+  const handleDeleteBoard = async() => {
+    await toast.promise(deleteBoard({
+      variables:{
+        deleteBoardId:boardId,
+
+      }
+    }),{
+      loading:"Deleting board",
+      success:"Board deleted",
+      error:"Oops something went wrong..."
+    }) ;
+    setModalOpen(false)
+  }
+
   const onSubmit:SubmitHandler<ValidationBoard> = async(data) => {
     console.log(data)
 
-    await updateBoard({
+   await toast.promise(updateBoard({
       variables:{
         updateBoardId:boardId,
         name:data.name,
         secret:data.secret,
         description:data.description,
       }
-    })
+    }),{
+      loading:"Updating board",
+      success:"Board Updated",
+      error:"Oops something went wrong..."
+    }) ;
+    setModalOpen(false)
+
   }
 
   return (
@@ -105,7 +127,7 @@ const BoardEditModal = () => {
             </div>
             <div className="flex flex-col gap-y-2">
               <label className="text-xs">Action</label>
-              <button type="button" className="font-semibold text-xl self-start">
+              <button onClick={handleDeleteBoard} type="button" className="font-semibold text-xl self-start">
                 Delete board
               </button>
             </div>

@@ -32,6 +32,7 @@ type Mutation {
   createBoard(name: String!, secret: Boolean!, userId: String!): Board!
   createComment(content: String!, pinId: String!, userId: String!): Comment!
   createPin(categories: [String], description: String, media: String!, title: String!, userId: String!): Pin!
+  deleteBoard(id: String!): Board!
   deletePin(pinId: String!): Pin!
   deleteSave(saveId: String!): Saved!
   savePin(boardId: String!, pinId: String!, userId: String!): Saved!

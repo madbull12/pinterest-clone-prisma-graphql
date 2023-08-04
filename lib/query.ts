@@ -179,6 +179,7 @@ export const BoardPins = gql`
       id
       name
       secret
+      description
     }
   }
 `;
