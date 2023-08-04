@@ -84,7 +84,7 @@ model Saved {
   user      User     @relation(fields: [userId], references: [id])
   pinId     String
   pin       Pin      @relation(fields: [pinId], references: [id], onDelete: Cascade)
-  board     Board    @relation(fields: [boardId], references: [id])
+  board     Board    @relation(fields: [boardId], references: [id],onDelete: Cascade)
   boardId   String
 
   @@unique([userId, pinId, boardId])
