@@ -18,7 +18,7 @@ export default async function handler(
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
       "Access-Control-Allow-Origin",
-      "https://studio.apollographql.com"
+      "*"
   );
   res.setHeader(
       "Access-Control-Allow-Headers",
