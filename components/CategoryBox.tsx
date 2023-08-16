@@ -10,6 +10,7 @@ const CategoryBox = ({ category }: { category: CategoryWithPins }) => {
       {category.pins.length !== 0 ? (
         <div className="relative   w-full h-44 grid place-items-center">
           <Image
+            alt="category-svg"
             src={category.pins[0].media}
             layout="fill"
             objectFit="cover"

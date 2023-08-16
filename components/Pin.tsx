@@ -35,6 +35,7 @@ const Pin = ({ item, isEdit }: IProps) => {
           ) : (
             <>
               <Image
+              alt="pin-image"
                 src={item?.media}
                 width={widthGenerator}
                 height={heightGenerator}

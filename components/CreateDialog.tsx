@@ -9,7 +9,7 @@ const CreateDialog = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const dialogRef = useRef<HTMLDivElement>(null)
   
-    const [openModal, setOpenModal] = useRecoilState(boardModalState);
+    const [_, setOpenModal] = useRecoilState(boardModalState);
     useOutsideClick(dialogRef,()=>{
         setDialogOpen(false)
       })

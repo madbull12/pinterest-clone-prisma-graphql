@@ -52,6 +52,7 @@ const MobileNav = () => {
         {status === "authenticated" ? (
           <Link href="/user/saved">
             <Image
+            alt="user-profile-image"
               src={session?.user?.image || ""}
               width={35}
               height={35}

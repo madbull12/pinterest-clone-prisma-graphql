@@ -23,13 +23,13 @@ const EditModal = () => {
   const editPin = useRecoilValue<Pin | null>(editPinValue);
   const router = useRouter();
   console.log(editPin);
-  const [openEditModal, setEditModal] = useRecoilState(editModalState);
+  const [_, setEditModal] = useRecoilState(editModalState);
   const {
     register,
     handleSubmit,
-    formState: { errors },
-    reset,
-    getValues,
+    // formState: { errors },
+    // reset,
+    // getValues,
   } = useForm<IFormInput>();
   const { data: session }: any = useSession();
   const modalRef = useRef<HTMLDivElement>(null);
@@ -101,7 +101,7 @@ const EditModal = () => {
       }
     );
     setEditModal(false);
-    await refreshData();
+    refreshData();
   };
 
   return (
@@ -147,6 +147,7 @@ const EditModal = () => {
             </video>
           ) : (
             <Image
+              alt="modal-edit-image"
               src={editPin?.media ?? ""}
               className="rounded-xl object-cover"
               width={250}
