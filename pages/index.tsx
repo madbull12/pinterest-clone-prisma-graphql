@@ -11,10 +11,14 @@ import { useSession } from 'next-auth/react'
 import MasonryWrapper from '../components/MasonryWrapper'
 import Container from '../components/Container'
 import { PinWithPayload } from '../interface'
+import { trpc } from '../utils/trpc'
 
 
 const Home: NextPage = () => {
   const { data, loading, error } = useQuery(FeedQuery);
+
+  const { data:hello } = trpc.example.getAll.useQuery()
+  console.log(hello)
 
   const [searchResults,setSearchResults] = useRecoilState<any>(searchResultState)
   console.log(searchResults)
