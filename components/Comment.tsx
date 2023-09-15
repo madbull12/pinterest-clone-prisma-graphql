@@ -8,7 +8,7 @@ interface IProps {
 }
 const Comment = ({ comment }: IProps) => {
   return (
-    <Link href={`/user/${comment.userId}/created`}>
+    <Link href={`/user/${comment?.userId}/created`}>
       <div className={`flex gap-x-2 items-center cursor-pointer`}>
         <div className="h-6 w-6 md:h-8 md:w-8 relative">
           <Image
@@ -24,9 +24,9 @@ const Comment = ({ comment }: IProps) => {
 
         <div>
           <p className=" text-sm md:text-base text-gray-500">
-            {comment.user.name}
+            {comment?.user?.name}
           </p>
-          <p className="text-sm md:text-base lg:text-lg">{comment.content}</p>
+          <p className="text-sm md:text-base lg:text-lg">{comment?.content}</p>
         </div>
       </div>
     </Link>

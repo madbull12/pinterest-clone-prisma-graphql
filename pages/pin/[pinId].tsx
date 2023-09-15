@@ -8,7 +8,7 @@ import {
   HiDownload,
   HiLink,
 } from "react-icons/hi";
-import { ICategory, PinWithPayload } from "../../interface";
+import { BoardWithPayload, ICategory, PinWithPayload } from "../../interface";
 import Image from "next/image";
 import { MdExpandMore } from "react-icons/md";
 import { v4 as uuidv4 } from "uuid";
@@ -28,7 +28,8 @@ import { useCopyToClipboard } from "../../hooks/useCopyToClipboard";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { useSavedMutation } from "../../hooks/useSaved";
 import Link from "next/link";
-import { Category } from "@prisma/client";
+import { Category, CategoryPayload } from "@prisma/client";
+import { trpc } from "../../utils/trpc";
 const PinDetail = () => {
   const [expandComment, setExpandComment] = useState(false);
   const [value, copy] = useCopyToClipboard();
@@ -37,7 +38,7 @@ const PinDetail = () => {
   const router = useRouter();
   const { pinId } = router.query;
   const commentInputRef = useRef<any>(null);
-  const { data: session, status }: any = useSession();
+  const { data: session, status } = useSession();
 
   const [contentFocus, setContentFocus] = useState<boolean>(false);
   const [content, setContent] = useState<string>("");
@@ -53,29 +54,22 @@ const PinDetail = () => {
     setOpenDialog(false);
   });
 
-  const { data, loading, error } = useQuery(SinglePinQuery, {
-    variables: {
-      pinId,
-    },
+  const { data:pin, isLoading, error } = trpc.pin.getPin.useQuery<PinWithPayload>({
+    pinId:pinId as string
   });
+ 
 
-  const { pin }: { pin: PinWithPayload } = data || {};
+  const { data:relatedPins } = trpc.pin.getRelatedPins.useQuery<PinWithPayload[]>({
+    categories:pin?.categories  as Category[],
+    pinId:pinId as string
 
-  const { data: relatedPins } = useQuery(RelatedPins, {
-    variables: {
-      categories: pin?.categories?.map((category: Category) => category.name),
-      pinId,
-    },
-  });
-  console.log(relatedPins);
+  })
+
 
   const [openModal, setOpenModal] = useRecoilState(boardModalState);
 
-  const { data: userBoards } = useQuery(UserBoardsQuery, {
-    variables: {
-      userId: session?.user?.id,
-    },
-  });
+  const { data: userBoards } = trpc.board.getYourBoards.useQuery<BoardWithPayload[]>();
+
 
   const addComment = async () => {
     const variables = {
@@ -97,16 +91,17 @@ const PinDetail = () => {
   };
 
   const payload = {
-    boardId: userBoards?.userBoards[0]?.id,
+    boardId: userBoards?.[0].id as string,
     userId: session?.user?.id as string,
     pinId: pinId as string,
   };
   const { handleDeleteSavedPin, handleSavePin } = useSavedMutation(payload);
-  const savedInBoard = userBoards?.userBoards[0]?.saved.find(
-    (v: any) => v.pin.id === pinId
+  const savedInBoard = userBoards?.[0]?.saved.find(
+    (v) => v?.pinId === pinId
   );
+  console.log(userBoards)
 
-  if (loading)
+  if (isLoading)
     return (
       <div className="flex justify-center py-4">
         <Loading />
@@ -122,7 +117,7 @@ const PinDetail = () => {
         />
         <section className="shadow-lg relative rounded-3xl w-full flex flex-col md:flex-row">
           <div className="  w-full md:w-1/2 max-h-96 ">
-            {pin.media.includes("video") ? (
+            {pin?.media.includes("video") ? (
               <video
                 controls
                 className="relative h-96 mt-14  md:mt-0  w-full rounded-2xl"
@@ -132,7 +127,7 @@ const PinDetail = () => {
             ) : (
               <div className="relative w-full h-96 mt-14  md:mt-0   ">
                 <Image
-                  src={pin.media}
+                  src={pin?.media as string}
                   alt="image"
                   layout="fill"
                   objectFit="cover"
@@ -156,7 +151,7 @@ const PinDetail = () => {
               </div>
 
               <div className="ml-auto flex items-center gap-x-4">
-                {userBoards?.userBoards.length !== 0 ||
+                {userBoards?.length !== 0 ||
                 status === "authenticated" ? (
                   <button
                     ref={btnRef}
@@ -164,7 +159,7 @@ const PinDetail = () => {
                     onClick={() => setOpenDialog(!openDialog)}
                   >
                     <MdExpandMore className="text-xl " />
-                    <p className="">{userBoards?.userBoards[0]?.name}</p>
+                    <p className="">{userBoards?.[0]?.name}</p>
 
                     {openDialog && (
                       <div
@@ -172,7 +167,7 @@ const PinDetail = () => {
                         ref={saveDialogRef}
                         className="absolute top-8 -right-8 sm:right-8 w-56 sm:w-96 z-50"
                       >
-                        <SaveDialog userBoards={userBoards?.userBoards} />
+                        <SaveDialog userBoards={userBoards as BoardWithPayload[]} />
                       </div>
                     )}
                   </button>
@@ -182,7 +177,7 @@ const PinDetail = () => {
                     <Button
                       text={savedInBoard ? "Unsave" : "Save"}
                       handleClick={() => {
-                        userBoards?.userBoards.length !== 0
+                        userBoards?.length !== 0
                           ? savedInBoard
                             ? handleDeleteSavedPin(savedInBoard?.id)
                             : handleSavePin()
@@ -194,16 +189,16 @@ const PinDetail = () => {
               </div>
             </nav>
             <div className="mt-8  pt-4 md:pt-0 space-y-3">
-              <h1 className="text-2xl md:text-4xl font-bold">{pin.title}</h1>
-              <p className="text-sm md:text-base">{pin.description}</p>
-              <Link href={`/user/${data?.pin.user.id}/created`}>
+              <h1 className="text-2xl md:text-4xl font-bold">{pin?.title}</h1>
+              <p className="text-sm md:text-base">{pin?.description}</p>
+              <Link href={`/user/${pin?.userId}/created`}>
                 <div className="flex gap-x-3 cursor-pointer items-center">
                   <div className="relative w-8 h-8">
                     <Image
                       alt="user-avatar"
                       className="rounded-full"
                       src={
-                        data?.pin.user.image ||
+                       pin?.user?.image ??
                         "https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"
                       }
                       layout="fill"
@@ -211,25 +206,25 @@ const PinDetail = () => {
                   </div>
 
                   <p className="w-1/2 text-xs sm:text-sm md:text-base">
-                    {data?.pin.user.email}
+                    {pin?.user?.name}
                   </p>
                 </div>
               </Link>
 
               <div>
-                {pin.comments.length !== 0 ? (
+                {pin?.comments?.length !== 0 ? (
                   <div
                     className="flex items-center gap-x-2 font-semibold text-xl mb-4 cursor-pointer"
                     onClick={() => setExpandComment((prev) => !prev)}
                   >
-                    <span>{pin.comments.length} Comments</span>
+                    <span>{pin?.comments?.length} Comments</span>
                     <MdExpandMore className="text-2xl  " />
                   </div>
                 ) : null}
 
                 {expandComment && (
                   <div className="space-y-2 my-2">
-                    {pin.comments.map((comment) => (
+                    {pin?.comments?.map((comment) => (
                       <Comment key={uuidv4()} comment={comment} />
                     ))}
                   </div>
@@ -258,7 +253,7 @@ const PinDetail = () => {
                       className="w-full py-1 px-2  md:px-4 md:py-2 outline-none border-gray-200 rounded-full text-sm md:text-base border"
                       placeholder={`${
                         status === "authenticated"
-                          ? pin.comments.length === 0
+                          ? pin?.comments?.length === 0
                             ? "Be the first person to comment"
                             : "Add a comment"
                           : "Please login first to comment"
@@ -292,7 +287,7 @@ const PinDetail = () => {
           </div>
         </section>
       </div>
-      <RelatedPinsComponent pins={relatedPins?.relatedPins} />
+      <RelatedPinsComponent pins={relatedPins as PinWithPayload[]} />
     </Container>
   );
 };
