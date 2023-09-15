@@ -23,7 +23,7 @@ const UserProfile = () => {
       <div className="w-1/2 h-44 sm:h-60 md:h-80 rounded-3xl bg-gray-200 relative">
         <HiPlusCircle className="text-gray-50 text-2xl sm:text-4xl md:text-5xl absolute bottom-0 right-0" />
       </div>
-      <div className="-mt-8 md:-mt-14">
+      <div className="my-8">
         <Image
           src={data?.user?.image || ""}
           className="rounded-full "
