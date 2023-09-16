@@ -30,6 +30,9 @@ import { useSavedMutation } from "../../hooks/useSaved";
 import Link from "next/link";
 import { Category, CategoryPayload } from "@prisma/client";
 import { trpc } from "../../utils/trpc";
+import { useComment } from "../../hooks/useComment";
+import CommentForm from "../../components/CommentForm";
+
 const PinDetail = () => {
   const [expandComment, setExpandComment] = useState(false);
   const [value, copy] = useCopyToClipboard();
@@ -37,58 +40,37 @@ const PinDetail = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const router = useRouter();
   const { pinId } = router.query;
-  const commentInputRef = useRef<any>(null);
   const { data: session, status } = useSession();
+  // const { register, handleSubmit,watch,reset } = useForm<FormValues>();
+  // const [contentFocus, setContentFocus] = useState<boolean>(false);
 
-  const [contentFocus, setContentFocus] = useState<boolean>(false);
-  const [content, setContent] = useState<string>("");
-
-  const { handleSubmit } = useForm();
-
-  const [createComment] = useMutation(createCommentMutation, {
-    refetchQueries: [SinglePinQuery],
-  });
   const btnRef = useRef(null);
 
   useOutsideClick(saveDialogRef, () => {
     setOpenDialog(false);
   });
 
-  const { data:pin, isLoading, error } = trpc.pin.getPin.useQuery<PinWithPayload>({
-    pinId:pinId as string
+  const {
+    data: pin,
+    isLoading,
+    error,
+  } = trpc.pin.getPin.useQuery<PinWithPayload>({
+    pinId: pinId as string,
   });
- 
 
-  const { data:relatedPins } = trpc.pin.getRelatedPins.useQuery<PinWithPayload[]>({
-    categories:pin?.categories  as Category[],
-    pinId:pinId as string
+  const { data: relatedPins } = trpc.pin.getRelatedPins.useQuery<
+    PinWithPayload[]
+  >({
+    categories: pin?.categories as Category[],
+    pinId: pinId as string,
+  });
 
-  })
+  const [_, setOpenModal] = useRecoilState(boardModalState);
+
+  const { data: userBoards } =
+    trpc.board.getYourBoards.useQuery<BoardWithPayload[]>();
 
 
-  const [openModal, setOpenModal] = useRecoilState(boardModalState);
-
-  const { data: userBoards } = trpc.board.getYourBoards.useQuery<BoardWithPayload[]>();
-
-
-  const addComment = async () => {
-    const variables = {
-      content,
-      userId: session?.user?.id,
-      pinId,
-    };
-    try {
-      await toast.promise(createComment({ variables }), {
-        loading: "Posting comment...",
-        success: "Comment posted 👏👏",
-        error: "Oops something went wrong 😢",
-      });
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setContent("");
-    }
-  };
 
   const payload = {
     boardId: userBoards?.[0].id as string,
@@ -96,10 +78,8 @@ const PinDetail = () => {
     pinId: pinId as string,
   };
   const { handleDeleteSavedPin, handleSavePin } = useSavedMutation(payload);
-  const savedInBoard = userBoards?.[0]?.saved.find(
-    (v) => v?.pinId === pinId
-  );
-  console.log(userBoards)
+  const savedInBoard = userBoards?.[0]?.saved.find((v) => v?.pinId === pinId);
+  console.log(userBoards);
 
   if (isLoading)
     return (
@@ -151,8 +131,7 @@ const PinDetail = () => {
               </div>
 
               <div className="ml-auto flex items-center gap-x-4">
-                {userBoards?.length !== 0 ||
-                status === "authenticated" ? (
+                {userBoards?.length !== 0 || status === "authenticated" ? (
                   <button
                     ref={btnRef}
                     className="flex items-center relative "
@@ -167,7 +146,9 @@ const PinDetail = () => {
                         ref={saveDialogRef}
                         className="absolute top-8 -right-8 sm:right-8 w-56 sm:w-96 z-50"
                       >
-                        <SaveDialog userBoards={userBoards as BoardWithPayload[]} />
+                        <SaveDialog
+                          userBoards={userBoards as BoardWithPayload[]}
+                        />
                       </div>
                     )}
                   </button>
@@ -198,7 +179,7 @@ const PinDetail = () => {
                       alt="user-avatar"
                       className="rounded-full"
                       src={
-                       pin?.user?.image ??
+                        pin?.user?.image ??
                         "https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"
                       }
                       layout="fill"
@@ -230,58 +211,7 @@ const PinDetail = () => {
                   </div>
                 )}
 
-                <form
-                  className="flex flex-col"
-                  onSubmit={handleSubmit(addComment)}
-                >
-                  <div className="flex gap-x-4 w-full items-center ">
-                    {status === "authenticated" && (
-                      <Image
-                        src={session?.user?.image || ""}
-                        width={40}
-                        height={40}
-                        className="rounded-full mr-4"
-                        alt={"avatar"}
-                      />
-                    )}
-                    <input
-                      onFocus={() => setContentFocus(true)}
-                      onChange={(e) => setContent(e.target.value)}
-                      ref={commentInputRef}
-                      value={content}
-                      type="text"
-                      className="w-full py-1 px-2  md:px-4 md:py-2 outline-none border-gray-200 rounded-full text-sm md:text-base border"
-                      placeholder={`${
-                        status === "authenticated"
-                          ? pin?.comments?.length === 0
-                            ? "Be the first person to comment"
-                            : "Add a comment"
-                          : "Please login first to comment"
-                      }`}
-                      disabled={status !== "authenticated"}
-                    />
-                  </div>
-
-                  {contentFocus && (
-                    <div className=" self-end gap-x-2 flex items-center  mt-2">
-                      <button
-                        className="py-1 px-2  md:px-4 md:py-2 bg-gray-200 text-gray-800 font-semibold rounded-full"
-                        onClick={() => {
-                          setContentFocus(false);
-                          commentInputRef.current.value = "";
-                        }}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        className="font-semibold bg-[#E60023] text-white rounded-full py-1 px-2  md:px-4 md:py-2"
-                        disabled={content.length <= 0}
-                      >
-                        Done
-                      </button>
-                    </div>
-                  )}
-                </form>
+                <CommentForm noComments={pin?.comments?.length === 0} />
               </div>
             </div>
           </div>

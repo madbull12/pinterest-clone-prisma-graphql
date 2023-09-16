@@ -21,7 +21,7 @@ const BoardSaveItem = ({ board }: { board: BoardWithPayload }) => {
       pinId:pinId as string,
     }
     const { handleDeleteSavedPin,handleSavePin } = useSavedMutation(payload);
-    const savedInBoard = board?.saved?.find((v)=>v?.pin?.id===pinId);
+    const savedInBoard = board?.saved?.find((v)=>v?.pinId===pinId);
 
     return (
       <div
