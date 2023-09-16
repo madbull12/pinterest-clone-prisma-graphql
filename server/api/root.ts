@@ -4,6 +4,7 @@ import { pinRouter } from "./routers/pinRouter";
 import { boardRouter } from "./routers/boardRouter";
 import { savedRouter } from "./routers/savedRouter";
 import { commentRouter } from './routers/commentRouter'
+import { categoryRouter } from "./routers/categoryRouter";
 
 /**
  * This is the primary router for your server.
@@ -16,6 +17,7 @@ export const appRouter = createTRPCRouter({
   pin:pinRouter,
   saved:savedRouter,
   comment:commentRouter,
+  category:categoryRouter,
 });
 
 // export type definition of API

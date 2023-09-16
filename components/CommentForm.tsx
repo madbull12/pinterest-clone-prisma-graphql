@@ -25,7 +25,7 @@ const CommentForm = ({noComments}:{noComments:boolean}) => {
   );
   return (
     <form className="flex flex-col" onSubmit={handleSubmit(handleAddComment)}>
-      <div className="flex gap-x-4 w-full items-center ">
+      <div className="flex gap-x-2 w-full items-center ">
         {status === "authenticated" && (
           <Image
             src={session?.user?.image || ""}
