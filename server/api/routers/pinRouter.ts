@@ -28,10 +28,12 @@ export const pinRouter = createTRPCRouter({
   getRelatedPins: publicProcedure
     .input(
       z.object({
-        categories: z.array(z.object({
-          id:z.string(),
-          name: z.string(),
-        })),
+        categories: z.array(
+          z.object({
+            id: z.string(),
+            name: z.string(),
+          })
+        ),
         pinId: z.string(),
       })
     )
@@ -44,7 +46,6 @@ export const pinRouter = createTRPCRouter({
             categories: {
               some: {
                 name: {
-                    
                   contains: category.name,
                 },
               },
@@ -56,7 +57,9 @@ export const pinRouter = createTRPCRouter({
         },
       });
     }),
-    searchPins:publicProcedure.input(z.object({ searchTerm:z.string()})).query(({ ctx,input })=>{
+  searchPins: publicProcedure
+    .input(z.object({ searchTerm: z.string() }))
+    .query(({ ctx, input }) => {
       const { searchTerm } = input;
       return ctx.prisma.pin.findMany({
         where: {
@@ -64,27 +67,38 @@ export const pinRouter = createTRPCRouter({
             {
               title: {
                 contains: searchTerm,
-                mode:"insensitive"
+                mode: "insensitive",
               },
             },
             {
               description: {
                 contains: searchTerm,
-                mode:"insensitive"
+                mode: "insensitive",
               },
             },
             {
-              categories:{
-                some:{
-                  name:{
-                    contains:searchTerm,
-                    mode:"insensitive"
-                  }
-                }
-              }
-            }
+              categories: {
+                some: {
+                  name: {
+                    contains: searchTerm,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
           ],
         },
       });
+    }),
+  createdPins: publicProcedure.input(z.object({ userId:z.string()})).query(({ ctx,input }) => {
+    const { userId } = input;
+    return ctx.prisma.pin.findMany({
+      where:{
+        userId:userId as string
+      },
+      include:{
+        user:true
+      }
     })
+  }),
 });

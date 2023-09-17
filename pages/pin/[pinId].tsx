@@ -73,7 +73,7 @@ const PinDetail = () => {
 
 
   const payload = {
-    boardId: userBoards?.[0].id as string,
+    boardId: userBoards?.[0]?.id as string,
     userId: session?.user?.id as string,
     pinId: pinId as string,
   };
