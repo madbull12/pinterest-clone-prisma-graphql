@@ -56,4 +56,35 @@ export const pinRouter = createTRPCRouter({
         },
       });
     }),
+    searchPins:publicProcedure.input(z.object({ searchTerm:z.string()})).query(({ ctx,input })=>{
+      const { searchTerm } = input;
+      return ctx.prisma.pin.findMany({
+        where: {
+          OR: [
+            {
+              title: {
+                contains: searchTerm,
+                mode:"insensitive"
+              },
+            },
+            {
+              description: {
+                contains: searchTerm,
+                mode:"insensitive"
+              },
+            },
+            {
+              categories:{
+                some:{
+                  name:{
+                    contains:searchTerm,
+                    mode:"insensitive"
+                  }
+                }
+              }
+            }
+          ],
+        },
+      });
+    })
 });

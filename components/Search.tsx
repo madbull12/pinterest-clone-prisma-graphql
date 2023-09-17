@@ -17,7 +17,7 @@ const Search = () => {
 
   const router = useRouter();
   const [_, setSearchOpen] = useRecoilState(searchModalState);
-
+  
   const onSubmit = async (data: IFormInput) => {
     try {
       // const pins = await apolloClient.query({
