@@ -11,23 +11,23 @@ import { AiFillEdit } from "react-icons/ai";
 import Container from "../../components/Container";
 import { useRecoilState } from "recoil";
 import { boardEditModal } from "../../atom/boardAtom";
-import { SavedWithPayload } from "../../interface";
+import { PinWithPayload, SavedWithPayload } from "../../interface";
+import { trpc } from "../../utils/trpc";
 
 const BoardDetails = () => {
   const router = useRouter();
+
   const {
     data: boardPins,
-    loading,
+    isLoading,
     error,
-  } = useQuery(BoardPins, {
-    variables: {
-      boardId: router?.query.boardId,
-    },
-  });
+  } = trpc.board.boardPins.useQuery({
+    boardId:router?.query?.boardId as string
+  })
   const [_, setEditBoard] = useRecoilState<any>(boardEditModal);
 
   console.log(boardPins);
-  if (loading) return <Loading />;
+  if (isLoading) return <Loading />;
   if (error)
     return <p className="text-center text-xl font-bold">{error?.message}</p>;
 
@@ -35,7 +35,7 @@ const BoardDetails = () => {
     <Container>
       <div className="flex gap-y-4 items-center flex-col">
         <h1 className="text-center text-3xl font-semibold">
-          {boardPins?.boardPins.name}
+          {boardPins?.name}
         </h1>
         <div
           onClick={() => {
@@ -46,20 +46,20 @@ const BoardDetails = () => {
         >
           <AiFillEdit />
         </div>
-        {boardPins?.boardPins.secret && (
+        {boardPins?.secret && (
           <div className="flex justify-center items-center gap-x-2 text-gray-400">
             <MdLock className="text-center" />
             <p>Secret board</p>
           </div>
         )}
-        <p>{boardPins?.boardPins?.description}</p>
+        <p>{boardPins?.description}</p>
         <div className="self-start w-full">
           <p className="text-xl font-semibold px-4">
-            {boardPins?.boardPins.saved.length} pins
+            {boardPins?.saved.length} pins
           </p>
           <MasonryWrapper>
-            {boardPins?.boardPins.saved.map((item: SavedWithPayload) => (
-              <Pin key={uuidv4()} item={item.pin} />
+            {boardPins?.saved.map((item) => (
+              <Pin key={uuidv4()} item={item.pin as PinWithPayload} />
             ))}
           </MasonryWrapper>
         </div>
