@@ -21,14 +21,14 @@ interface IFormInput {
 }
 
 const PinBuilder = () => {
-  const { data: session }: any = useSession();
+  const { data: session } = useSession();
   const [textAreaFocus, setTextAreaFocus] = useState(false);
   const [textAreaCount, setTextAreaCount] = useState(500);
   const [categories, setCategories] = useState<string[]>([]);
 
   // const [imageSrc, setImageSrc] = useState<any>();
   // const [uploadData, setUploadData] = useState<any>();
-  const [selectedFile, setSelectedFile] = useState<any>();
+  const [selectedFile, setSelectedFile] = useState<File | undefined>(undefined);
   const [preview, setPreview] = useState<string>();
   const router = useRouter();
   useEffect(() => {
@@ -119,13 +119,13 @@ const PinBuilder = () => {
     } else {
       try {
         const formData = new FormData();
-        formData.append("file", selectedFile);
+        formData.append("file", selectedFile as File);
 
         formData.append("upload_preset", "uploads");
 
         const res = await fetch(
           `https://api.cloudinary.com/v1_1/dem2vt6lj/${
-            selectedFile.type === "video/mp4" ? "video" : "image"
+            selectedFile?.type === "video/mp4" ? "video" : "image"
           }/upload`,
           {
             method: "POST",
@@ -141,7 +141,7 @@ const PinBuilder = () => {
           categories,
           description,
           media,
-          userId: session?.user.id,
+          userId: session?.user?.id,
         };
         await toast.promise(createPin({ variables }), {
           loading: "Creating new pin..",
