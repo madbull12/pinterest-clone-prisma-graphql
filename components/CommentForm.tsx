@@ -9,7 +9,7 @@ type FormValues = {
   content: string;
 };
 
-const CommentForm = ({noComments}:{noComments:boolean}) => {
+const CommentForm = ({ noComments }: { noComments: boolean }) => {
   const router = useRouter();
 
   const { pinId } = router.query;
@@ -25,7 +25,7 @@ const CommentForm = ({noComments}:{noComments:boolean}) => {
   );
   return (
     <form className="flex flex-col" onSubmit={handleSubmit(handleAddComment)}>
-      <div className="flex gap-x-2 w-full items-center ">
+      <div className="flex  w-full items-center ">
         {status === "authenticated" && (
           <Image
             src={session?.user?.image || ""}

@@ -8,6 +8,7 @@ import { createBoardMutation } from "../lib/mutation";
 import { useSession } from "next-auth/react";
 import { useForm, Controller } from "react-hook-form";
 import useBoardMutation from "../hooks/useBoardMutation";
+import { Checkbox } from "@nextui-org/react";
 
 type FormValues = {
   name: string;
@@ -44,20 +45,6 @@ const BoardModal = () => {
   });
 
 
-  // const handleSubmit = async (e: React.SyntheticEvent) => {
-  //   e.preventDefault();
-  //   const variables = { name, userId: session?.user?.id, secret: isChecked };
-  //   try {
-  //     await toast.promise(createBoard({ variables }), {
-  //       loading: "Creating new board..",
-  //       success: "Board successfully created!🎉",
-  //       error: `Something went wrong 😥 Please try again `,
-  //     });
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  //   setOpenModal(false);
-  // };
 
   return (
     <div
@@ -84,20 +71,21 @@ const BoardModal = () => {
             name="secret"
             control={control}
             render={({ field }) => (
-              <input
+              <Checkbox
               
-                type="checkbox"
                 checked={field.value}
                 onChange={field.onChange}
-              />
-            )}
-          />
-          <div>
+              >
+     <div>
             <p className="text-lg font-semibold">Keep this board secret</p>
             <p className="text-gray-500">
               So only you and collaborators can see it.
             </p>
           </div>
+              </Checkbox>
+            )}
+          />
+     
         </div>
         <button
           type="submit"

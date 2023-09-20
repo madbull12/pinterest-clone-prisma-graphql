@@ -1,21 +1,17 @@
-import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import React, { useRef, useState } from "react";
-import { RelatedPins, SinglePinQuery, UserBoardsQuery } from "../../lib/query";
 import {
   HiArrowLeft,
   HiDotsHorizontal,
   HiDownload,
   HiLink,
 } from "react-icons/hi";
-import { BoardWithPayload, ICategory, PinWithPayload } from "../../interface";
+import { BoardWithPayload,  PinWithPayload } from "../../interface";
 import Image from "next/image";
 import { MdExpandMore } from "react-icons/md";
 import { v4 as uuidv4 } from "uuid";
 import Loading from "../../components/Loading";
-import { createCommentMutation, deleteSaveMutation } from "../../lib/mutation";
 import toast from "react-hot-toast";
-import { useForm } from "react-hook-form";
 import Button from "../../components/Button";
 import { useSession } from "next-auth/react";
 import { useRecoilState } from "recoil";
@@ -28,9 +24,8 @@ import { useCopyToClipboard } from "../../hooks/useCopyToClipboard";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { useSavedMutation } from "../../hooks/useSaved";
 import Link from "next/link";
-import { Category, CategoryPayload } from "@prisma/client";
+import { Board, Category } from "@prisma/client";
 import { trpc } from "../../utils/trpc";
-import { useComment } from "../../hooks/useComment";
 import CommentForm from "../../components/CommentForm";
 
 const PinDetail = () => {
@@ -132,26 +127,7 @@ const PinDetail = () => {
 
               <div className="ml-auto flex items-center gap-x-4">
                 {userBoards?.length !== 0 || status === "authenticated" ? (
-                  <button
-                    ref={btnRef}
-                    className="flex items-center relative "
-                    onClick={() => setOpenDialog(!openDialog)}
-                  >
-                    <MdExpandMore className="text-xl " />
-                    <p className="">{userBoards?.[0]?.name}</p>
-
-                    {openDialog && (
-                      <div
-                        onClick={(e) => e.stopPropagation()}
-                        ref={saveDialogRef}
-                        className="absolute top-8 -right-8 sm:right-8 w-56 sm:w-96 z-50"
-                      >
-                        <SaveDialog
-                          userBoards={userBoards as BoardWithPayload[]}
-                        />
-                      </div>
-                    )}
-                  </button>
+                  <SaveDialog userBoards={userBoards as BoardWithPayload[]} />
                 ) : null}
                 <>
                   {status === "authenticated" ? (

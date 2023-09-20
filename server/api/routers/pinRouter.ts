@@ -146,9 +146,9 @@ export const pinRouter = createTRPCRouter({
       });
     }),
   updatePin: protectedProcedure
-    .input(z.object({ title: z.string(), description: z.string().optional(),pinId:z.string() }))
+    .input(z.object({ title: z.string(), description: z.string().optional(),pinId:z.string(),boardId:z.string().optional() }))
     .mutation(async({ ctx, input }) => {
-      const { pinId,title,description } = input;
+      const { pinId,title,description,boardId } = input;
       const userId = await ctx.session.user.id;
       const isRightUser = (await ctx.prisma.pin.findUnique({
         where:{
@@ -169,8 +169,9 @@ export const pinRouter = createTRPCRouter({
         },
         data:{
           title,
-          description
-        }
+          description,
+          
+        },
       })
 
     }),
