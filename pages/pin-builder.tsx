@@ -12,166 +12,62 @@ import Container from "../components/Container";
 import useMediaQuery from "../hooks/useMediaQuery";
 
 import CategoryTag from "../components/CategoryTag";
+import usePinCreation from "../hooks/usePinCreation";
+import { IFormPinInput } from "../interface";
 
-interface IFormInput {
-  title: string;
-  description: string;
-  imageUrl: string;
-  category: string;
-}
+
 
 const PinBuilder = () => {
   const { data: session } = useSession();
   const [textAreaFocus, setTextAreaFocus] = useState(false);
   const [textAreaCount, setTextAreaCount] = useState(500);
-  const [categories, setCategories] = useState<string[]>([]);
 
-  // const [imageSrc, setImageSrc] = useState<any>();
-  // const [uploadData, setUploadData] = useState<any>();
-  const [selectedFile, setSelectedFile] = useState<File | undefined>(undefined);
-  const [preview, setPreview] = useState<string>();
-  const router = useRouter();
-  useEffect(() => {
-    if (!selectedFile) {
-      setPreview(undefined);
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(selectedFile);
-    setPreview(objectUrl);
-
-    // free memory when ever this component is unmounted
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [selectedFile]);
-  const onSelectFile = (e: any) => {
-    if (!e.target.files || e.target.files.length === 0) {
-      setSelectedFile(undefined);
-      return;
-    }
-
-    // I've kept this example simple by using the first image instead of multiple
-    setSelectedFile(e.target.files[0]);
-  };
-
-  console.log(selectedFile);
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    watch,
     reset,
     getValues,
-  } = useForm<IFormInput>();
-  // const { data } = useQuery(UserIdQuery, {
-  //   variables: {
-  //     userId: session?.user?.email,
-  //   },
-  // });
-
-  // const userId = data?.user.id;
-  const [createPin, { error }] = useMutation(createPinMutation, {
-    onCompleted: () => {
-      reset();
-      setSelectedFile(undefined);
-      router.push("/");
+    formState: { errors },
+  } = useForm<IFormPinInput>();
+  const {
+    addCategory,
+    deleteCategory,
+    handleCreatePin,
+    selectedFile,
+    onSelectFile,
+    preview,
+    removeSelectedFile,
+    categories,
+  } = usePinCreation(
+    {
+      title: watch("title"),
+      description: watch("description"),
     },
-    refetchQueries: [FeedQuery],
-  });
+    reset,
+    getValues
+  );
 
-  // image change
 
-  // function handleOnChangeImage(changeEvent:any) {
-  //     const reader = new FileReader();
 
-  //     reader.onload = function(onLoadEvent) {
-  //       setImageSrc(onLoadEvent.target?.result);
-  //     }
+ 
 
-  //     reader.readAsDataURL(changeEvent.target.files[0]);
-  //   }
-
-  const addCategory = () => {
-    const category = getValues("category");
-
-    if (categories.includes(category) || category === "") {
-      toast.error("Category can't be the same or empty!", {
-        duration: 2000,
-      });
-    } else {
-      setCategories((prev) => [...prev, category]);
-    }
-
-    reset({
-      category: "",
-    });
-  };
-
-  const onSubmit = async (data: IFormInput) => {
-    console.log(data);
-    const { title, description } = data;
-
-    console.log(categories);
-
-    // upload image
-
-    if (categories?.length === 0) {
-      toast.error("Please add some categories");
-    } else {
-      try {
-        const formData = new FormData();
-        formData.append("file", selectedFile as File);
-
-        formData.append("upload_preset", "uploads");
-
-        const res = await fetch(
-          `https://api.cloudinary.com/v1_1/dem2vt6lj/${
-            selectedFile?.type === "video/mp4" ? "video" : "image"
-          }/upload`,
-          {
-            method: "POST",
-            body: formData,
-          }
-        ).then((res) => res.json());
-        console.log(res);
-
-        // end of upload image
-        const media = res.secure_url;
-        const variables = {
-          title,
-          categories,
-          description,
-          media,
-          userId: session?.user?.id,
-        };
-        await toast.promise(createPin({ variables }), {
-          loading: "Creating new pin..",
-          success: "Pin successfully created!🎉",
-          error: `Something went wrong 😥 Please try again -  ${error}`,
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  };
   const isNotMobile = useMediaQuery("(min-width: 768px)");
 
-  console.log(textAreaFocus);
-
-  const deleteCategory = (index: number) => {
-    setCategories(categories.filter((_, _index) => _index != index));
-  };
   return (
     <div className="bg-gray-200">
       <Container>
         <div className="min-h-screen  py-8 ">
           <form
             className="shadow-md p-8 rounded-2xl max-w-3xl bg-white mx-auto"
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(handleCreatePin)}
           >
             <div className="flex items-center justify-between">
               <HiDotsHorizontal className="text-2xl text-gray-400" />
               <button
-                className="rounded-full bg-[#E60023] md:px-4 px-2 py-1 md:py-2 text-white font-semibold"
+              disabled={!selectedFile}
+                className="rounded-full disabled:bg-gray-400 bg-[#E60023] md:px-4 px-2 py-1 md:py-2 text-white font-semibold"
                 type="submit"
               >
                 Publish
@@ -190,7 +86,7 @@ const PinBuilder = () => {
                       </video>
                       <button
                         className="absolute top-0 w-10 h-10 rounded-full bg-white place-items-center grid opacity-75 m-4"
-                        onClick={() => setSelectedFile(undefined)}
+                        onClick={removeSelectedFile}
                       >
                         <HiTrash />
                       </button>
@@ -203,7 +99,7 @@ const PinBuilder = () => {
                       />
                       <button
                         className="absolute top-0 w-10 h-10 rounded-full bg-white place-items-center grid opacity-75 m-4"
-                        onClick={() => setSelectedFile(undefined)}
+                        onClick={removeSelectedFile}
                       >
                         <HiTrash />
                       </button>

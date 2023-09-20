@@ -90,3 +90,10 @@ export type BoardWithPayload = Prisma.BoardGetPayload<{
       }
   }
 }>
+
+export interface IFormPinInput {
+  title: string;
+  description: string;
+  imageUrl: string;
+  category: string;
+}

@@ -7,11 +7,11 @@ import Loading from "./Loading";
 import { useSession } from 'next-auth/react'
 
 const BoardDropdown = () => {
-  const { data:session }:any = useSession();
+  const { data:session } = useSession();
 
   const { data: firstBoard, loading } = useQuery(firstBoardQuery, {
     variables: {
-      userId: session?.user.id,
+      userId: session?.user?.id,
     },
   });
   const [openDropdown, setOpenDropdown] = useState(false);

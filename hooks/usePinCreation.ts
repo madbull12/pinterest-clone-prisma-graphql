@@ -3,14 +3,15 @@ import { useEffect, useState } from "react";
 import { trpc } from "../utils/trpc";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
+import { UseFormReset,UseFormGetValues } from "react-hook-form";
+import { IFormPinInput } from "../interface";
 
 type Payload = {
-  pinId?: string;
   title: string;
   description?: string;
 };
 
-const usePinCreation = (data: Payload) => {
+const usePinCreation = (data: Payload,reset: UseFormReset<IFormPinInput>,getValues:UseFormGetValues<IFormPinInput>) => {
   const [selectedFile, setSelectedFile] = useState<File | undefined>(undefined);
   const [preview, setPreview] = useState<string>();
   const router = useRouter();
@@ -19,8 +20,25 @@ const usePinCreation = (data: Payload) => {
   const { mutateAsync: createPin } = trpc.pin.createPin.useMutation();
   const [categories, setCategories] = useState<string[]>([]);
 
+  
   const deleteCategory = (index: number) => {
     setCategories(categories.filter((_, _index) => _index != index));
+  };
+
+  const addCategory = () => {
+    const category = getValues("category");
+
+    if (categories.includes(category) || category === "") {
+      toast.error("Category can't be the same or empty!", {
+        duration: 2000,
+      });
+    } else {
+      setCategories((prev) => [...prev, category]);
+    }
+
+    reset({
+      category:""
+    })
   };
 
   const removeSelectedFile = () => {
@@ -93,11 +111,15 @@ const usePinCreation = (data: Payload) => {
         });
       } catch (error) {
         console.error(error);
+      } finally {
+        reset();
+        router.push("/");
+
       }
     }
   };
 
-  return { handleCreatePin, categories, deleteCategory };
+  return { addCategory, handleCreatePin, categories, deleteCategory,removeSelectedFile,onSelectFile,selectedFile,preview };
 };
 
 export default usePinCreation;

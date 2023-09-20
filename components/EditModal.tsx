@@ -31,7 +31,7 @@ const EditModal = () => {
     // reset,
     // getValues,
   } = useForm<IFormInput>();
-  const { data: session }: any = useSession();
+  const { data: session } = useSession();
   const modalRef = useRef<HTMLDivElement>(null);
   useOutsideClick(modalRef, () => {
     setEditModal(false);
