@@ -173,7 +173,7 @@ const PinDetail = () => {
               <h1 className="text-2xl md:text-4xl font-bold">{pin?.title}</h1>
               <p className="text-sm md:text-base">{pin?.description}</p>
               <Link href={`/user/${pin?.userId}/created`}>
-                <div className="flex gap-x-3 cursor-pointer items-center">
+                <div className="flex gap-x-3 cursor-pointer mt-3 items-center">
                   <div className="relative w-8 h-8">
                     <Image
                       alt="user-avatar"

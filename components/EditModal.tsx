@@ -13,96 +13,42 @@ import Button from "./Button";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Pin } from "@prisma/client";
+import usePinEdit from "../hooks/usePinEdit";
 
 interface IFormInput {
   title: string;
   description: string;
+  boardId?: string;
 }
 
 const EditModal = () => {
   const editPin = useRecoilValue<Pin | null>(editPinValue);
-  const router = useRouter();
-  console.log(editPin);
   const [_, setEditModal] = useRecoilState(editModalState);
   const {
     register,
     handleSubmit,
+    watch,
     // formState: { errors },
     // reset,
     // getValues,
   } = useForm<IFormInput>();
-  const { data: session } = useSession();
   const modalRef = useRef<HTMLDivElement>(null);
   useOutsideClick(modalRef, () => {
     setEditModal(false);
   });
 
-  const [updatePin] = useMutation(updatePinMutation);
-  const onSubmit = async (data: IFormInput) => {
-    console.log(editPin?.id);
-    const variables = {
-      ...data,
-      pinId: editPin?.id,
-    };
-    try {
-      await toast.promise(
-        updatePin({
-          variables,
-        }),
-        {
-          loading: "Updating pin",
-          success: "Pin successfully updated",
-          error: "Something went wrong!",
-        }
-      );
-    } catch (err) {
-      throw new Error("Something went wrong" + err);
-    }
-
+  const updateCallback = () => {
     setEditModal(false);
   };
 
-  // const { data: userId } = useQuery(UserIdQuery, {
-  //   variables: {
-  //     userId: session?.user?.email,
-  //   },
-  // });
-  // console.log(userId);
-  const refreshData = () => {
-    router.replace(router.asPath, undefined, { scroll: false });
-  };
-  const [deletePin] = useMutation(deletePinMutation, {
-    refetchQueries: [
-      {
-        query: FeedQuery,
-      },
-      {
-        query: CreatedPins,
-        variables: {
-          userId: session?.user?.id,
-        },
-      },
-    ],
-  });
-
-  console.log(editPin);
-
-  const handleDeletePin = async () => {
-    await toast.promise(
-      deletePin({
-        variables: {
-          pinId: editPin?.id,
-        },
-      }),
-      {
-        loading: "Deleting pin",
-        success: "Pin successfully deleted",
-        error: "Something went wrong",
-      }
-    );
-    setEditModal(false);
-    refreshData();
-  };
+  const { handleDeletePin, handleUpdatePin } = usePinEdit(
+    {
+      title: watch("title"),
+      description: watch("description"),
+      boardId: watch("boardId"),
+    },
+    updateCallback
+  );
 
   return (
     <div
@@ -111,7 +57,7 @@ const EditModal = () => {
     >
       <form
         onClick={(e) => e.stopPropagation()}
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(handleUpdatePin)}
         className="relative"
       >
         <h1 className="text-center font-semibold text-2xl">Edit this Pin</h1>
@@ -120,7 +66,7 @@ const EditModal = () => {
             <div className="flex gap-x-2  justify-between">
               <label className="flex-[0.25] py-2">Board</label>
               <div className="flex-[0.75]">
-                <BoardDropdown />
+                <BoardDropdown register={register} />
               </div>
             </div>
             <div className="flex items-center gap-x-2 justify-between">
@@ -142,7 +88,10 @@ const EditModal = () => {
             </div>
           </div>
           {editPin?.media.includes("video") ? (
-            <video controls className="relative h-full w-full md:w-1/2 rounded-2xl">
+            <video
+              controls
+              className="relative h-full w-full md:w-1/2 rounded-2xl"
+            >
               <source src={editPin?.media} type="video/mp4"></source>
             </video>
           ) : (
