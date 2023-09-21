@@ -11,7 +11,7 @@ interface IFormInput {
   boardId?:string;
 }
 
-const BoardDropdown = ({ register }:{ register:UseFormRegister<IFormInput>}) => {
+const BoardDropdown = ({ register,defaultBoardId }:{ register:UseFormRegister<IFormInput>,defaultBoardId:string }) => {
   const { data: session } = useSession();
 
   // const { data: firstBoard, loading } = useQuery(firstBoardQuery, {
@@ -25,9 +25,9 @@ const BoardDropdown = ({ register }:{ register:UseFormRegister<IFormInput>}) => 
 
   return (
 
-    <Select {...register("boardId")}  defaultValue={boards?.[0].id}  items={boards} placeholder="Select a board" className="w-full">
+    <Select {...register("boardId")} aria-label="boards"  defaultValue={defaultBoardId}  items={boards} placeholder="Select a board" className="w-full">
       {(board) => (
-        <SelectItem key={crypto.randomUUID()} value={board?.id} className="capitalize">
+        <SelectItem key={crypto.randomUUID()} defaultValue={defaultBoardId} value={board?.id} className="capitalize">
           {board?.name}
         </SelectItem>
       )}

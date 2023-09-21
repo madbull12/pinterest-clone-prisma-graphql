@@ -14,6 +14,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Pin } from "@prisma/client";
 import usePinEdit from "../hooks/usePinEdit";
+import { PinWithPayload } from "../interface";
 
 interface IFormInput {
   title: string;
@@ -22,7 +23,7 @@ interface IFormInput {
 }
 
 const EditModal = () => {
-  const editPin = useRecoilValue<Pin | null>(editPinValue);
+  const editPin = useRecoilValue<PinWithPayload | null>(editPinValue);
   const [_, setEditModal] = useRecoilState(editModalState);
   const {
     register,
@@ -46,9 +47,11 @@ const EditModal = () => {
       title: watch("title"),
       description: watch("description"),
       boardId: watch("boardId"),
+      
     },
     updateCallback
   );
+  console.log(watch("boardId"))
 
   return (
     <div
@@ -66,7 +69,7 @@ const EditModal = () => {
             <div className="flex gap-x-2  justify-between">
               <label className="flex-[0.25] py-2">Board</label>
               <div className="flex-[0.75]">
-                <BoardDropdown register={register} />
+                <BoardDropdown register={register} defaultBoardId={editPin?.saved?.[0].boardId as string} />
               </div>
             </div>
             <div className="flex items-center gap-x-2 justify-between">

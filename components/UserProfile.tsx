@@ -15,6 +15,8 @@ const UserProfile = () => {
   const { userId } = router?.query;
   const { data:user } = trpc.user.singleUser.useQuery({
     userId:userId as string
+  },{
+    refetchOnWindowFocus:false
   })
 
   return (

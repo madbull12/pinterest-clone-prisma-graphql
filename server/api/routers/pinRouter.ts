@@ -101,6 +101,11 @@ export const pinRouter = createTRPCRouter({
         },
         include: {
           user: true,
+          saved:{
+            include:{
+              board:true
+            }
+          }
         },
       });
     }),
@@ -150,6 +155,9 @@ export const pinRouter = createTRPCRouter({
     .mutation(async({ ctx, input }) => {
       const { pinId,title,description,boardId } = input;
       const userId = await ctx.session.user.id;
+
+ 
+
       const isRightUser = (await ctx.prisma.pin.findUnique({
         where:{
           id:pinId
@@ -170,7 +178,29 @@ export const pinRouter = createTRPCRouter({
         data:{
           title,
           description,
-          
+          saved:{
+            upsert:{
+              where:{
+                userId_pinId_boardId:{
+                  userId,
+                  pinId,
+                  boardId:boardId as string
+                }
+              },
+              update:{
+                boardId:boardId as string,
+                userId,
+              },
+              create:{
+                boardId:boardId as string,
+                userId,
+
+
+              }
+              
+              
+            }
+          }
         },
       })
 

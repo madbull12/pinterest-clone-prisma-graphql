@@ -7,7 +7,7 @@ import { Pin } from "@prisma/client";
 
 const HoverEdit:React.FC<{ item:Pin }> = ({ item }) => {
   const [openEditModal, setEditModal] = useRecoilState(editModalState);
-
+  console.log(item)
   const [editPin,setEditPin] = useRecoilState<any>(editPinState);
   const [isHover, setIsHover] = useState(false);
   return (

@@ -20,7 +20,9 @@ const CreatedPinsPage = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const { userId } = router.query;
-  const { data, isLoading } = trpc.pin.createdPins.useQuery<PinWithPayload[]>({ userId:userId as string });
+  const { data, isLoading } = trpc.pin.createdPins.useQuery<PinWithPayload[]>({ userId:userId as string },{
+    refetchOnWindowFocus:false
+  });
   // const [isClicked, setIsClicked] = useState(false);
   const isEditOpenValue = useRecoilValue(isEditOpen);
   useEffect(() => {

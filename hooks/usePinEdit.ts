@@ -43,6 +43,7 @@ const usePinEdit = (data: Payload, callback: () => void) => {
       await toast.promise(
         updatePin({
           pinId: editPin?.id as string,
+          boardId:data?.boardId as string,
           description: data?.description as string,
           title: data.title as string,
         }),

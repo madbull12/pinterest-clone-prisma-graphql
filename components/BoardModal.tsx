@@ -19,13 +19,14 @@ const BoardModal = () => {
   const modalRef = useRef<HTMLDivElement>(null);
   const [_, setOpenModal] = useRecoilState(boardModalState);
 
-  const { register, handleSubmit, watch, reset, control } =
-    useForm<FormValues>({
-      defaultValues:{
-        name:"",
-        secret:false
-      }
-    });
+  const { register, handleSubmit, watch, reset, control } = useForm<FormValues>(
+    {
+      defaultValues: {
+        name: "",
+        secret: false,
+      },
+    }
+  );
 
   const callbackBoardMutation = () => {
     reset();
@@ -43,8 +44,6 @@ const BoardModal = () => {
   useOutsideClick(modalRef, () => {
     setOpenModal(false);
   });
-
-
 
   return (
     <div
@@ -71,21 +70,18 @@ const BoardModal = () => {
             name="secret"
             control={control}
             render={({ field }) => (
-              <Checkbox
-              
-                checked={field.value}
-                onChange={field.onChange}
-              >
-     <div>
-            <p className="text-lg font-semibold">Keep this board secret</p>
-            <p className="text-gray-500">
-              So only you and collaborators can see it.
-            </p>
-          </div>
+              <Checkbox checked={field.value} onChange={field.onChange}>
+                <div>
+                  <p className="text-lg font-semibold">
+                    Keep this board secret
+                  </p>
+                  <p className="text-gray-500">
+                    So only you and collaborators can see it.
+                  </p>
+                </div>
               </Checkbox>
             )}
           />
-     
         </div>
         <button
           type="submit"

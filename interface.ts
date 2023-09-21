@@ -75,7 +75,11 @@ export type PinWithPayload = Prisma.PinGetPayload<{
       }
     },
     user:true,
-    saved:true,
+    saved:{
+      include:{
+        board:true
+      }
+    },
     categories:true
   }
 }>
