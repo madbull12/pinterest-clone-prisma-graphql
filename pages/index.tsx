@@ -17,7 +17,7 @@ import { trpc } from '../utils/trpc'
 const Home: NextPage = () => {
   // const { data, loading, error } = useQuery(FeedQuery);
 
-  const { data,error,isLoading } = trpc.pin.getAllPins.useQuery()
+  const { data,error,isLoading } = trpc.pin.getAllPins.useQuery<PinWithPayload[]>()
 console.log(data)
   const [searchResults,_] = useRecoilState<any>(searchResultState)
   console.log(searchResults)
