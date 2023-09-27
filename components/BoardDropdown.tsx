@@ -1,39 +1,37 @@
-import { useQuery } from "@apollo/client";
 import React, { useState } from "react";
-import { MdArrowDropDown } from "react-icons/md";
-import { firstBoardQuery } from "../lib/query";
-import BoardList from "./BoardList";
+import { Select, SelectItem } from "@nextui-org/react";
 import Loading from "./Loading";
-import { useSession } from 'next-auth/react'
+import { useSession } from "next-auth/react";
+import { trpc } from "../utils/trpc";
+import { UseFormRegister } from "react-hook-form";
 
-const BoardDropdown = () => {
-  const { data:session }:any = useSession();
+interface IFormInput {
+  title: string;
+  description: string;
+  boardId?:string;
+}
 
-  const { data: firstBoard, loading } = useQuery(firstBoardQuery, {
-    variables: {
-      userId: session?.user.id,
-    },
-  });
-  const [openDropdown, setOpenDropdown] = useState(false);
-  if (loading) return <Loading />;
+const BoardDropdown = ({ register,defaultBoardId }:{ register:UseFormRegister<IFormInput>,defaultBoardId:string }) => {
+  const { data: session } = useSession();
+
+  // const { data: firstBoard, loading } = useQuery(firstBoardQuery, {
+  //   variables: {
+  //     userId: session?.user?.id,
+  //   },
+  // });
+
+  const { data: boards, isLoading } = trpc.board.getYourBoards.useQuery();
+  if (isLoading) return <Loading />;
 
   return (
-    <div className="w-full flex flex-col">
 
-        <div
-          onClick={() => setOpenDropdown(!openDropdown)}
-          className="flex relative justify-between items-center cursor-pointer  bg-gray-300 px-4 py-2 rounded-lg flex-[0.75]"
-        >
-          <p className="font-semibold">{firstBoard?.firstUserBoard.name}</p>
-          <MdArrowDropDown />
-        </div>
-        {openDropdown && (
-          <div className=" w-full ">
-            <BoardList />
-          </div>
-        )}
-    </div>
- 
+    <Select {...register("boardId")} aria-label="boards"  defaultValue={defaultBoardId}  items={boards} placeholder="Select a board" className="w-full">
+      {(board) => (
+        <SelectItem key={crypto.randomUUID()} defaultValue={defaultBoardId} value={board?.id} className="capitalize">
+          {board?.name}
+        </SelectItem>
+      )}
+    </Select>
   );
 };
 

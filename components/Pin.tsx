@@ -1,10 +1,10 @@
-import { Pin } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useMemo } from "react";
+import { PinWithPayload } from "../interface";
 
 interface IProps {
-  item: Pin;
+  item: PinWithPayload;
   isEdit?: boolean;
 }
 const Pin = ({ item, isEdit }: IProps) => {

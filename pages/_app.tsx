@@ -9,24 +9,32 @@ import NextTopLoader from "nextjs-toploader";
 
 import { SessionProvider } from "next-auth/react";
 import AuthWrapper from "../components/AuthWrapper";
+import { trpc } from "../utils/trpc";
+import { NextUIProvider } from "@nextui-org/react";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <RecoilRoot>
       <SessionProvider session={session}>
         <AuthWrapper>
-          <ApolloProvider client={apolloClient}>
-            <Toaster />
+          <NextUIProvider>
+            {/* <ApolloProvider client={apolloClient}> */}
+              <Toaster />
 
-            <Layout>
-              <NextTopLoader color="#E60023" shadow="none"showSpinner={false}/>
-              <Component {...pageProps} />
-            </Layout>
-          </ApolloProvider>
+              <Layout>
+                <NextTopLoader
+                  color="#E60023"
+                  shadow="none"
+                  showSpinner={false}
+                />
+                <Component {...pageProps} />
+              </Layout>
+            {/* </ApolloProvider> */}
+          </NextUIProvider>
         </AuthWrapper>
       </SessionProvider>
     </RecoilRoot>
   );
 }
 
-export default MyApp;
+export default trpc.withTRPC(MyApp);

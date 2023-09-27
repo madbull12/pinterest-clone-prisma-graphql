@@ -11,6 +11,8 @@ import Container from "../../../../components/Container";
 import useMediaQuery from "../../../../hooks/useMediaQuery";
 import Button from "../../../../components/Button";
 import { useRouter } from "next/router";
+import { trpc } from "../../../../utils/trpc";
+import { BoardWithPayload } from "../../../../interface";
 const BoardListPage = () => {
   // const { data: userId } = useQuery(UserIdQuery, {
   //   variables: {
@@ -25,18 +27,16 @@ const BoardListPage = () => {
 
   const { data: session } = useSession();
 
-  const { data, loading } = useQuery(UserBoardsQuery, {
-    variables: {
-      userId,
-    },
-  });
+  const { data, isLoading } = trpc.board.userBoards.useQuery({
+    userId:session?.user?.id as string
+  })
   console.log(data);
 
   return (
     <Container>
       <UserProfile />
 
-      {loading && (
+      {isLoading && (
         <div className="flex justify-center pt-4">
           <Loading />
         </div>
@@ -49,7 +49,7 @@ const BoardListPage = () => {
           {session?.user?.id === userId ? <CreateDialog /> : null}
           
         </div>
-        <UserBoardsList userBoards={data?.userBoards} />
+        <UserBoardsList userBoards={data as BoardWithPayload[]} />
       </section>
     </Container>
   );

@@ -2,15 +2,13 @@ import React, { useRef } from "react";
 import useOutsideClick from "../hooks/useOutsideClick";
 import { useRecoilState } from "recoil";
 import { boardEditModal } from "../atom/boardAtom";
-import { useMutation, useQuery } from "@apollo/client";
-import { SingleBoard } from "../lib/query";
 import { useRouter } from "next/router";
 import Loading from "./Loading";
 import { ValidationBoard, boardValidation } from "../lib/validations/board";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { deleteBoardMutation, updateBoardMutation } from "../lib/mutation";
-import { toast } from "react-hot-toast";
+import { trpc } from "../utils/trpc";
+import useBoardMutation from "../hooks/useBoardMutation";
 
 const BoardEditModal = () => {
   const modalRef = useRef<HTMLDivElement>(null);
@@ -18,64 +16,71 @@ const BoardEditModal = () => {
   useOutsideClick(modalRef, () => {
     setModalOpen(false);
   });
-
-  const [updateBoard] = useMutation(updateBoardMutation, {
-    onCompleted() {},
-  });
-  const [deleteBoard] = useMutation(deleteBoardMutation);
-
-  const { boardId } = useRouter().query;
-
-  const { data, loading } = useQuery(SingleBoard, {
-    variables: {
-      boardId,
-    },
-  });
-
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
+    watch,
+    control,
   } = useForm<ValidationBoard>({
     resolver: zodResolver(boardValidation),
   });
 
-  const handleDeleteBoard = async () => {
-    await toast.promise(
-      deleteBoard({
-        variables: {
-          deleteBoardId: boardId,
-        },
-      }),
-      {
-        loading: "Deleting board",
-        success: "Board deleted",
-        error: "Oops something went wrong...",
-      }
-    );
+  const callback = () => {
+    reset();
     setModalOpen(false);
-  };
 
-  const onSubmit: SubmitHandler<ValidationBoard> = async (data) => {
-    console.log(data);
+  }
 
-    await toast.promise(
-      updateBoard({
-        variables: {
-          updateBoardId: boardId,
-          name: data.name,
-          secret: data.secret,
-          description: data.description,
-        },
-      }),
-      {
-        loading: "Updating board",
-        success: "Board Updated",
-        error: "Oops something went wrong...",
-      }
-    );
-    setModalOpen(false);
-  };
+  const { handleDeleteBoard,handleUpdateBoard } = useBoardMutation({
+    name:watch("name"),
+    description:watch("description") as string,
+    secret:watch("secret")
+  },callback)
+
+  const { boardId } = useRouter().query;
+
+  const { data, isLoading } = trpc.board.singleBoard.useQuery({
+    boardId:boardId as string
+  })
+
+
+  // const handleDeleteBoard = async () => {
+  //   await toast.promise(
+  //     deleteBoard({
+  //       variables: {
+  //         deleteBoardId: boardId,
+  //       },
+  //     }),
+  //     {
+  //       loading: "Deleting board",
+  //       success: "Board deleted",
+  //       error: "Oops something went wrong...",
+  //     }
+  //   );
+  //   setModalOpen(false);
+  // };
+
+  // const onSubmit: SubmitHandler<ValidationBoard> = async (data) => {
+  //   console.log(data);
+
+  //   await toast.promise(
+  //     updateBoard({
+  //       variables: {
+  //         updateBoardId: boardId,
+  //         name: data.name,
+  //         secret: data.secret,
+  //         description: data.description,
+  //       },
+  //     }),
+  //     {
+  //       loading: "Updating board",
+  //       success: "Board Updated",
+  //       error: "Oops something went wrong...",
+  //     }
+  //   );
+  //   setModalOpen(false);
+  // };
 
   return (
     <div
@@ -83,21 +88,21 @@ const BoardEditModal = () => {
       onClick={(e) => e.stopPropagation()}
       ref={modalRef}
     >
-      {loading ? (
+      {isLoading ? (
         <Loading />
       ) : (
         <>
           <p className="text-xl mb-4 text-center font-semibold">Edit board</p>
           <form
             className="space-y-3 flex flex-col"
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(handleUpdateBoard)}
           >
             <div className="flex flex-col gap-y-2">
               <label className="text-xs">Name</label>
               <input
                 // onChange={(e) => setName(e.target.value)}
                 {...register("name")}
-                defaultValue={data?.singleBoard?.name}
+                defaultValue={data?.name}
                 type="text"
                 className="rounded-xl border-2 px-4 py-3 outline-none ring-blue-300 focus:ring-4 border-gray-300"
               />
@@ -107,7 +112,7 @@ const BoardEditModal = () => {
               <input
                 // onChange={(e) => setName(e.target.value)}
                 {...register("description")}
-                defaultValue={data?.singleBoard?.description}
+                defaultValue={data?.description as string}
                 type="text"
                 className="rounded-xl border-2 px-4 py-3 outline-none ring-blue-300 focus:ring-4 border-gray-300"
               />
@@ -115,12 +120,21 @@ const BoardEditModal = () => {
             <div className="flex flex-col gap-y-2">
               <label className="text-xs">Settings</label>
               <div className="flex items-center gap-x-2">
-                <input
-                  {...register("secret")}
-                  defaultChecked={data?.singleBoard?.secret}
-                  type="checkbox"
-                  className="accent-gray-900 rounded-lg w-6 h-6 ring-blue-300 focus:ring-4"
-                />
+              <Controller
+            name="secret"
+            control={control}
+            defaultValue={data?.secret}
+            render={({ field }) => (
+              <input
+              
+                type="checkbox"
+                checked={field.value}
+                onChange={field.onChange}
+              />
+            )}
+          />
+          </div>
+          <div>
                 <div className="leading-6">
                   <h4 className="font-semibold">Hide this board</h4>
                   <p className="text-gray-500">
@@ -148,6 +162,7 @@ const BoardEditModal = () => {
             </button>
           </form>
         </>
+        
       )}
     </div>
   );

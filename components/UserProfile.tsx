@@ -6,26 +6,27 @@ import { HiPlusCircle } from "react-icons/hi";
 import useMediaQuery from "../hooks/useMediaQuery";
 import { useQuery } from "@apollo/client";
 import { SingleUserQuery } from "../lib/query";
+import { trpc } from "../utils/trpc";
 
 const UserProfile = () => {
   //   const { data: session } = useSession();
   const isNotMobile = useMediaQuery("(min-width: 768px)");
   const router = useRouter();
   const { userId } = router?.query;
-  const { data, loading, error } = useQuery(SingleUserQuery, {
-    variables: {
-      userId,
-    },
-  });
+  const { data:user } = trpc.user.singleUser.useQuery({
+    userId:userId as string
+  },{
+    refetchOnWindowFocus:false
+  })
 
   return (
     <main className="flex justify-center items-center flex-col text-center">
       <div className="w-1/2 h-44 sm:h-60 md:h-80 rounded-3xl bg-gray-200 relative">
         <HiPlusCircle className="text-gray-50 text-2xl sm:text-4xl md:text-5xl absolute bottom-0 right-0" />
       </div>
-      <div className="-mt-8 md:-mt-14">
+      <div className="my-8">
         <Image
-          src={data?.user?.image || ""}
+          src={user?.image || ""}
           className="rounded-full "
           width={isNotMobile ? 100 : 50}
           height={isNotMobile ? 100 : 50}
@@ -33,8 +34,8 @@ const UserProfile = () => {
         />
       </div>
       <div>
-        <h1 className="text-2xl font-semibold">{data?.user?.name}</h1>
-        <p className="text-sm text-gray-400">{data?.user?.email}</p>
+        <h1 className="text-2xl font-semibold">{user?.name}</h1>
+        <p className="text-sm text-gray-400">{user?.email}</p>
       </div>
       <nav>
         <ul className="flex gap-x-4 font-semibold">

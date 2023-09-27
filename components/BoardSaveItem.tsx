@@ -21,8 +21,7 @@ const BoardSaveItem = ({ board }: { board: BoardWithPayload }) => {
       pinId:pinId as string,
     }
     const { handleDeleteSavedPin,handleSavePin } = useSavedMutation(payload);
-    const savedInBoard = board.saved.find((v)=>v.pin.id===pinId);
-    console.log(savedInBoard,board.saved)    
+    const savedInBoard = board?.saved?.find((v)=>v?.pinId===pinId);
 
     return (
       <div
@@ -32,7 +31,7 @@ const BoardSaveItem = ({ board }: { board: BoardWithPayload }) => {
       >
         <div className="flex items-center gap-x-2">
           <div className="bg-gray-300 w-12 h-12 rounded-lg"></div>
-          <p className="font-semibold">{board.name}</p>
+          <p className="font-semibold text-ellipsis">{board?.name}</p>
         </div>
         {!showSaveBtn && (
           <>{board.secret && <AiFillLock className="text-lg" />}</>

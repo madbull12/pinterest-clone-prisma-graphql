@@ -11,16 +11,19 @@ import { useSession } from 'next-auth/react'
 import MasonryWrapper from '../components/MasonryWrapper'
 import Container from '../components/Container'
 import { PinWithPayload } from '../interface'
+import { trpc } from '../utils/trpc'
 
 
 const Home: NextPage = () => {
-  const { data, loading, error } = useQuery(FeedQuery);
+  // const { data, loading, error } = useQuery(FeedQuery);
 
-  const [searchResults,setSearchResults] = useRecoilState<any>(searchResultState)
+  const { data,error,isLoading } = trpc.pin.getAllPins.useQuery()
+console.log(data)
+  const [searchResults,_] = useRecoilState<any>(searchResultState)
   console.log(searchResults)
   const { data:session } = useSession();
   console.log(session)
-  if(loading) return (
+  if(isLoading) return (
     <div className='justify-center flex py-4'>
       <Loading />
     </div>
@@ -36,7 +39,7 @@ const Home: NextPage = () => {
       <p className='text-center font-semibold  py-4 text-lg '>For you</p>
       <MasonryWrapper>
 
-            {data?.pins?.map((item:PinWithPayload)=>(
+            {data?.map((item)=>(
               <Pin key={uuidv4()} item={item} />
             ))}
 

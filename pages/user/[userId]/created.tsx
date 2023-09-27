@@ -15,14 +15,13 @@ import { useSession } from "next-auth/react";
 import Container from "../../../components/Container";
 import { useRouter } from "next/router";
 import { PinWithPayload } from "../../../interface";
+import { trpc } from "../../../utils/trpc";
 const CreatedPinsPage = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const { userId } = router.query;
-  const { data, loading } = useQuery(CreatedPins, {
-    variables: {
-      userId,
-    },
+  const { data, isLoading } = trpc.pin.createdPins.useQuery<PinWithPayload[]>({ userId:userId as string },{
+    refetchOnWindowFocus:false
   });
   // const [isClicked, setIsClicked] = useState(false);
   const isEditOpenValue = useRecoilValue(isEditOpen);
@@ -36,24 +35,24 @@ const CreatedPinsPage = () => {
     <Container>
       <div className="relative">
         <UserProfile />
-        {loading && (
+        {isLoading && (
           <div className="flex justify-center pt-4">
             <Loading />
           </div>
         )}
-        {data?.user.pins.length === 0 && (
+        {data?.length === 0 && (
           <h1 className="p-4 text-2xl font-bold  text-center">
             No pins created{" "}
           </h1>
         )}
         <MasonryWrapper>
-          {data?.user.pins.map((item: PinWithPayload) => (
+          {data?.map((item) => (
             <div key={uuidv4()} className="relative cursor-pointer ">
-              {session?.user?.id === data?.user.id ? (
+              {session?.user?.id === item.userId ? (
                 <HoverEdit item={item} />
               ) : null}
 
-              <Pin item={item} isEdit={true} />
+              <Pin item={item as PinWithPayload} isEdit={true} />
             </div>
           ))}
         </MasonryWrapper>

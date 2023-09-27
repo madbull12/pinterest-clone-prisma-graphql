@@ -6,38 +6,44 @@ import { boardModalState } from "../atom/boardAtom";
 import useOutsideClick from "../hooks/useOutsideClick";
 import { createBoardMutation } from "../lib/mutation";
 import { useSession } from "next-auth/react";
+import { useForm, Controller } from "react-hook-form";
+import useBoardMutation from "../hooks/useBoardMutation";
+import { Checkbox } from "@nextui-org/react";
 
+type FormValues = {
+  name: string;
+  secret: boolean;
+};
 const BoardModal = () => {
   const [isChecked, setIsChecked] = useState(false);
-  const [name, setName] = useState("");
-  const { data: session }: any = useSession();
   const modalRef = useRef<HTMLDivElement>(null);
   const [_, setOpenModal] = useRecoilState(boardModalState);
+
+  const { register, handleSubmit, watch, reset, control } = useForm<FormValues>(
+    {
+      defaultValues: {
+        name: "",
+        secret: false,
+      },
+    }
+  );
+
+  const callbackBoardMutation = () => {
+    reset();
+    setOpenModal(false);
+  };
+
+  const { handleCreateBoard } = useBoardMutation(
+    {
+      name: watch("name"),
+      secret: watch("secret"),
+    },
+    callbackBoardMutation
+  );
 
   useOutsideClick(modalRef, () => {
     setOpenModal(false);
   });
-
-  const handleOnChange = () => {
-    setIsChecked(!isChecked);
-  };
-
-  const [createBoard] = useMutation(createBoardMutation);
-
-  const handleSubmit = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
-    const variables = { name, userId: session?.user?.id, secret: isChecked };
-    try {
-      await toast.promise(createBoard({ variables }), {
-        loading: "Creating new board..",
-        success: "Board successfully created!🎉",
-        error: `Something went wrong 😥 Please try again `,
-      });
-    } catch (err) {
-      console.log(err);
-    }
-    setOpenModal(false);
-  };
 
   return (
     <div
@@ -46,29 +52,36 @@ const BoardModal = () => {
       ref={modalRef}
     >
       <p className="text-xl mb-4 text-center font-semibold">Create Board</p>
-      <form className="space-y-3 flex flex-col" onSubmit={handleSubmit}>
+      <form
+        className="space-y-3 flex flex-col"
+        onSubmit={handleSubmit(handleCreateBoard)}
+      >
         <div className="flex flex-col gap-y-2">
           <label className="text-xs">Name</label>
           <input
-            onChange={(e) => setName(e.target.value)}
+            {...register("name")}
             type="text"
             placeholder='Like  "Places to Go" or "Recipes to Make" '
             className="rounded-xl border-2 px-4 py-3 outline-none ring-blue-300 focus:ring-4 border-gray-300"
           />
         </div>
         <div className="flex gap-x-3">
-          <input
-            type="checkbox"
-            checked={isChecked}
-            onChange={handleOnChange}
+          <Controller
+            name="secret"
+            control={control}
+            render={({ field }) => (
+              <Checkbox checked={field.value} onChange={field.onChange}>
+                <div>
+                  <p className="text-lg font-semibold">
+                    Keep this board secret
+                  </p>
+                  <p className="text-gray-500">
+                    So only you and collaborators can see it.
+                  </p>
+                </div>
+              </Checkbox>
+            )}
           />
-
-          <div>
-            <p className="text-lg font-semibold">Keep this board secret</p>
-            <p className="text-gray-500">
-              So only you and collaborators can see it.
-            </p>
-          </div>
         </div>
         <button
           type="submit"
