@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
       <SessionProvider session={session}>
         <AuthWrapper>
           <NextUIProvider>
-            <ApolloProvider client={apolloClient}>
+            {/* <ApolloProvider client={apolloClient}> */}
               <Toaster />
 
               <Layout>
@@ -29,7 +29,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
                 />
                 <Component {...pageProps} />
               </Layout>
-            </ApolloProvider>
+            {/* </ApolloProvider> */}
           </NextUIProvider>
         </AuthWrapper>
       </SessionProvider>
