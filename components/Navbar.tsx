@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import Button from "./Button";
 import Search from "./Search";
 import { useSession, signIn, signOut } from "next-auth/react";
+import { Button } from "@nextui-org/react";
 
 const Navbar = () => {
   const { status, data: session } = useSession();
@@ -28,9 +28,25 @@ const Navbar = () => {
         <Search />
         <div className="flex items-center gap-x-2">
           {status === "authenticated" ? (
-            <Button text="Logout" handleClick={() => signOut()} />
+            <Button
+              className="bg-[#E60023] text-white font-semibold"
+              onClick={(e) => {
+                e.preventDefault();
+                signOut();
+              }}
+            >
+              Login
+            </Button>
           ) : (
-            <Button text="Login" handleClick={() => signIn("google")} />
+            <Button
+              className="bg-[#E60023] text-white font-semibold"
+              onClick={(e) => {
+                e.preventDefault();
+                signIn("google");
+              }}
+            >
+              Logout
+            </Button>
           )}
           {status === "authenticated" && (
             <Link href={`/user/${session.user?.id}/created`}>
