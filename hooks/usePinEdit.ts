@@ -9,6 +9,7 @@ type Payload = {
   title?: string;
   description?: string;
   boardId?: string;
+  defaultBoardId?:string;
 };
 
 const usePinEdit = (data: Payload, callback: () => void) => {
@@ -37,13 +38,11 @@ const usePinEdit = (data: Payload, callback: () => void) => {
   const editPin = useRecoilValue<Pin | null>(editPinValue);
 
   const handleUpdatePin = async () => {
-    console.log(editPin?.id);
 
     try {
       await toast.promise(
         updatePin({
           pinId: editPin?.id as string,
-          boardId:data?.boardId as string,
           description: data?.description as string,
           title: data.title as string,
         }),

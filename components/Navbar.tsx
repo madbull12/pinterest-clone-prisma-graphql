@@ -35,7 +35,7 @@ const Navbar = () => {
                 signOut();
               }}
             >
-              Login
+              Logout
             </Button>
           ) : (
             <Button
@@ -45,7 +45,7 @@ const Navbar = () => {
                 signIn("google");
               }}
             >
-              Logout
+              Login
             </Button>
           )}
           {status === "authenticated" && (

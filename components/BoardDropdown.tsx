@@ -11,7 +11,7 @@ interface IFormInput {
   boardId?:string;
 }
 
-const BoardDropdown = ({ register,defaultBoardId }:{ register:UseFormRegister<IFormInput>,defaultBoardId:string }) => {
+const BoardDropdown = ({  defaultBoardId ,handleChangeBoardId}:{  handleChangeBoardId:(e:React.ChangeEvent<HTMLSelectElement>)=>void,defaultBoardId:string }) => {
   const { data: session } = useSession();
 
   // const { data: firstBoard, loading } = useQuery(firstBoardQuery, {
@@ -20,14 +20,16 @@ const BoardDropdown = ({ register,defaultBoardId }:{ register:UseFormRegister<IF
   //   },
   // });
 
-  const { data: boards, isLoading } = trpc.board.getYourBoards.useQuery();
+  const { data: boards, isLoading } = trpc.board.getYourBoards.useQuery(undefined,{
+    refetchOnWindowFocus:false
+  });
   if (isLoading) return <Loading />;
 
   return (
 
-    <Select {...register("boardId")} aria-label="boards"  defaultValue={defaultBoardId}  items={boards} placeholder="Select a board" className="w-full">
+    <Select onChange={(e)=>handleChangeBoardId(e)}  aria-label="boards"  defaultValue={defaultBoardId}  items={boards} placeholder="Select a board" className="w-full">
       {(board) => (
-        <SelectItem key={crypto.randomUUID()} defaultValue={defaultBoardId} value={board?.id} className="capitalize">
+        <SelectItem key={crypto.randomUUID()}  value={board?.id} className="capitalize">
           {board?.name}
         </SelectItem>
       )}

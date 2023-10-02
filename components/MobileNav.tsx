@@ -50,7 +50,7 @@ const MobileNav = () => {
       </li>
       <li className="cursor-pointer">
         {status === "authenticated" ? (
-          <Link href="/user/saved">
+          <Link href={`/user/${session.user?.id}/created`}>
             <Image
             alt="user-profile-image"
               src={session?.user?.image || ""}

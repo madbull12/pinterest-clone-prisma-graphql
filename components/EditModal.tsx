@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 import Image from "next/image";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -42,17 +42,20 @@ const EditModal = () => {
     setEditModal(false);
   };
 
+  const [selectedBoardId,setSelectedBoardId] = useState("");
+  const handleSelectedBoardId = (e:React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedBoardId(e.target?.value);
+  }
+
   const { handleDeletePin, handleUpdatePin } = usePinEdit(
     {
       title: watch("title"),
       description: watch("description"),
-      boardId: watch("boardId"),
-      
     },
     updateCallback
   );
-  console.log(watch("boardId"))
 
+  console.log(selectedBoardId)
   return (
     <div
       ref={modalRef}
@@ -66,12 +69,12 @@ const EditModal = () => {
         <h1 className="text-center font-semibold text-2xl">Edit this Pin</h1>
         <div className="flex flex-col gap-y-4 md:flex-row gap-x-4 w-full mt-8 relative">
           <div className="md:w-3/4 space-y-6">
-            <div className="flex gap-x-2  justify-between">
+            {/* <div className="flex gap-x-2  justify-between">
               <label className="flex-[0.25] py-2">Board</label>
               <div className="flex-[0.75]">
-                <BoardDropdown register={register} defaultBoardId={editPin?.saved?.[0].boardId as string} />
+                <BoardDropdown  handleChangeBoardId={handleSelectedBoardId} defaultBoardId={editPin?.saved?.[0].board.id as string} />
               </div>
-            </div>
+            </div> */}
             <div className="flex items-center gap-x-2 justify-between">
               <label className="flex-[0.25]">Title</label>
               <input

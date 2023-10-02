@@ -151,9 +151,9 @@ export const pinRouter = createTRPCRouter({
       });
     }),
   updatePin: protectedProcedure
-    .input(z.object({ title: z.string(), description: z.string().optional(),pinId:z.string(),boardId:z.string().optional() }))
+    .input(z.object({ title: z.string(), description: z.string().optional(),pinId:z.string() }))
     .mutation(async({ ctx, input }) => {
-      const { pinId,title,description,boardId } = input;
+      const { pinId,title,description } = input;
       const userId = await ctx.session.user.id;
 
  
@@ -163,6 +163,8 @@ export const pinRouter = createTRPCRouter({
           id:pinId
         }
       }))?.userId === userId;
+
+
 
       if(!isRightUser) {
         return new TRPCError({
@@ -178,29 +180,7 @@ export const pinRouter = createTRPCRouter({
         data:{
           title,
           description,
-          saved:{
-            upsert:{
-              where:{
-                userId_pinId_boardId:{
-                  userId,
-                  pinId,
-                  boardId:boardId as string
-                }
-              },
-              update:{
-                boardId:boardId as string,
-                userId,
-              },
-              create:{
-                boardId:boardId as string,
-                userId,
-
-
-              }
-              
-              
-            }
-          }
+          
         },
       })
 
